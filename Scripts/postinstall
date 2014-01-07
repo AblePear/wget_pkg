@@ -1,5 +1,3 @@
 #!/bin/sh
 
 printf "wget %s\n" `basename $0`
-
-# TODO: make sure /usr/local/bin is in path

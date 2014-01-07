@@ -1,14 +1,20 @@
 # Build wget from within Xcode
 
 
-FILES := \
+INSTALL_DIR := $(DERIVED_SOURCES_DIR)/Installed
+
+SCRIPTS := $(shell find $(SRCROOT)/Scripts -type f \! -name .DS_Store)
+STATIC_FILES := $(shell find $(SRCROOT)/Root -type f \! -name .DS_Store)
+WGET_FILES := \
     usr/local/bin/wget \
     usr/local/etc/wgetrc \
     usr/local/share/info/wget.info \
     usr/local/share/man/man1/wget.1
-INSTALL_DIR := $(DERIVED_SOURCES_DIR)/Installed
-INSTALLED_FILES := $(addprefix $(INSTALL_DIR)/,$(FILES))
-SCRIPTS := $(shell find $(SRCROOT)/Scripts -type f \! -name .DS_Store \! -path "*/.svn/*")
+
+INSTALLED_STATIC_FILES := $(patsubst $(SRCROOT)/Root/%,$(INSTALL_DIR)/%,$(STATIC_FILES))
+INSTALLED_WGET_FILES := $(addprefix $(INSTALL_DIR)/,$(WGET_FILES))
+
+INSTALLED_FILES := $(INSTALLED_STATIC_FILES) $(INSTALLED_WGET_FILES)
 
 
 .PHONY : all clean
@@ -40,6 +46,7 @@ $(INSTALLED_FILES) : $(DERIVED_SOURCES_DIR)/Source/Makefile
 	# install
 	-rm -rf $(INSTALL_DIR)
 	mkdir -p $(INSTALL_DIR)
+	cp -R $(SRCROOT)/Root/ $(INSTALL_DIR)/
 	DESTDIR=$(INSTALL_DIR) $(MAKE) -C $(DERIVED_SOURCES_DIR)/Source install
 
 
