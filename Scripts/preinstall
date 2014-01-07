@@ -1,0 +1,3 @@
+#!/bin/sh
+
+printf "wget %s\n" `basename $0`
