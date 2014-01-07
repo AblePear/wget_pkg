@@ -11,6 +11,7 @@
 		D4CFD14E187B0DEB00180467 /* configure-wget.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "configure-wget.sh"; sourceTree = "<group>"; };
 		D4CFD14F187B9E9700180467 /* Source */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Source; sourceTree = "<group>"; };
 		D4CFD150187BCABD00180467 /* Scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Scripts; sourceTree = "<group>"; };
+		D4CFD151187BD11C00180467 /* build-project */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "build-project"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -19,6 +20,7 @@
 			children = (
 				D4CFD150187BCABD00180467 /* Scripts */,
 				D4CFD14F187B9E9700180467 /* Source */,
+				D4CFD151187BD11C00180467 /* build-project */,
 				D4CFD14D187B0DEB00180467 /* build-wget.mk */,
 				D4CFD14E187B0DEB00180467 /* configure-wget.sh */,
 			);
