@@ -13,6 +13,8 @@
 		D4CFD150187BCABD00180467 /* Scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Scripts; sourceTree = "<group>"; };
 		D4CFD151187BD11C00180467 /* build-project */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "build-project"; sourceTree = "<group>"; };
 		D4CFD152187C5D9800180467 /* Root */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Root; sourceTree = "<group>"; };
+		D4CFD153187C628900180467 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		D4CFD154187C62F300180467 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -25,6 +27,8 @@
 				D4CFD151187BD11C00180467 /* build-project */,
 				D4CFD14D187B0DEB00180467 /* build-wget.mk */,
 				D4CFD14E187B0DEB00180467 /* configure-wget.sh */,
+				D4CFD153187C628900180467 /* LICENSE */,
+				D4CFD154187C62F300180467 /* README.md */,
 			);
 			sourceTree = "<group>";
 		};

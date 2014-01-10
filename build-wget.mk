@@ -1,3 +1,6 @@
+# Copyright (c) 2014, Able Pear Software. All rights reserved.
+# Distributed under the GNU General Public License, version 3.
+#
 # Build wget from within Xcode
 
 
