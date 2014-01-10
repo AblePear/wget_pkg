@@ -8,8 +8,8 @@ PROJECT_DIR="`pwd`"
 BUILD_DIR="$PROJECT_DIR/build"
 
 xcodebuild \
-	-project wget.xcodeproj \
-	-scheme wget \
+	-project WgetInstaller.xcodeproj \
+	-scheme WgetInstaller \
 	-configuration Release \
 	SYMROOT="$BUILD_DIR" \
 	OBJROOT="$BUILD_DIR"
