@@ -1,7 +1,7 @@
 # Copyright (c) 2014, Able Pear Software. All rights reserved.
 # Distributed under the GNU General Public License, version 3.
 #
-# Build wget from within Xcode
+# Build wget and installer package from within Xcode
 
 
 INSTALL_DIR := $(DERIVED_SOURCES_DIR)/Installed
@@ -36,7 +36,7 @@ $(BUILT_PRODUCTS_DIR)/wget.pkg : $(INSTALLED_FILES) $(SCRIPTS) | $(BUILT_PRODUCT
 	@echo --- Building wget package ---
 	pkgbuild \
 		--root $(INSTALL_DIR) \
-		--identifier com.ablepear.server.wget \
+		--identifier com.ablepear.wget \
 		--ownership recommended \
 		--scripts $(SRCROOT)/Scripts \
 		$@
@@ -54,11 +54,11 @@ $(INSTALLED_FILES) : $(DERIVED_SOURCES_DIR)/Source/Makefile
 
 
 # Copy source and configure
-$(DERIVED_SOURCES_DIR)/Source/Makefile : $(SRCROOT)/configure-wget.sh $(SRCROOT)/Source/configure | $(DERIVED_SOURCES_DIR)
+$(DERIVED_SOURCES_DIR)/Source/Makefile : $(SRCROOT)/configureWgetInstaller.sh $(SRCROOT)/Source/configure | $(DERIVED_SOURCES_DIR)
 	@echo --- Configuring wget ---
 	-rm -rf $(DERIVED_SOURCES_DIR)/Source
 	cp -R $(SRCROOT)/Source/ $(DERIVED_SOURCES_DIR)/Source/
-	cd $(DERIVED_SOURCES_DIR)/Source; sh $(SRCROOT)/configure-wget.sh
+	cd $(DERIVED_SOURCES_DIR)/Source; sh $(SRCROOT)/configureWgetInstaller.sh
 
 
 $(BUILT_PRODUCTS_DIR) :

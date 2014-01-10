@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		D4CFD14D187B0DEB00180467 /* build-wget.mk */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; fileEncoding = 4; indentWidth = 4; path = "build-wget.mk"; sourceTree = "<group>"; tabWidth = 4; usesTabs = 1; };
-		D4CFD14E187B0DEB00180467 /* configure-wget.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "configure-wget.sh"; sourceTree = "<group>"; };
+		D4CFD14D187B0DEB00180467 /* buildWgetInstaller.mk */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; fileEncoding = 4; indentWidth = 4; path = buildWgetInstaller.mk; sourceTree = "<group>"; tabWidth = 4; usesTabs = 1; };
+		D4CFD14E187B0DEB00180467 /* configureWgetInstaller.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = configureWgetInstaller.sh; sourceTree = "<group>"; };
 		D4CFD14F187B9E9700180467 /* Source */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Source; sourceTree = "<group>"; };
 		D4CFD150187BCABD00180467 /* Scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Scripts; sourceTree = "<group>"; };
-		D4CFD151187BD11C00180467 /* build-project */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "build-project"; sourceTree = "<group>"; };
+		D4CFD151187BD11C00180467 /* buildProject */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = buildProject; sourceTree = "<group>"; };
 		D4CFD152187C5D9800180467 /* Root */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Root; sourceTree = "<group>"; };
 		D4CFD153187C628900180467 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		D4CFD154187C62F300180467 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
@@ -24,9 +24,9 @@
 				D4CFD152187C5D9800180467 /* Root */,
 				D4CFD150187BCABD00180467 /* Scripts */,
 				D4CFD14F187B9E9700180467 /* Source */,
-				D4CFD151187BD11C00180467 /* build-project */,
-				D4CFD14D187B0DEB00180467 /* build-wget.mk */,
-				D4CFD14E187B0DEB00180467 /* configure-wget.sh */,
+				D4CFD151187BD11C00180467 /* buildProject */,
+				D4CFD14D187B0DEB00180467 /* buildWgetInstaller.mk */,
+				D4CFD14E187B0DEB00180467 /* configureWgetInstaller.sh */,
 				D4CFD153187C628900180467 /* LICENSE */,
 				D4CFD154187C62F300180467 /* README.md */,
 			);
@@ -35,17 +35,17 @@
 /* End PBXGroup section */
 
 /* Begin PBXLegacyTarget section */
-		D4CFD147187B0C6200180467 /* wget */ = {
+		D4CFD147187B0C6200180467 /* WgetInstaller */ = {
 			isa = PBXLegacyTarget;
-			buildArgumentsString = "--makefile=build-wget.mk $(ACTION)";
-			buildConfigurationList = D4CFD14A187B0C6200180467 /* Build configuration list for PBXLegacyTarget "wget" */;
+			buildArgumentsString = "--makefile=buildWgetInstaller.mk $(ACTION)";
+			buildConfigurationList = D4CFD14A187B0C6200180467 /* Build configuration list for PBXLegacyTarget "WgetInstaller" */;
 			buildPhases = (
 			);
 			buildToolPath = /usr/bin/make;
 			buildWorkingDirectory = "${SRCROOT}";
 			dependencies = (
 			);
-			name = wget;
+			name = WgetInstaller;
 			passBuildSettingsInEnvironment = 1;
 			productName = wget;
 		};
@@ -58,7 +58,7 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Able Pear Software";
 			};
-			buildConfigurationList = D4CFD146187B0C6200180467 /* Build configuration list for PBXProject "wget" */;
+			buildConfigurationList = D4CFD146187B0C6200180467 /* Build configuration list for PBXProject "WgetInstaller" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -69,7 +69,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D4CFD147187B0C6200180467 /* wget */,
+				D4CFD147187B0C6200180467 /* WgetInstaller */,
 			);
 		};
 /* End PBXProject section */
@@ -106,7 +106,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 			};
@@ -138,7 +138,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -167,7 +167,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		D4CFD146187B0C6200180467 /* Build configuration list for PBXProject "wget" */ = {
+		D4CFD146187B0C6200180467 /* Build configuration list for PBXProject "WgetInstaller" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D4CFD148187B0C6200180467 /* Debug */,
@@ -176,13 +176,14 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D4CFD14A187B0C6200180467 /* Build configuration list for PBXLegacyTarget "wget" */ = {
+		D4CFD14A187B0C6200180467 /* Build configuration list for PBXLegacyTarget "WgetInstaller" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D4CFD14B187B0C6200180467 /* Debug */,
 				D4CFD14C187B0C6200180467 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
