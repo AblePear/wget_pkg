@@ -1,7 +1,7 @@
 GNU Wget 1.14 for OS X
 ======================
 
-This project build a standard OS X installer package for GNU wget.
+This project build a standard OS X installer package for [GNU wget](http://www.gnu.org/software/wget/).
 
 A recent version of Mac OS X and Xcode are required to build wget and the
 installer.  The project and installer are tested on Mac OS X 10.9 "Mavericks"
