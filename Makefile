@@ -18,6 +18,7 @@ wget.pkg : \
         $(TMP)/wget.pkg \
         resources/background.png \
         resources/distribution.xml \
+        resources/license.html \
         resources/welcome.html
 	productbuild \
         --distribution resources/distribution.xml \
