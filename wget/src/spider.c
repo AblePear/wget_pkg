@@ -45,13 +45,13 @@ static struct hash_table *nonexisting_urls_set;
 
 /* Cleanup the data structures associated with this file.  */
 
-static void
+void
 spider_cleanup (void)
 {
   if (nonexisting_urls_set)
     string_set_free (nonexisting_urls_set);
 }
-
+
 /* Remembers broken links.  */
 void
 nonexisting_url (const char *url)
@@ -97,4 +97,3 @@ print_broken_links (void)
 /*
  * vim: et ts=2 sw=2
  */
-

@@ -47,12 +47,7 @@ as that of the covered work.  */
 
 #define alloca_array(type, size) ((type *) alloca ((size) * sizeof (type)))
 
-#define xfree free
-/* Free P if it is non-NULL.  C requires free() to behaves this way by
-   default, but Wget's code is historically careful not to pass NULL
-   to free.  This allows us to assert p!=NULL in xfree to check
-   additional errors.  (But we currently don't do that!)  */
-#define xfree_null(p) if (!(p)) ; else xfree (p)
+#define xfree(p) do { free ((void *) (p)); p = NULL; } while (0)
 
 struct hash_table;
 
@@ -98,7 +93,6 @@ bool has_wildcards_p (const char *);
 
 bool has_html_suffix_p (const char *);
 
-char *read_whole_line (FILE *);
 struct file_memory *wget_read_file (const char *);
 void wget_read_file_free (struct file_memory *);
 
@@ -122,7 +116,7 @@ const char *with_thousand_seps (wgint);
 #else
 # define HR_NUMTYPE double
 #endif
-char *human_readable (HR_NUMTYPE);
+char *human_readable (HR_NUMTYPE, const int, const int);
 
 
 int numdigit (wgint);
@@ -140,8 +134,8 @@ void xsleep (double);
 /* How many bytes it will take to store LEN bytes in base64.  */
 #define BASE64_LENGTH(len) (4 * (((len) + 2) / 3))
 
-int base64_encode (const void *, int, char *);
-int base64_decode (const char *, void *);
+size_t base64_encode (const void *, size_t, char *);
+ssize_t base64_decode (const char *, void *);
 
 #ifdef HAVE_LIBPCRE
 void *compile_pcre_regex (const char *);
@@ -154,6 +148,12 @@ bool match_posix_regex (const void *, const char *);
 void stable_sort (void *, size_t, size_t, int (*) (const void *, const void *));
 
 const char *print_decimal (double);
+
+long get_max_length (const char *path, int length, int name);
+
+#ifndef HAVE_STRLCPY
+size_t strlcpy (char *dst, const char *src, size_t size);
+#endif
 
 extern unsigned char char_prop[];
 

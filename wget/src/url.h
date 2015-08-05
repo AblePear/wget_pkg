@@ -37,6 +37,22 @@ as that of the covered work.  */
 #define DEFAULT_FTP_PORT 21
 #define DEFAULT_HTTPS_PORT 443
 
+/* This represents how many characters less than the OS max name length a file
+ * should be.  More precisely, a file name should be at most
+ * (NAME_MAX - CHOMP_BUFFER) characters in length.  This number was arrived at
+ * by adding the lengths of all possible strings that could be appended to a
+ * file name later in the code (e.g. ".orig", ".html", etc.).  This is
+ * hopefully plenty of extra characters, but I am not guaranteeing that a file
+ * name will be of the proper length by the time the code wants to open a
+ * file descriptor. */
+#define CHOMP_BUFFER 19
+
+/* The flags that allow clobbering the file (opening with "wb").
+   Defined here to avoid repetition later.  #### This will require
+   rework.  */
+#define ALLOW_CLOBBER (opt.noclobber || opt.always_rest || opt.timestamping \
+                  || opt.dirstruct || opt.output_document || opt.backups > 0)
+
 /* Specifies how, or whether, user auth information should be included
  * in URLs regenerated from URL parse structures. */
 enum url_auth_mode {
@@ -60,11 +76,11 @@ enum url_scheme {
 /* Structure containing info on a URL.  */
 struct url
 {
-  char *url;			/* Original URL */
-  enum url_scheme scheme;	/* URL scheme */
+  char *url;                /* Original URL */
+  enum url_scheme scheme;   /* URL scheme */
 
-  char *host;			/* Extracted hostname */
-  int port;			/* Port number */
+  char *host;               /* Extracted hostname */
+  int port;                 /* Port number */
 
   /* URL components (URL-quoted). */
   char *path;
@@ -79,12 +95,17 @@ struct url
   /* Username and password (unquoted). */
   char *user;
   char *passwd;
+
+  /* 'host' is allocated by idna_to_ascii_8z() via idn_encode().
+   * Call 'idn_free()' to free this memory. */
+  bool idn_allocated;
 };
 
 /* Function declarations */
 
 char *url_escape (const char *);
 char *url_escape_unsafe_and_reserved (const char *);
+void url_unescape (char *);
 
 struct url *url_parse (const char *, int *, struct iri *iri, bool percent_encode);
 char *url_error (const char *, int);

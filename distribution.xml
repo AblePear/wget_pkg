@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<installer-gui-script minSpecVersion="1">
+    <title>GNU Wget {{version}}</title>
+
+    <background alignment="center" file="background.png" mime-type="image/png" scaling="tofit"/>
+    <welcome file="welcome.html" mime-type="text/html"/>
+    <license file="license.html" mime-type="text/html"/>
+
+    <options customize="never"/>
+
+    <choices-outline>
+        <line choice="com.ablepear.wget"/>
+    </choices-outline>
+
+    <choice id="com.ablepear.wget">
+        <pkg-ref id="com.ablepear.wget"/>
+    </choice>
+    <pkg-ref id="com.ablepear.wget">wget-{{version}}.pkg</pkg-ref>
+
+</installer-gui-script>

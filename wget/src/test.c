@@ -28,7 +28,12 @@ Corresponding Source for a non-source form of such a combination
 shall include the source code for the parts of OpenSSL used as well
 as that of the covered work.  */
 
+#include "wget.h"
+
 #include <stdio.h>
+#ifdef ENABLE_NLS
+# include <locale.h>
+#endif
 
 #include "test.h"
 
@@ -36,22 +41,22 @@ as that of the covered work.  */
 #error "TESTING not set!!!"
 #endif
 
-const char *test_parse_content_disposition();
-const char *test_subdir_p();
-const char *test_dir_matches_p();
-const char *test_commands_sorted();
-const char *test_cmd_spec_restrict_file_names();
-const char *test_path_simplify ();
-const char *test_append_uri_pathel();
-const char *test_are_urls_equal();
-const char *test_is_robots_txt_url();
+const char *test_parse_content_disposition(void);
+const char *test_subdir_p(void);
+const char *test_dir_matches_p(void);
+const char *test_commands_sorted(void);
+const char *test_cmd_spec_restrict_file_names(void);
+const char *test_path_simplify (void);
+const char *test_append_uri_pathel(void);
+const char *test_are_urls_equal(void);
+const char *test_is_robots_txt_url(void);
 
 const char *program_argstring = "TEST";
 
 int tests_run;
 
 static const char *
-all_tests()
+all_tests(void)
 {
   mu_run_test (test_parse_content_disposition);
   mu_run_test (test_subdir_p);
@@ -66,12 +71,20 @@ all_tests()
   return NULL;
 }
 
-char *program_name; /* Needed by lib/error.c. */
+const char *program_name; /* Needed by lib/error.c. */
 
 int
-main (int argc, char *argv[])
+main (int argc _GL_UNUSED, const char *argv[])
 {
   const char *result;
+
+#ifdef ENABLE_NLS
+  /* Set the current locale.  */
+  setlocale (LC_ALL, "");
+  /* Set the text message domain.  */
+  bindtextdomain ("wget", LOCALEDIR);
+  textdomain ("wget");
+#endif /* ENABLE_NLS */
 
   program_name = argv[0];
 
@@ -94,4 +107,3 @@ main (int argc, char *argv[])
 /*
  * vim: et ts=2 sw=2
  */
-

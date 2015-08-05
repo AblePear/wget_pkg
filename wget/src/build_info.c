@@ -8,6 +8,7 @@
 
 #include "wget.h"
 #include <stdio.h>
+#include "version.h"
 
 const char *compiled_features[] =
 {
@@ -36,7 +37,7 @@ const char *compiled_features[] =
   "-iri",
 #endif
 
-#if SIZEOF_OFF_T >= 8
+#if SIZEOF_OFF_T >= 8 || defined WINDOWS
   "+large-file",
 #else
   "-large-file",
@@ -60,11 +61,17 @@ const char *compiled_features[] =
   "-opie",
 #endif
 
+#if defined HAVE_LIBPSL
+  "+psl",
+#else
+  "-psl",
+#endif
+
 #if defined HAVE_LIBSSL || defined HAVE_LIBSSL32
   "+ssl/openssl",
 #elif defined HAVE_LIBGNUTLS
   "+ssl/gnutls",
-#else 
+#else
   "-ssl",
 #endif
 

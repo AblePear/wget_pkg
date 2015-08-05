@@ -20,24 +20,6 @@
 #include "wget.h"
 #include "exits.h"
 
-/* Final exit code possibilities. Exit codes 1 and 2 are reserved
- * for situations that lead to direct exits from Wget, not using the
- * value of final_exit_status. */
-enum
-  {
-    WGET_EXIT_SUCCESS = 0,
-
-    WGET_EXIT_MINIMUM = 3,
-    WGET_EXIT_IO_FAIL = WGET_EXIT_MINIMUM,
-    WGET_EXIT_NETWORK_FAIL = 4,
-    WGET_EXIT_SSL_AUTH_FAIL = 5,
-    WGET_EXIT_SERVER_AUTH_FAIL = 6,
-    WGET_EXIT_PROTOCOL_ERROR = 7,
-    WGET_EXIT_SERVER_ERROR = 8,
-
-    WGET_EXIT_UNKNOWN
-  };
-
 static int final_exit_status = WGET_EXIT_SUCCESS;
 
 /* XXX: I don't like that newly-added uerr_t codes will doubtless fall
@@ -58,7 +40,7 @@ get_status_for_err (uerr_t err)
     case RETROK:
       return WGET_EXIT_SUCCESS;
     case FOPENERR: case FOPEN_EXCL_ERR: case FWRITEERR: case WRITEFAILED:
-    case UNLINKERR: case CLOSEFAILED:
+    case UNLINKERR: case CLOSEFAILED: case FILEBADFILE:
       return WGET_EXIT_IO_FAIL;
     case NOCONERROR: case HOSTERR: case CONSOCKERR: case CONERROR:
     case CONSSLERR: case CONIMPOSSIBLE: case FTPRERR: case FTPINVPASV:
@@ -68,15 +50,15 @@ get_status_for_err (uerr_t err)
       return WGET_EXIT_SSL_AUTH_FAIL;
     case FTPLOGINC: case FTPLOGREFUSED: case AUTHFAILED:
       return WGET_EXIT_SERVER_AUTH_FAIL;
-    case HEOF: case HERR:
+    case HEOF: case HERR: case ATTRMISSING:
       return WGET_EXIT_PROTOCOL_ERROR;
     case WRONGCODE: case FTPPORTERR: case FTPSYSERR:
     case FTPNSFOD: case FTPUNKNOWNTYPE: case FTPSRVERR:
     case FTPRETRINT: case FTPRESTFAIL: case FTPNOPASV:
     case CONTNOTSUPPORTED: case RANGEERR: case RETRBADPATTERN:
-    case PROXERR:
+    case PROXERR: case GATEWAYTIMEOUT:
       return WGET_EXIT_SERVER_ERROR;
-    case URLERROR: case QUOTEXC: case SSLINITFAILED:
+    case URLERROR: case QUOTEXC: case SSLINITFAILED: case UNKNOWNATTR:
     default:
       return WGET_EXIT_UNKNOWN;
     }
@@ -108,4 +90,3 @@ get_exit_status (void)
       ? 1
       : final_exit_status;
 }
-

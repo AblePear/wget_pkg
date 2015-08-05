@@ -1,6 +1,6 @@
 /* File retrieval.
    Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,
-   2005, 2006, 2007, 2008, 2009, 2010, 2011 Free Software Foundation,
+   2005, 2006, 2007, 2008, 2009, 2010, 2011, 2014 Free Software Foundation,
    Inc.
 
 This file is part of GNU Wget.
@@ -37,6 +37,9 @@ as that of the covered work.  */
 #include <errno.h>
 #include <string.h>
 #include <assert.h>
+#ifdef VMS
+# include <unixio.h>            /* For delete(). */
+#endif
 
 #include "exits.h"
 #include "utils.h"
@@ -67,7 +70,7 @@ FILE *output_stream;
 /* Whether output_document is a regular file we can manipulate,
    i.e. not `-' or a device file. */
 bool output_stream_regular;
-
+
 static struct {
   wgint chunk_bytes;
   double chunk_start;
@@ -133,16 +136,12 @@ limit_bandwidth (wgint bytes, struct ptimer *timer)
   limit_data.chunk_start = ptimer_read (timer);
 }
 
-#ifndef MIN
-# define MIN(i, j) ((i) <= (j) ? (i) : (j))
-#endif
-
 /* Write data in BUF to OUT.  However, if *SKIP is non-zero, skip that
    amount of data and decrease SKIP.  Increment *TOTAL by the amount
    of data written.  If OUT2 is not NULL, also write BUF to OUT2.
    In case of error writing to OUT, -1 is returned.  In case of error
-   writing to OUT2, -2 is returned.  In case of any other error,
-   1 is returned.  */
+   writing to OUT2, -2 is returned.  Return 1 if the whole BUF was
+   skipped.  */
 
 static int
 write_data (FILE *out, FILE *out2, const char *buf, int bufsize,
@@ -223,7 +222,8 @@ write_data (FILE *out, FILE *out2, const char *buf, int bufsize,
    data to OUT2, -3 is returned.  */
 
 int
-fd_read_body (int fd, FILE *out, wgint toread, wgint startpos,
+fd_read_body (const char *downloaded_filename, int fd, FILE *out, wgint toread, wgint startpos,
+
               wgint *qtyread, wgint *qtywritten, double *elapsed, int flags,
               FILE *out2)
 {
@@ -259,13 +259,18 @@ fd_read_body (int fd, FILE *out, wgint toread, wgint startpos,
   if (flags & rb_skip_startpos)
     skip = startpos;
 
-  if (opt.verbose)
+  if (opt.show_progress)
     {
+      const char *filename_progress;
       /* If we're skipping STARTPOS bytes, pass 0 as the INITIAL
          argument to progress_create because the indicator doesn't
          (yet) know about "skipping" data.  */
       wgint start = skip ? 0 : startpos;
-      progress = progress_create (start, start + toread);
+      if (opt.dir_prefix)
+        filename_progress = downloaded_filename + strlen (opt.dir_prefix) + 1;
+      else
+        filename_progress = downloaded_filename;
+      progress = progress_create (filename_progress, start, start + toread);
       progress_interactive = progress_interactive_p (progress);
     }
 
@@ -374,9 +379,11 @@ fd_read_body (int fd, FILE *out, wgint toread, wgint startpos,
 
       if (ret > 0)
         {
+          int write_res;
+
           sum_read += ret;
-          int write_res = write_data (out, out2, dlbuf, ret, &skip, &sum_written);
-          if (write_res != 0)
+          write_res = write_data (out, out2, dlbuf, ret, &skip, &sum_written);
+          if (write_res < 0)
             {
               ret = (write_res == -3) ? -3 : -2;
               goto out;
@@ -408,7 +415,7 @@ fd_read_body (int fd, FILE *out, wgint toread, wgint startpos,
       if (progress)
         progress_update (progress, ret, ptimer_read (timer));
 #ifdef WINDOWS
-      if (toread > 0 && !opt.quiet)
+      if (toread > 0 && opt.show_progress)
         ws_percenttitle (100.0 *
                          (startpos + sum_read) / (startpos + toread));
 #endif
@@ -430,11 +437,11 @@ fd_read_body (int fd, FILE *out, wgint toread, wgint startpos,
   if (qtywritten)
     *qtywritten += sum_written;
 
-  free (dlbuf);
+  xfree (dlbuf);
 
   return ret;
 }
-
+
 /* Read a hunk of data from FD, up until a terminator.  The hunk is
    limited by whatever the TERMINATOR callback chooses as its
    terminator.  For example, if terminator stops at newline, the hunk
@@ -539,7 +546,7 @@ fd_read_hunk (int fd, hunk_terminator_t terminator, long sizehint, long maxsize)
       rdlen = fd_read (fd, hunk + tail, remain, 0);
       if (rdlen < 0)
         {
-          xfree_null (hunk);
+          xfree (hunk);
           return NULL;
         }
       tail += rdlen;
@@ -584,7 +591,7 @@ fd_read_hunk (int fd, hunk_terminator_t terminator, long sizehint, long maxsize)
 }
 
 static const char *
-line_terminator (const char *start, const char *peeked, int peeklen)
+line_terminator (const char *start _GL_UNUSED, const char *peeked, int peeklen)
 {
   const char *p = memchr (peeked, '\n', peeklen);
   if (p)
@@ -611,7 +618,7 @@ fd_read_line (int fd)
 {
   return fd_read_hunk (fd, line_terminator, 128, FD_READ_LINE_MAX);
 }
-
+
 /* Return a printed representation of the download rate, along with
    the units appropriate for the download speed.  */
 
@@ -646,7 +653,7 @@ calc_rate (wgint bytes, double secs, int *units)
 {
   double dlrate;
   double bibyte = 1000.0;
- 
+
   if (!opt.report_bps)
     bibyte = 1024.0;
 
@@ -675,22 +682,25 @@ calc_rate (wgint bytes, double secs, int *units)
 
   return dlrate;
 }
-
 
-#define SUSPEND_POST_DATA do {                  \
-  post_data_suspended = true;                   \
-  saved_post_data = opt.post_data;              \
-  saved_post_file_name = opt.post_file_name;    \
-  opt.post_data = NULL;                         \
-  opt.post_file_name = NULL;                    \
+
+#define SUSPEND_METHOD do {                     \
+  method_suspended = true;                      \
+  saved_body_data = opt.body_data;              \
+  saved_body_file_name = opt.body_file;         \
+  saved_method = opt.method;                    \
+  opt.body_data = NULL;                         \
+  opt.body_file = NULL;                         \
+  opt.method = NULL;                            \
 } while (0)
 
-#define RESTORE_POST_DATA do {                          \
-  if (post_data_suspended)                              \
+#define RESTORE_METHOD do {                             \
+  if (method_suspended)                                 \
     {                                                   \
-      opt.post_data = saved_post_data;                  \
-      opt.post_file_name = saved_post_file_name;        \
-      post_data_suspended = false;                      \
+      opt.body_data = saved_body_data;                  \
+      opt.body_file = saved_body_file_name;             \
+      opt.method = saved_method;                        \
+      method_suspended = false;                         \
     }                                                   \
 } while (0)
 
@@ -718,9 +728,10 @@ retrieve_url (struct url * orig_parsed, const char *origurl, char **file,
   char *local_file;
   int redirection_count = 0;
 
-  bool post_data_suspended = false;
-  char *saved_post_data = NULL;
-  char *saved_post_file_name = NULL;
+  bool method_suspended = false;
+  char *saved_body_data = NULL;
+  char *saved_method = NULL;
+  char *saved_body_file_name = NULL;
 
   /* If dt is NULL, use local storage.  */
   if (!dt)
@@ -753,7 +764,7 @@ retrieve_url (struct url * orig_parsed, const char *origurl, char **file,
       pi->utf8_encode = false;
 
       /* Parse the proxy URL.  */
-      proxy_url = url_parse (proxy, &up_error_code, NULL, true);
+      proxy_url = url_parse (proxy, &up_error_code, pi, true);
       if (!proxy_url)
         {
           char *error = url_error (proxy, up_error_code);
@@ -761,7 +772,7 @@ retrieve_url (struct url * orig_parsed, const char *origurl, char **file,
                      proxy, error);
           xfree (url);
           xfree (error);
-          RESTORE_POST_DATA;
+          RESTORE_METHOD;
           result = PROXERR;
           goto bail;
         }
@@ -770,10 +781,12 @@ retrieve_url (struct url * orig_parsed, const char *origurl, char **file,
           logprintf (LOG_NOTQUIET, _("Error in proxy URL %s: Must be HTTP.\n"), proxy);
           url_free (proxy_url);
           xfree (url);
-          RESTORE_POST_DATA;
+          RESTORE_METHOD;
           result = PROXERR;
           goto bail;
         }
+      iri_free(pi);
+      xfree (proxy);
     }
 
   if (u->scheme == SCHEME_HTTP
@@ -822,8 +835,7 @@ retrieve_url (struct url * orig_parsed, const char *origurl, char **file,
 
       assert (mynewloc != NULL);
 
-      if (local_file)
-        xfree (local_file);
+      xfree (local_file);
 
       /* The HTTP specs only allow absolute URLs to appear in
          redirects, but a ton of boneheaded webservers and CGIs out
@@ -837,7 +849,7 @@ retrieve_url (struct url * orig_parsed, const char *origurl, char **file,
          the content encoding. */
       iri->utf8_encode = opt.enable_iri;
       set_content_encoding (iri, NULL);
-      xfree_null (iri->orig_url);
+      xfree (iri->orig_url);
 
       /* Now, see if this new location makes sense. */
       newloc_parsed = url_parse (mynewloc, &up_error_code, iri, true);
@@ -853,7 +865,7 @@ retrieve_url (struct url * orig_parsed, const char *origurl, char **file,
           xfree (url);
           xfree (mynewloc);
           xfree (error);
-          RESTORE_POST_DATA;
+          RESTORE_METHOD;
           goto bail;
         }
 
@@ -875,7 +887,7 @@ retrieve_url (struct url * orig_parsed, const char *origurl, char **file,
             }
           xfree (url);
           xfree (mynewloc);
-          RESTORE_POST_DATA;
+          RESTORE_METHOD;
           result = WRONGCODE;
           goto bail;
         }
@@ -894,14 +906,18 @@ retrieve_url (struct url * orig_parsed, const char *origurl, char **file,
          index page; that redirection is clearly a GET.  We "suspend"
          POST data for the duration of the redirections, and restore
          it when we're done.
-	 
-	 RFC2616 HTTP/1.1 introduces code 307 Temporary Redirect
-	 specifically to preserve the method of the request.
-	 */
-      if (result != NEWLOCATION_KEEP_POST && !post_data_suspended)
-        SUSPEND_POST_DATA;
+
+         RFC2616 HTTP/1.1 introduces code 307 Temporary Redirect
+         specifically to preserve the method of the request.
+     */
+      if (result != NEWLOCATION_KEEP_POST && !method_suspended)
+        SUSPEND_METHOD;
 
       goto redirected;
+    }
+  else
+    {
+      xfree(mynewloc);
     }
 
   /* Try to not encode in UTF-8 if fetching failed */
@@ -916,6 +932,7 @@ retrieve_url (struct url * orig_parsed, const char *origurl, char **file,
       if (u)
         {
           DEBUGP (("[IRI fallbacking to non-utf8 for %s\n", quote (url)));
+          xfree (url);
           url = xstrdup (u->url);
           iri_fallbacked = 1;
           goto redirected;
@@ -941,7 +958,7 @@ retrieve_url (struct url * orig_parsed, const char *origurl, char **file,
   if (file)
     *file = local_file ? local_file : NULL;
   else
-    xfree_null (local_file);
+    xfree (local_file);
 
   if (orig_parsed != u)
     {
@@ -962,7 +979,7 @@ retrieve_url (struct url * orig_parsed, const char *origurl, char **file,
       xfree (url);
     }
 
-  RESTORE_POST_DATA;
+  RESTORE_METHOD;
 
 bail:
   if (register_status)
@@ -996,7 +1013,6 @@ retrieve_from_file (const char *file, bool html, int *count)
   if (url_valid_scheme (url))
     {
       int dt,url_err;
-      uerr_t status;
       struct url *url_parsed = url_parse (url, &url_err, iri, true);
       if (!url_parsed)
         {
@@ -1022,12 +1038,11 @@ retrieve_from_file (const char *file, bool html, int *count)
       /* If we have a found a content encoding, use it.
        * ( == is okay, because we're checking for identical object) */
       if (iri->content_encoding != opt.locale)
-	  set_uri_encoding (iri, iri->content_encoding, false);
+          set_uri_encoding (iri, iri->content_encoding, false);
 
       /* Reset UTF-8 encode status */
       iri->utf8_encode = opt.enable_iri;
-      xfree_null (iri->orig_url);
-      iri->orig_url = NULL;
+      xfree (iri->orig_url);
 
       input_file = url_file;
     }
@@ -1037,12 +1052,12 @@ retrieve_from_file (const char *file, bool html, int *count)
   url_list = (html ? get_urls_html (input_file, NULL, NULL, iri)
               : get_urls_file (input_file));
 
-  xfree_null (url_file);
+  xfree (url_file);
 
   for (cur_url = url_list; cur_url; cur_url = cur_url->next, ++*count)
     {
-      char *filename = NULL, *new_file = NULL;
-      int dt;
+      char *filename = NULL, *new_file = NULL, *proxy;
+      int dt = 0;
       struct iri *tmpiri = iri_dup (iri);
       struct url *parsed_url = NULL;
 
@@ -1057,8 +1072,9 @@ retrieve_from_file (const char *file, bool html, int *count)
 
       parsed_url = url_parse (cur_url->url->url, NULL, tmpiri, true);
 
+      proxy = getproxy (cur_url->url);
       if ((opt.recursive || opt.page_requisites)
-          && (cur_url->url->scheme != SCHEME_FTP || getproxy (cur_url->url)))
+          && (cur_url->url->scheme != SCHEME_FTP || proxy))
         {
           int old_follow_ftp = opt.follow_ftp;
 
@@ -1076,6 +1092,7 @@ retrieve_from_file (const char *file, bool html, int *count)
                                cur_url->url->url, &filename,
                                &new_file, NULL, &dt, opt.recursive, tmpiri,
                                true);
+      xfree (proxy);
 
       if (parsed_url)
           url_free (parsed_url);
@@ -1090,8 +1107,8 @@ Removing file due to --delete-after in retrieve_from_file():\n"));
           dt &= ~RETROKF;
         }
 
-      xfree_null (new_file);
-      xfree_null (filename);
+      xfree (new_file);
+      xfree (filename);
       iri_free (tmpiri);
     }
 
@@ -1167,7 +1184,7 @@ free_urlpos (struct urlpos *l)
       struct urlpos *next = l->next;
       if (l->url)
         url_free (l->url);
-      xfree_null (l->local_name);
+      xfree (l->local_name);
       xfree (l);
       l = next;
     }
@@ -1177,7 +1194,16 @@ free_urlpos (struct urlpos *l)
 void
 rotate_backups(const char *fname)
 {
-  int maxlen = strlen (fname) + 1 + numdigit (opt.backups) + 1;
+#ifdef __VMS
+# define SEP "_"
+# define AVS ";*"                       /* All-version suffix. */
+# define AVSL (sizeof (AVS) - 1)
+#else
+# define SEP "."
+# define AVSL 0
+#endif
+
+  int maxlen = strlen (fname) + sizeof (SEP) + numdigit (opt.backups) + AVSL;
   char *from = (char *)alloca (maxlen);
   char *to = (char *)alloca (maxlen);
   struct_stat sb;
@@ -1189,12 +1215,24 @@ rotate_backups(const char *fname)
 
   for (i = opt.backups; i > 1; i--)
     {
-      sprintf (from, "%s.%d", fname, i - 1);
-      sprintf (to, "%s.%d", fname, i);
+#ifdef VMS
+      /* Delete (all versions of) any existing max-suffix file, to avoid
+       * creating multiple versions of it.  (On VMS, rename() will
+       * create a new version of an existing destination file, not
+       * destroy/overwrite it.)
+       */
+      if (i == opt.backups)
+        {
+          sprintf (to, "%s%s%d%s", fname, SEP, i, AVS);
+          delete (to);
+        }
+#endif
+      sprintf (to, "%s%s%d", fname, SEP, i);
+      sprintf (from, "%s%s%d", fname, SEP, i - 1);
       rename (from, to);
     }
 
-  sprintf (to, "%s.%d", fname, 1);
+  sprintf (to, "%s%s%d", fname, SEP, 1);
   rename(fname, to);
 }
 
@@ -1207,7 +1245,6 @@ getproxy (struct url *u)
 {
   char *proxy = NULL;
   char *rewritten_url;
-  static char rewritten_storage[1024];
 
   if (!opt.use_proxy)
     return NULL;
@@ -1237,13 +1274,9 @@ getproxy (struct url *u)
      getproxy() to return static storage. */
   rewritten_url = rewrite_shorthand_url (proxy);
   if (rewritten_url)
-    {
-      strncpy (rewritten_storage, rewritten_url, sizeof (rewritten_storage));
-      rewritten_storage[sizeof (rewritten_storage) - 1] = '\0';
-      proxy = rewritten_storage;
-    }
+    return rewritten_url;
 
-  return proxy;
+  return strdup(proxy);
 }
 
 /* Returns true if URL would be downloaded through a proxy. */
@@ -1252,9 +1285,13 @@ bool
 url_uses_proxy (struct url * u)
 {
   bool ret;
+  char *proxy;
+
   if (!u)
     return false;
-  ret = getproxy (u) != NULL;
+  proxy = getproxy (u);
+  ret = proxy != NULL;
+  xfree (proxy);
   return ret;
 }
 

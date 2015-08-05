@@ -1,5 +1,5 @@
 /* Creation of subprocesses, communicating via pipes.
-   Copyright (C) 2001-2004, 2006-2012 Free Software Foundation, Inc.
+   Copyright (C) 2001-2004, 2006-2015 Free Software Foundation, Inc.
    Written by Bruno Haible <haible@clisp.cons.org>, 2001.
 
    This program is free software: you can redistribute it and/or modify
@@ -48,11 +48,6 @@
 
 #endif
 
-/* The results of open() in this file are not used with fchdir,
-   therefore save some unnecessary work in fchdir.c.  */
-#undef open
-#undef close
-
 
 #ifdef EINTR
 
@@ -60,7 +55,7 @@
    These functions can return -1/EINTR even though we don't have any
    signal handlers set up, namely when we get interrupted via SIGSTOP.  */
 
-static inline int
+static int
 nonintr_close (int fd)
 {
   int retval;
@@ -73,7 +68,8 @@ nonintr_close (int fd)
 }
 #define close nonintr_close
 
-static inline int
+#if (defined _WIN32 || defined __WIN32__) && ! defined __CYGWIN__
+static int
 nonintr_open (const char *pathname, int oflag, mode_t mode)
 {
   int retval;
@@ -84,8 +80,9 @@ nonintr_open (const char *pathname, int oflag, mode_t mode)
 
   return retval;
 }
-#undef open /* avoid warning on VMS */
-#define open nonintr_open
+# undef open /* avoid warning on VMS */
+# define open nonintr_open
+#endif
 
 #endif
 

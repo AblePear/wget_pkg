@@ -1,5 +1,5 @@
 /* Conversion of links to local files.
-   Copyright (C) 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011
+   Copyright (C) 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2014
    Free Software Foundation, Inc.
 
 This file is part of GNU Wget.
@@ -125,7 +125,7 @@ convert_links_in_hashtable (struct hash_table *downloaded_set,
 
           u = url_parse (cur_url->url->url, NULL, pi, true);
           if (!u)
-	    continue;
+              continue;
 
           local_name = hash_table_get (dl_url_file_map, u->url);
 
@@ -465,7 +465,7 @@ write_backup_file (const char *file, downloaded_file_t downloaded_file_return)
     converted_files = make_string_hash_table (0);
 
   /* We can get called twice on the same URL thanks to the
-     convert_all_links() call in main().  If we write the .orig file
+     convert_all_links() call in main.  If we write the .orig file
      each time in such a case, it'll end up containing the first-pass
      conversion, not the original file.  So, see if we've already been
      called on this file. */
@@ -626,6 +626,7 @@ local_quote_string (const char *file, bool no_html_quote)
   /* Allocate space assuming the worst-case scenario, each character
      having to be quoted.  */
   to = newname = (char *)alloca (3 * strlen (file) + 1);
+  newname[0] = '\0';
   for (from = file; *from; from++)
     switch (*from)
       {
@@ -660,7 +661,7 @@ local_quote_string (const char *file, bool no_html_quote)
 
   return no_html_quote ? strdup (newname) : html_quote_string (newname);
 }
-
+
 /* Book-keeping code for dl_file_url_map, dl_url_file_map,
    downloaded_html_list, and downloaded_html_set.  Other code calls
    these functions to let us know that a file has been downloaded.  */
@@ -835,7 +836,7 @@ register_download (const char *url, const char *file)
   hash_table_put (dl_url_file_map, xstrdup (url), xstrdup (file));
 }
 
-/* Register that FROM has been redirected to TO.  This assumes that TO
+/* Register that FROM has been redirected to "TO".  This assumes that TO
    is successfully downloaded and already registered using
    register_download() above.  */
 
@@ -915,7 +916,7 @@ convert_cleanup (void)
   if (converted_files)
     string_set_free (converted_files);
 }
-
+
 /* Book-keeping code for downloaded files that enables extension
    hacks.  */
 
@@ -1011,7 +1012,7 @@ downloaded_files_free (void)
       downloaded_files_hash = NULL;
     }
 }
-
+
 /* The function returns the pointer to the malloc-ed quoted version of
    string s.  It will recognize and quote numeric and special graphic
    entities, as per RFC1866:
@@ -1087,4 +1088,3 @@ html_quote_string (const char *s)
 /*
  * vim: et ts=2 sw=2
  */
-

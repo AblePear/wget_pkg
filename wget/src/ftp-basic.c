@@ -1,6 +1,6 @@
 /* Basic FTP routines.
    Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,
-   2005, 2006, 2007, 2008, 2009, 2010, 2011 Free Software Foundation,
+   2005, 2006, 2007, 2008, 2009, 2010, 2011, 2014 Free Software Foundation,
    Inc.
 
 This file is part of GNU Wget.
@@ -43,10 +43,9 @@ as that of the covered work.  */
 #include "host.h"
 #include "ftp.h"
 #include "retr.h"
+#include "c-strcase.h"
 
-char ftp_last_respline[128];
 
-
 /* Get the response of FTP server and allocate enough room to handle
    it.  <CR> and <LF> characters are stripped from the line, and the
    line is 0-terminated.  All the response lines but the last one are
@@ -84,8 +83,6 @@ ftp_response (int fd, char **ret_line)
       if (c_isdigit (line[0]) && c_isdigit (line[1]) && c_isdigit (line[2])
           && line[3] == ' ')
         {
-          strncpy (ftp_last_respline, line, sizeof (ftp_last_respline));
-          ftp_last_respline[sizeof (ftp_last_respline) - 1] = '\0';
           *ret_line = line;
           return FTPOK;
         }
@@ -194,7 +191,7 @@ ftp_login (int csock, const char *acc, const char *pass)
     for (i = 0; i < countof (skey_head); i++)
       {
         int l = strlen (skey_head[i]);
-        if (0 == strncasecmp (skey_head[i], respline, l))
+        if (0 == c_strncasecmp (skey_head[i], respline, l))
           {
             seed = respline + l;
             break;
@@ -788,16 +785,8 @@ ftp_epsv (int csock, ip_address *ip, int *port)
     }
 
   /* Finally, get the port number */
-  tport = 0;
-  for (i = 1; c_isdigit (*s); s++)
-    {
-      if (i > 5)
-        {
-          xfree (respline);
-          return FTPINVPASV;
-        }
+  for (tport = 0, i = 0; i < 5 && c_isdigit (*s); i++, s++)
       tport = (*s - '0') + 10 * tport;
-    }
 
   /* Make sure that the response terminates correcty */
   if (*s++ != delim)
@@ -960,23 +949,34 @@ ftp_retr (int csock, const char *file)
 /* Sends the LIST command to the server.  If FILE is NULL, send just
    `LIST' (no space).  */
 uerr_t
-ftp_list (int csock, const char *file, enum stype rs)
+ftp_list (int csock, const char *file, bool avoid_list_a, bool avoid_list,
+          bool *list_a_used)
 {
   char *request, *respline;
   int nwritten;
   uerr_t err;
   bool ok = false;
   size_t i = 0;
-  /* Try `LIST -a' first and revert to `LIST' in case of failure.  */
-  const char *list_commands[] = { "LIST -a",
-                                  "LIST" };
 
-  /* 2008-01-29  SMS.  For a VMS FTP server, where "LIST -a" may not
-     fail, but will never do what is desired here, skip directly to the
-     simple "LIST" command (assumed to be the last one in the list).
-  */
-  if (rs == ST_VMS)
-    i = countof (list_commands)- 1;
+  /* 2013-10-12 Andrea Urbani (matfanjol)
+     For more information about LIST and "LIST -a" please look at ftp.c,
+     function getftp, text "__LIST_A_EXPLANATION__".
+
+     If somebody changes the following commands, please, checks also the
+     later "i" variable.  */
+  static const char *list_commands[] = {
+    "LIST -a",
+    "LIST"
+  };
+
+  *list_a_used = false;
+
+  if (avoid_list_a)
+    {
+      i = countof (list_commands)- 1;
+      DEBUGP (("(skipping \"LIST -a\")"));
+    }
+
 
   do {
     /* Send request.  */
@@ -1000,6 +1000,8 @@ ftp_list (int csock, const char *file, enum stype rs)
           {
             err = FTPOK;
             ok = true;
+            /* Which list command was used? */
+            *list_a_used = (i == 0);
           }
         else
           {
@@ -1008,6 +1010,12 @@ ftp_list (int csock, const char *file, enum stype rs)
         xfree (respline);
       }
     ++i;
+    if ((avoid_list) && (i == 1))
+      {
+        /* I skip LIST */
+        ++i;
+        DEBUGP (("(skipping \"LIST\")"));
+      }
   } while (i < countof (list_commands) && !ok);
 
   return err;
@@ -1015,11 +1023,12 @@ ftp_list (int csock, const char *file, enum stype rs)
 
 /* Sends the SYST command to the server. */
 uerr_t
-ftp_syst (int csock, enum stype *server_type)
+ftp_syst (int csock, enum stype *server_type, enum ustype *unix_type)
 {
   char *request, *respline;
   int nwritten;
   uerr_t err;
+  char *ftp_last_respline;
 
   /* Send SYST request.  */
   request = ftp_request ("SYST", NULL);
@@ -1041,6 +1050,8 @@ ftp_syst (int csock, enum stype *server_type)
       return FTPSRVERR;
     }
 
+  ftp_last_respline = strdup (respline);
+
   /* Skip the number (215, but 200 (!!!) in case of VMS) */
   strtok (respline, " ");
 
@@ -1048,22 +1059,34 @@ ftp_syst (int csock, enum stype *server_type)
      first word of the server response)?  */
   request = strtok (NULL, " ");
 
+  *unix_type = UST_OTHER;
+
   if (request == NULL)
     *server_type = ST_OTHER;
-  else if (!strcasecmp (request, "VMS"))
+  else if (!c_strcasecmp (request, "VMS"))
     *server_type = ST_VMS;
-  else if (!strcasecmp (request, "UNIX"))
-    *server_type = ST_UNIX;
-  else if (!strcasecmp (request, "WINDOWS_NT")
-           || !strcasecmp (request, "WINDOWS2000"))
+  else if (!c_strcasecmp (request, "UNIX"))
+    {
+      *server_type = ST_UNIX;
+      /* 2013-10-17 Andrea Urbani (matfanjol)
+         I check more in depth the system type */
+      if (!c_strncasecmp (ftp_last_respline, "215 UNIX Type: L8", 17))
+        *unix_type = UST_TYPE_L8;
+      else if (!c_strncasecmp (ftp_last_respline,
+                             "215 UNIX MultiNet Unix Emulation V5.3(93)", 41))
+        *unix_type = UST_MULTINET;
+    }
+  else if (!c_strcasecmp (request, "WINDOWS_NT")
+           || !c_strcasecmp (request, "WINDOWS2000"))
     *server_type = ST_WINNT;
-  else if (!strcasecmp (request, "MACOS"))
+  else if (!c_strcasecmp (request, "MACOS"))
     *server_type = ST_MACOS;
-  else if (!strcasecmp (request, "OS/400"))
+  else if (!c_strcasecmp (request, "OS/400"))
     *server_type = ST_OS400;
   else
     *server_type = ST_OTHER;
 
+  xfree (ftp_last_respline);
   xfree (respline);
   /* All OK.  */
   return FTPOK;
@@ -1107,7 +1130,7 @@ ftp_pwd (int csock, char **pwd)
     goto err;
 
   /* Has the `pwd' been already allocated?  Free! */
-  xfree_null (*pwd);
+  xfree (*pwd);
 
   *pwd = xstrdup (request);
 

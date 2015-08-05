@@ -1,62 +1,81 @@
 TMP ?= $(abspath tmp)
-pkg_version := 1
-wget_version := 1.14
+
+version := 1.16.3
+installer_version := 1
 configure_flags := --with-ssl=openssl
 
 
 .PHONY : all
-all : wget.pkg
+all : wget-$(version).pkg
 
 
 .PHONY : clean
 clean :
-	-rm -f wget.pkg
+	-rm -f wget-$(version).pkg
 	-rm -rf $(TMP)
 
 
-wget.pkg : \
-        $(TMP)/wget.pkg \
-        resources/background.png \
-        resources/distribution.xml \
-        resources/license.html \
-        resources/welcome.html
+##### dist ##########
+dist_sources := $(shell find wget -type f \! -name .DS_Store)
+
+$(TMP)/install/usr/local/bin/wget : $(TMP)/build/src/wget | $(TMP)/install
+	cd $(TMP)/build && $(MAKE) DESTDIR=$(TMP)/install install
+
+$(TMP)/build/src/wget : $(TMP)/build/config.status $(dist_sources)
+	cd $(TMP)/build && $(MAKE)
+
+$(TMP)/build/config.status : wget/configure | $(TMP)/build
+	cd $(TMP)/build && sh $(abspath wget/configure) $(configure_flags)
+
+$(TMP)/build \
+$(TMP)/install :
+	mkdir -p $@
+
+
+##### pkg ##########
+
+$(TMP)/wget-$(version).pkg : \
+        $(TMP)/install/usr/local/bin/wget \
+        $(TMP)/install/etc/paths.d/wget.path
+	pkgbuild \
+        --root $(TMP)/install \
+        --identifier com.ablepear.wget \
+        --ownership recommended \
+        --version $(version) \
+        $@
+
+$(TMP)/install/etc/paths.d/wget.path : wget.path | $(TMP)/install/etc/paths.d
+	cp $< $@
+
+$(TMP)/install/etc/paths.d :
+	mkdir -p $@
+
+
+##### product ##########
+
+wget-$(version).pkg : \
+        $(TMP)/wget-$(version).pkg \
+        $(TMP)/distribution.xml \
+        $(TMP)/resources/background.png \
+        $(TMP)/resources/license.html \
+        $(TMP)/resources/welcome.html
 	productbuild \
-        --distribution resources/distribution.xml \
-        --resources resources \
+        --distribution $(TMP)/distribution.xml \
+        --resources $(TMP)/resources \
         --package-path $(TMP) \
-        --version $(pkg_version) \
+        --version $(installer_version) \
         --sign 'Able Pear Software Incorporated' \
         $@
 
+$(TMP)/distribution.xml \
+$(TMP)/resources/welcome.html : $(TMP)/% : % | $(dir $@)
+	sed -e s/{{version}}/$(version)/g $< > $@
 
-src := $(shell find wget -type f \! -name .DS_Store)
-build_dir := $(TMP)/build
-install_dir := $(TMP)/install
-
-
-$(TMP)/wget.pkg : $(install_dir)/usr/local/bin/wget | $(TMP)
-	pkgbuild \
-        --root $(install_dir) \
-        --identifier com.ablepear.wget \
-        --ownership recommended \
-        --version $(wget_version) \
-        $@
-
-
-$(install_dir)/usr/local/bin/wget : $(build_dir)/src/wget | $(install_dir)
-	cd $(build_dir) && $(MAKE) DESTDIR=$(install_dir) install
-
-
-$(build_dir)/src/wget : $(build_dir)/config.status $(src)
-	cd $(build_dir) && $(MAKE)
-
-
-$(build_dir)/config.status : wget/configure | $(build_dir)
-	cd $(build_dir) && sh $(abspath wget/configure) $(configure_flags)
-
+$(TMP)/resources/background.png \
+$(TMP)/resources/license.html : $(TMP)/% : % | $(TMP)/resources
+	cp $< $@
 
 $(TMP) \
-$(build_dir) \
-$(install_dir) :
+$(TMP)/resources :
 	mkdir -p $@
 

@@ -34,6 +34,8 @@ as that of the covered work.  */
 
 #include "url.h"
 
+extern int numurls;
+
 /* These global vars should be made static to retr.c and exported via
    functions! */
 extern SUM_SIZE_INT total_downloaded_bytes;
@@ -50,7 +52,7 @@ enum {
   rb_chunked_transfer_encoding = 4
 };
 
-int fd_read_body (int, FILE *, wgint, wgint, wgint *, wgint *, double *, int, FILE *);
+int fd_read_body (const char *, int, FILE *, wgint, wgint, wgint *, wgint *, double *, int, FILE *);
 
 typedef const char *(*hunk_terminator_t) (const char *, const char *, int);
 

@@ -41,6 +41,7 @@ as that of the covered work.  */
 #include "utils.h"
 #include "url.h"
 #include "host.h"  /* for is_valid_ipv6_address */
+#include "c-strcase.h"
 
 #ifdef __VMS
 #include "vms.h"
@@ -85,7 +86,7 @@ static struct scheme_data supported_schemes[] =
 /* Forward declarations: */
 
 static bool path_simplify (enum url_scheme, char *);
-
+
 /* Support for escaping and unescaping of URL strings.  */
 
 /* Table of "reserved" and "unsafe" characters.  Those terms are
@@ -169,7 +170,7 @@ static const unsigned char urlchr_table[256] =
    The transformation is done in place.  If you need the original
    string intact, make a copy before calling this function.  */
 
-static void
+void
 url_unescape (char *s)
 {
   char *t = s;                  /* t - tortoise */
@@ -272,7 +273,7 @@ url_escape_allow_passthrough (const char *s)
 {
   return url_escape_1 (s, urlchr_unsafe, true);
 }
-
+
 /* Decide whether the char at position P needs to be encoded.  (It is
    not enough to pass a single char *P because the function may need
    to inspect the surrounding context.)
@@ -418,7 +419,7 @@ reencode_escapes (const char *s)
   assert (p2 - newstr == newlen);
   return newstr;
 }
-
+
 /* Returns the scheme type if the scheme is supported, or
    SCHEME_INVALID if not.  */
 
@@ -574,8 +575,8 @@ rewrite_shorthand_url (const char *url)
         goto http;
 
       /* Turn "foo.bar.com:path" to "ftp://foo.bar.com/path". */
-      ret = aprintf ("ftp://%s", url);
-      ret[6 + (p - url)] = '/';
+      if ((ret = aprintf ("ftp://%s", url)) != NULL)
+        ret[6 + (p - url)] = '/';
     }
   else
     {
@@ -585,7 +586,7 @@ rewrite_shorthand_url (const char *url)
     }
   return ret;
 }
-
+
 static void split_path (const char *, char **, char **);
 
 /* Like strpbrk, with the exception that it returns the pointer to the
@@ -681,7 +682,6 @@ url_parse (const char *url, int *error, struct iri *iri, bool percent_encode)
   char *user = NULL, *passwd = NULL;
 
   const char *url_encoded = NULL;
-  char *new_url = NULL;
 
   int error_code;
 
@@ -695,26 +695,30 @@ url_parse (const char *url, int *error, struct iri *iri, bool percent_encode)
       goto error;
     }
 
+  url_encoded = url;
+
   if (iri && iri->utf8_encode)
     {
+      char *new_url = NULL;
+
       iri->utf8_encode = remote_to_utf8 (iri, iri->orig_url ? iri->orig_url : url, (const char **) &new_url);
       if (!iri->utf8_encode)
         new_url = NULL;
       else
-        iri->orig_url = xstrdup (url);
+        {
+          xfree (iri->orig_url);
+          iri->orig_url = xstrdup (url);
+          url_encoded = reencode_escapes (new_url);
+          if (url_encoded != new_url)
+            xfree (new_url);
+          percent_encode = false;
+        }
     }
 
-  /* XXX XXX Could that change introduce (security) bugs ???  XXX XXX*/
   if (percent_encode)
-    url_encoded = reencode_escapes (new_url ? new_url : url);
-  else
-    url_encoded = new_url ? new_url : url;
+    url_encoded = reencode_escapes (url);
 
   p = url_encoded;
-
-  if (new_url && url_encoded != new_url)
-    xfree (new_url);
-
   p += strlen (supported_schemes[scheme].leading_string);
   uname_b = p;
   p = url_skip_credentials (p);
@@ -893,6 +897,7 @@ url_parse (const char *url, int *error, struct iri *iri, bool percent_encode)
             {
               xfree (u->host);
               u->host = new;
+              u->idn_allocated = true;
               host_modified = true;
             }
         }
@@ -913,7 +918,7 @@ url_parse (const char *url, int *error, struct iri *iri, bool percent_encode)
       u->url = url_string (u, URL_AUTH_SHOW);
 
       if (url_encoded != url)
-        xfree ((char *) url_encoded);
+        xfree (url_encoded);
     }
   else
     {
@@ -928,7 +933,7 @@ url_parse (const char *url, int *error, struct iri *iri, bool percent_encode)
  error:
   /* Cleanup in case of error: */
   if (url_encoded && url_encoded != url)
-    xfree ((char *) url_encoded);
+    xfree (url_encoded);
 
   /* Transmit the error code to the caller, if the caller wants to
      know.  */
@@ -953,7 +958,7 @@ url_error (const char *url, int error_code)
 
       if ((p = strchr (scheme, ':')))
         *p = '\0';
-      if (!strcasecmp (scheme, "https"))
+      if (!c_strcasecmp (scheme, "https"))
         error = aprintf (_("HTTPS support not compiled in"));
       else
         error = aprintf (_(parse_errors[error_code]), quote (scheme));
@@ -1169,22 +1174,31 @@ url_set_file (struct url *url, const char *newfile)
 void
 url_free (struct url *url)
 {
-  xfree (url->host);
-  xfree (url->path);
-  xfree (url->url);
+  if (url)
+    {
+      if (url->idn_allocated) {
+        idn_free (url->host);      /* A dummy if !defined(ENABLE_IRI) */
+        url->host = NULL;
+      }
+      else
+        xfree (url->host);
 
-  xfree_null (url->params);
-  xfree_null (url->query);
-  xfree_null (url->fragment);
-  xfree_null (url->user);
-  xfree_null (url->passwd);
+      xfree (url->path);
+      xfree (url->url);
 
-  xfree (url->dir);
-  xfree (url->file);
+      xfree (url->params);
+      xfree (url->query);
+      xfree (url->fragment);
+      xfree (url->user);
+      xfree (url->passwd);
 
-  xfree (url);
+      xfree (url->dir);
+      xfree (url->file);
+
+      xfree (url);
+    }
 }
-
+
 /* Create all the necessary directories for PATH (a file).  Calls
    make_directory internally.  */
 int
@@ -1236,7 +1250,7 @@ mkalldirs (const char *path)
   xfree (t);
   return res;
 }
-
+
 /* Functions for constructing the file name out of URL components.  */
 
 /* A growable string structure, used by url_file_name and friends.
@@ -1245,12 +1259,16 @@ mkalldirs (const char *path)
    The idea is to have a convenient and efficient way to construct a
    string by having various functions append data to it.  Instead of
    passing the obligatory BASEVAR, SIZEVAR and TAILPOS to all the
-   functions in questions, we pass the pointer to this struct.  */
+   functions in questions, we pass the pointer to this struct.
+
+   Functions that write to the members in this struct must make sure
+   that base remains null terminated by calling append_null().
+   */
 
 struct growable {
   char *base;
-  int size;
-  int tail;
+  int size;   /* memory allocated */
+  int tail;   /* string length */
 };
 
 /* Ensure that the string can accept APPEND_COUNT more characters past
@@ -1268,28 +1286,45 @@ struct growable {
 /* Move the tail position by APPEND_COUNT characters. */
 #define TAIL_INCR(r, append_count) ((r)->tail += append_count)
 
-/* Append the string STR to DEST.  NOTICE: the string in DEST is not
-   terminated.  */
 
+/* Append NULL to DEST. */
+static void
+append_null (struct growable *dest)
+{
+  GROW (dest, 1);
+  *TAIL (dest) = 0;
+}
+
+/* Append CH to DEST. */
+static void
+append_char (char ch, struct growable *dest)
+{
+  if (ch)
+    {
+      GROW (dest, 1);
+      *TAIL (dest) = ch;
+      TAIL_INCR (dest, 1);
+    }
+
+  append_null (dest);
+}
+
+/* Append the string STR to DEST. */
 static void
 append_string (const char *str, struct growable *dest)
 {
   int l = strlen (str);
-  GROW (dest, l);
-  memcpy (TAIL (dest), str, l);
-  TAIL_INCR (dest, l);
+
+  if (l)
+    {
+      GROW (dest, l);
+      memcpy (TAIL (dest), str, l);
+      TAIL_INCR (dest, l);
+    }
+
+  append_null (dest);
 }
 
-/* Append CH to DEST.  For example, append_char (0, DEST)
-   zero-terminates DEST.  */
-
-static void
-append_char (char ch, struct growable *dest)
-{
-  GROW (dest, 1);
-  *TAIL (dest) = ch;
-  TAIL_INCR (dest, 1);
-}
 
 enum {
   filechr_not_unix    = 1,      /* unusable on Unix, / and \0 */
@@ -1361,6 +1396,7 @@ UWC,  C,  C,  C,   C,  C,  C,  C,   /* NUL SOH STX ETX  EOT ENQ ACK BEL */
    query, normally '?'.  Since Windows cannot handle '?' as part of
    file name, we use '@' instead there.  */
 #define FN_QUERY_SEP (opt.restrict_files_os != restrict_windows ? '?' : '@')
+#define FN_QUERY_SEP_STR (opt.restrict_files_os != restrict_windows ? "?" : "@")
 
 /* Quote path element, characters in [b, e), as file name, and append
    the quoted string to DEST.  Each character is quoted as per
@@ -1454,6 +1490,7 @@ append_uri_pathel (const char *b, const char *e, bool escaped,
     }
 
   TAIL_INCR (dest, outlen);
+  append_null (dest);
 }
 
 /* Append to DEST the directory structure that corresponds the
@@ -1494,21 +1531,27 @@ append_dir_structure (const struct url *u, struct growable *dest)
     }
 }
 
-/* Return a unique file name that matches the given URL as good as
+/* Return a unique file name that matches the given URL as well as
    possible.  Does not create directories on the file system.  */
 
 char *
 url_file_name (const struct url *u, char *replaced_filename)
 {
   struct growable fnres;        /* stands for "file name result" */
+  struct growable temp_fnres;
 
   const char *u_file;
-  char *fname, *unique;
+  char *fname, *unique, *fname_len_check;
   const char *index_filename = "index.html"; /* The default index file is index.html */
+  size_t max_length;
 
   fnres.base = NULL;
   fnres.size = 0;
   fnres.tail = 0;
+
+  temp_fnres.base = NULL;
+  temp_fnres.size = 0;
+  temp_fnres.tail = 0;
 
   /* If an alternative index file was defined, change index_filename */
   if (opt.default_page)
@@ -1555,43 +1598,87 @@ url_file_name (const struct url *u, char *replaced_filename)
 
   if (!replaced_filename)
     {
-      /* Add the file name. */
-      if (fnres.tail)
-	append_char ('/', &fnres);
+      /* Create the filename. */
       u_file = *u->file ? u->file : index_filename;
-      append_uri_pathel (u_file, u_file + strlen (u_file), false, &fnres);
 
-      /* Append "?query" to the file name, even if empty */
+      /* Append "?query" to the file name, even if empty,
+       * and create fname_len_check. */
       if (u->query)
-	{
-	  append_char (FN_QUERY_SEP, &fnres);
-	  append_uri_pathel (u->query, u->query + strlen (u->query),
-			     true, &fnres);
-	}
+        fname_len_check = concat_strings (u_file, FN_QUERY_SEP_STR, u->query, NULL);
+      else
+        fname_len_check = strdupdelim (u_file, u_file + strlen (u_file));
     }
   else
     {
-      if (fnres.tail)
-	append_char ('/', &fnres);
       u_file = replaced_filename;
-      append_uri_pathel (u_file, u_file + strlen (u_file), false, &fnres);
+      fname_len_check = strdupdelim (u_file, u_file + strlen (u_file));
     }
 
-  /* Zero-terminate the file name. */
-  append_char ('\0', &fnres);
+  append_uri_pathel (fname_len_check,
+    fname_len_check + strlen (fname_len_check), false, &temp_fnres);
+
+  /* Zero-terminate the temporary file name. */
+  append_char ('\0', &temp_fnres);
+
+  /* Check that the length of the file name is acceptable. */
+#ifdef WINDOWS
+  if (MAX_PATH > (fnres.tail + CHOMP_BUFFER + 2))
+    {
+      max_length = MAX_PATH - (fnres.tail + CHOMP_BUFFER + 2);
+      /* FIXME: In Windows a filename is usually limited to 255 characters.
+      To really be accurate you could call GetVolumeInformation() to get
+      lpMaximumComponentLength
+      */
+      if (max_length > 255)
+        {
+          max_length = 255;
+        }
+    }
+  else
+    {
+      max_length = 0;
+    }
+#else
+  max_length = get_max_length (fnres.base, fnres.tail, _PC_NAME_MAX) - CHOMP_BUFFER;
+#endif
+  if (max_length > 0 && strlen (temp_fnres.base) > max_length)
+    {
+      logprintf (LOG_NOTQUIET, "The name is too long, %lu chars total.\n",
+          (unsigned long) strlen (temp_fnres.base));
+      logprintf (LOG_NOTQUIET, "Trying to shorten...\n");
+
+      /* Shorten the file name. */
+      temp_fnres.base[max_length] = '\0';
+
+      logprintf (LOG_NOTQUIET, "New name is %s.\n", temp_fnres.base);
+    }
+
+  xfree (fname_len_check);
+
+  /* The filename has already been 'cleaned' by append_uri_pathel() above.  So,
+   * just append it. */
+  if (fnres.tail)
+    append_char ('/', &fnres);
+  append_string (temp_fnres.base, &fnres);
 
   fname = fnres.base;
+
+  /* Make a final check that the path length is acceptable? */
+  /* TODO: check fnres.base for path length problem */
+
+  xfree (temp_fnres.base);
 
   /* Check the cases in which the unique extensions are not used:
      1) Clobbering is turned off (-nc).
      2) Retrieval with regetting.
      3) Timestamping is used.
      4) Hierarchy is built.
+     5) Backups are specified.
 
      The exception is the case when file does exist and is a
      directory (see `mkalldirs' for explanation).  */
 
-  if ((opt.noclobber || opt.always_rest || opt.timestamping || opt.dirstruct)
+  if (ALLOW_CLOBBER
       && !(file_exists_p (fname) && !file_non_directory_p (fname)))
     {
       unique = fname;
@@ -1619,7 +1706,7 @@ url_file_name (const struct url *u, char *replaced_filename)
 
   return unique;
 }
-
+
 /* Resolve "." and ".." elements of PATH by destructively modifying
    PATH and return true if PATH has been modified, false otherwise.
 
@@ -1705,7 +1792,7 @@ path_simplify (enum url_scheme scheme, char *path)
 
   return t != h;
 }
-
+
 /* Return the length of URL's path.  Path is considered to be
    terminated by one or more of the ?query or ;params or #fragment,
    depending on the scheme.  */
@@ -1916,7 +2003,7 @@ uri_merge (const char *base, const char *link)
 
   return merge;
 }
-
+
 #define APPEND(p, s) do {                       \
   int len = strlen (s);                         \
   memcpy (p, s, len);                           \
@@ -1960,7 +2047,7 @@ url_string (const struct url *url, enum url_auth_mode auth_mode)
           if (url->passwd)
             {
               if (auth_mode == URL_AUTH_HIDE_PASSWD)
-                quoted_passwd = HIDDEN_PASSWORD;
+                quoted_passwd = (char *) HIDDEN_PASSWORD;
               else
                 quoted_passwd = url_escape_allow_passthrough (url->passwd);
             }
@@ -2033,7 +2120,7 @@ url_string (const struct url *url, enum url_auth_mode auth_mode)
 
   return result;
 }
-
+
 /* Return true if scheme a is similar to scheme b.
 
    Schemes are similar if they are equal.  If SSL is supported, schemes
@@ -2051,7 +2138,7 @@ schemes_are_similar_p (enum url_scheme a, enum url_scheme b)
 #endif
   return false;
 }
-
+
 static int
 getchar_from_escaped_string (const char *str, char *c)
 {
@@ -2112,7 +2199,7 @@ are_urls_equal (const char *u1, const char *u2)
 
   return (*p == 0 && *q == 0 ? true : false);
 }
-
+
 #ifdef TESTING
 /* Debugging and testing support for path_simplify. */
 
@@ -2129,7 +2216,7 @@ ps (char *path)
 #endif
 
 static const char *
-run_test (char *test, char *expected_result, enum url_scheme scheme,
+run_test (const char *test, const char *expected_result, enum url_scheme scheme,
           bool expected_change)
 {
   char *test_copy = xstrdup (test);
@@ -2158,8 +2245,8 @@ run_test (char *test, char *expected_result, enum url_scheme scheme,
 const char *
 test_path_simplify (void)
 {
-  static struct {
-    char *test, *result;
+  static const struct {
+    const char *test, *result;
     enum url_scheme scheme;
     bool should_modify;
   } tests[] = {
@@ -2191,15 +2278,16 @@ test_path_simplify (void)
     { "a/b/../../c",            "c",            SCHEME_HTTP, true },
     { "./a/../b",               "b",            SCHEME_HTTP, true }
   };
-  int i;
+  unsigned i;
 
   for (i = 0; i < countof (tests); i++)
     {
       const char *message;
-      char *test = tests[i].test;
-      char *expected_result = tests[i].result;
+      const char *test = tests[i].test;
+      const char *expected_result = tests[i].result;
       enum url_scheme scheme = tests[i].scheme;
       bool  expected_change = tests[i].should_modify;
+
       message = run_test (test, expected_result, scheme, expected_change);
       if (message) return message;
     }
@@ -2207,19 +2295,19 @@ test_path_simplify (void)
 }
 
 const char *
-test_append_uri_pathel()
+test_append_uri_pathel(void)
 {
-  int i;
-  struct {
-    char *original_url;
-    char *input;
+  unsigned i;
+  static const struct {
+    const char *original_url;
+    const char *input;
     bool escaped;
-    char *expected_result;
+    const char *expected_result;
   } test_array[] = {
     { "http://www.yoyodyne.com/path/", "somepage.html", false, "http://www.yoyodyne.com/path/somepage.html" },
   };
 
-  for (i = 0; i < sizeof(test_array)/sizeof(test_array[0]); ++i)
+  for (i = 0; i < countof(test_array); ++i)
     {
       struct growable dest;
       const char *p = test_array[i].input;
@@ -2228,7 +2316,6 @@ test_append_uri_pathel()
 
       append_string (test_array[i].original_url, &dest);
       append_uri_pathel (p, p + strlen(p), test_array[i].escaped, &dest);
-      append_char ('\0', &dest);
 
       mu_assert ("test_append_uri_pathel: wrong result",
                  strcmp (dest.base, test_array[i].expected_result) == 0);
@@ -2237,13 +2324,13 @@ test_append_uri_pathel()
   return NULL;
 }
 
-const char*
-test_are_urls_equal()
+const char *
+test_are_urls_equal(void)
 {
-  int i;
-  struct {
-    char *url1;
-    char *url2;
+  unsigned i;
+  static const struct {
+    const char *url1;
+    const char *url2;
     bool expected_result;
   } test_array[] = {
     { "http://www.adomain.com/apath/", "http://www.adomain.com/apath/",       true },
@@ -2254,7 +2341,7 @@ test_are_urls_equal()
     { "http://www.adomain.com/path%2f", "http://www.adomain.com/path/",       false },
   };
 
-  for (i = 0; i < sizeof(test_array)/sizeof(test_array[0]); ++i)
+  for (i = 0; i < countof(test_array); ++i)
     {
       mu_assert ("test_are_urls_equal: wrong result",
                  are_urls_equal (test_array[i].url1, test_array[i].url2) == test_array[i].expected_result);
@@ -2268,4 +2355,3 @@ test_are_urls_equal()
 /*
  * vim: et ts=2 sw=2
  */
-
