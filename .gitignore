@@ -3,5 +3,6 @@
 build
 project.xcworkspace
 tmp
+wget.pkg
 xcuserdata
 
