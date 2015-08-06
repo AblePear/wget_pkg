@@ -1,28 +1,21 @@
-GNU Wget 1.14 for OS X
-======================
+GNU Wget 1.16.3 for OS X
+========================
 
-This project build a standard OS X installer package for [GNU wget](http://www.gnu.org/software/wget/).
+This project build a standard OS X installer package for [GNU wget][1]. 
+It contains the source distribution for wget 1.16.3.
 
-A recent version of Mac OS X and Xcode are required to build wget and the
-installer.  The project and installer are tested on Mac OS X 10.9 "Mavericks"
-and Xcode 5.0.2.
+Dependencies
+------------
+This release was built on OS X 10.10.4 with Xcode 6.4 and [pkg-config 0.28][2]
+installed. See [AblePear/pkg-config\_pkg][3] for an OS X installer package. 
 
-You can build wget and the installer from within Xcode or on the command line
-by running the `build-project` script from the command line.  (Note that wget
-currently builds with many warnings on OS X.)
-
-The installer package adds the following files to your system:
-
- * `/etc/paths.d/11.usr_local_bin`
- * `/usr/local/bin/wget`
- * `/usr/local/etc/wgetrc`
- * `/usr/local/share/info/wget.info`
- * `/usr/local/share/man/man1/wget.1`
-
-(The `11.usr_local_bin` file adds `/usr/local/bin` to your system path.)
-
-## License
-
+License
+-------
 The installer and related scripts are copyright (c) 2014 Able Pear Software.
 Wget and the installer are distributed under the GNU General Public License, 
 version 3.  See the LICENSE file for details.
+
+[1]: http://www.gnu.org/software/wget/ "GNU Wget"
+[2]: http://www.freedesktop.org/wiki/Software/pkg-config/ "pkg-config"
+[3]: https://github.com/AblePear/pkg-config_pkg/releases "pkg-config for OS X"
+

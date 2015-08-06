@@ -16,7 +16,7 @@ clean :
 
 
 ##### dist ##########
-dist_sources := $(shell find wget -type f \! -name .DS_Store)
+dist_sources := $(shell find dist -type f \! -name .DS_Store)
 
 $(TMP)/install/usr/local/bin/wget : $(TMP)/build/src/wget | $(TMP)/install
 	cd $(TMP)/build && $(MAKE) DESTDIR=$(TMP)/install install
@@ -24,8 +24,8 @@ $(TMP)/install/usr/local/bin/wget : $(TMP)/build/src/wget | $(TMP)/install
 $(TMP)/build/src/wget : $(TMP)/build/config.status $(dist_sources)
 	cd $(TMP)/build && $(MAKE)
 
-$(TMP)/build/config.status : wget/configure | $(TMP)/build
-	cd $(TMP)/build && sh $(abspath wget/configure) $(configure_flags)
+$(TMP)/build/config.status : dist/configure | $(TMP)/build
+	cd $(TMP)/build && sh $(abspath dist/configure) $(configure_flags)
 
 $(TMP)/build \
 $(TMP)/install :
