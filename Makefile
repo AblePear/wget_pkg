@@ -4,6 +4,7 @@ version := 1.16.3
 installer_version := 1
 configure_flags := --with-ssl=openssl
 
+.SECONDEXPANSION :
 
 .PHONY : all
 all : wget-$(version).pkg
@@ -68,7 +69,7 @@ wget-$(version).pkg : \
         $@
 
 $(TMP)/distribution.xml \
-$(TMP)/resources/welcome.html : $(TMP)/% : % | $(dir $@)
+$(TMP)/resources/welcome.html : $(TMP)/% : % | $$(dir $$@)
 	sed -e s/{{version}}/$(version)/g $< > $@
 
 $(TMP)/resources/background.png \
