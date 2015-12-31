@@ -36,7 +36,7 @@ as that of the covered work.  */
 #include "utils.h"
 #include "sha256.h"
 #include "xstrndup.h"
-#include <sys/errno.h>
+#include <errno.h>
 #include <unistd.h> /* For unlink.  */
 #include <metalink/metalink_parser.h>
 #ifdef HAVE_GPGME
@@ -168,7 +168,7 @@ retrieve_from_metalink (const metalink_t* metalink)
               FILE *local_file;
 
               /* Check the digest.  */
-              local_file = fopen (filename, "r");
+              local_file = fopen (filename, "rb");
               if (!local_file)
                 {
                   logprintf (LOG_NOTQUIET, _("Could not open downloaded file.\n"));

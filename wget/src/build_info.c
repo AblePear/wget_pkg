@@ -19,6 +19,12 @@ const char *compiled_features[] =
   "-digest",
 #endif
 
+#if defined HAVE_GPGME
+  "+gpgme",
+#else
+  "-gpgme",
+#endif
+
 #if defined HAVE_SSL
   "+https",
 #else
@@ -41,6 +47,12 @@ const char *compiled_features[] =
   "+large-file",
 #else
   "-large-file",
+#endif
+
+#if defined HAVE_METALINK
+  "+metalink",
+#else
+  "-metalink",
 #endif
 
 #if defined ENABLE_NLS

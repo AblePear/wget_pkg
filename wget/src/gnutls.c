@@ -633,9 +633,13 @@ ssl_connect_wget (int fd, const char *hostname, int *continue_session)
         {
           if (!ctx || !ctx->session_data || gnutls_session_set_data (session, ctx->session_data->data, ctx->session_data->size))
             {
-              /* server does not want to continue the session */
-              gnutls_free (ctx->session_data->data);
-              gnutls_free (ctx->session_data);
+              if (ctx && ctx->session_data)
+                {
+                  /* server does not want to continue the session */
+                  if (ctx->session_data->data)
+                    gnutls_free (ctx->session_data->data);
+                  gnutls_free (ctx->session_data);
+                }
               gnutls_deinit (session);
               return false;
             }
@@ -687,6 +691,10 @@ ssl_check_certificate (int fd, const char *host)
      him about problems with the server's certificate.  */
   const char *severity = opt.check_cert ? _("ERROR") : _("WARNING");
   bool success = true;
+
+  /* The user explicitly said to not check for the certificate.  */
+  if (opt.check_cert == CHECK_CERT_QUIET)
+    return success;
 
   err = gnutls_certificate_verify_peers2 (ctx->session, &status);
   if (err < 0)
@@ -762,5 +770,5 @@ ssl_check_certificate (int fd, const char *host)
     }
 
  out:
-  return opt.check_cert ? success : true;
+  return opt.check_cert == CHECK_CERT_ON ? success : true;
 }

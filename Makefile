@@ -1,7 +1,7 @@
 TMP ?= $(abspath tmp)
 
-version := 1.17
-installer_version := 2
+version := 1.17.1
+installer_version := 3
 openssl_configure_flags := no-shared darwin64-x86_64-cc
 wget_configure_flags := \
 		--with-ssl=openssl \

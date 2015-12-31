@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wget 1.16.3.124\n"
 "Report-Msgid-Bugs-To: bug-wget@gnu.org\n"
-"POT-Creation-Date: 2015-11-15 15:11+0100\n"
+"POT-Creation-Date: 2015-12-11 18:42+0100\n"
 "PO-Revision-Date: 2015-11-05 11:56-0500\n"
 "Last-Translator: Mingye Wang (Arthur2e5) <arthur200126@gmail.com>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
@@ -457,81 +457,81 @@ msgstr "，剩余 %s"
 msgid " (unauthoritative)\n"
 msgstr " (非正式数据)\n"
 
-#: src/ftp.c:377
+#: src/ftp.c:378
 msgid "Could not initialize SSL. It will be disabled."
 msgstr "不能初始化 SSL，因此将禁用之。"
 
-#: src/ftp.c:457
+#: src/ftp.c:460
 #, c-format
 msgid "Logging in as %s ... "
 msgstr "正在以 %s 登录 ... "
 
-#: src/ftp.c:476 src/ftp.c:562 src/ftp.c:629 src/ftp.c:694 src/ftp.c:928
-#: src/ftp.c:981 src/ftp.c:1028 src/ftp.c:1091 src/ftp.c:1152 src/ftp.c:1243
-#: src/ftp.c:1293
+#: src/ftp.c:479 src/ftp.c:565 src/ftp.c:632 src/ftp.c:697 src/ftp.c:931
+#: src/ftp.c:984 src/ftp.c:1031 src/ftp.c:1094 src/ftp.c:1155 src/ftp.c:1246
+#: src/ftp.c:1296
 msgid "Error in server response, closing control connection.\n"
 msgstr "服务器响应时发生错误，正在关闭控制连接。\n"
 
-#: src/ftp.c:483
+#: src/ftp.c:486
 msgid "Error in server greeting.\n"
 msgstr "服务器消息出现错误。\n"
 
-#: src/ftp.c:490 src/ftp.c:702 src/ftp.c:936 src/ftp.c:1036 src/ftp.c:1101
-#: src/ftp.c:1162 src/ftp.c:1253 src/ftp.c:1303
+#: src/ftp.c:493 src/ftp.c:705 src/ftp.c:939 src/ftp.c:1039 src/ftp.c:1104
+#: src/ftp.c:1165 src/ftp.c:1256 src/ftp.c:1306
 msgid "Write failed, closing control connection.\n"
 msgstr "写入失败，正在关闭控制连接。\n"
 
-#: src/ftp.c:496
+#: src/ftp.c:499
 msgid "The server refuses login.\n"
 msgstr "服务器拒绝登录。\n"
 
-#: src/ftp.c:502
+#: src/ftp.c:505
 msgid "Login incorrect.\n"
 msgstr "登录不正确。\n"
 
-#: src/ftp.c:508
+#: src/ftp.c:511
 msgid "Logged in!\n"
 msgstr "登录成功！\n"
 
-#: src/ftp.c:528
+#: src/ftp.c:531
 msgid "Server did not accept the 'PBSZ 0' command.\n"
 msgstr "服务器不接受‘PBSZ 0’命令。\n"
 
-#: src/ftp.c:538
+#: src/ftp.c:541
 #, c-format
 msgid "Server did not accept the 'PROT %c' command.\n"
 msgstr "服务器不接受‘PROT %c’命令。\n"
 
-#: src/ftp.c:570
+#: src/ftp.c:573
 msgid "Server error, can't determine system type.\n"
 msgstr "服务器错误，无法确定操作系统的类型。\n"
 
-#: src/ftp.c:579 src/ftp.c:1071 src/ftp.c:1135 src/ftp.c:1178
+#: src/ftp.c:582 src/ftp.c:1074 src/ftp.c:1138 src/ftp.c:1181
 msgid "done.    "
 msgstr "完成。   "
 
-#: src/ftp.c:682 src/ftp.c:954 src/ftp.c:998 src/ftp.c:1273 src/ftp.c:1322
+#: src/ftp.c:685 src/ftp.c:957 src/ftp.c:1001 src/ftp.c:1276 src/ftp.c:1325
 msgid "done.\n"
 msgstr "完成。\n"
 
-#: src/ftp.c:709
+#: src/ftp.c:712
 #, c-format
 msgid "Unknown type `%c', closing control connection.\n"
 msgstr "未知的类别“%c”，正在关闭控制连接。\n"
 
-#: src/ftp.c:721
+#: src/ftp.c:724
 msgid "done.  "
 msgstr "完成。 "
 
-#: src/ftp.c:727
+#: src/ftp.c:730
 msgid "==> CWD not needed.\n"
 msgstr "==> 不需要 CWD。\n"
 
-#: src/ftp.c:911
+#: src/ftp.c:914
 msgid "Logically impossible section reached in getftp()"
 msgstr "进入了 getftp() 中逻辑上不可能的段落"
 
-#: src/ftp.c:912
+#: src/ftp.c:915
 #, c-format
 msgid ""
 "cwd_count: %d\n"
@@ -542,7 +542,7 @@ msgstr ""
 "cwd_start: %d\n"
 "cwd_end: %d\n"
 
-#: src/ftp.c:942
+#: src/ftp.c:945
 #, c-format
 msgid ""
 "No such directory %s.\n"
@@ -551,37 +551,37 @@ msgstr ""
 "目录 %s 不存在。\n"
 "\n"
 
-#: src/ftp.c:963
+#: src/ftp.c:966
 msgid "==> CWD not required.\n"
 msgstr "==> 不需要 CWD。\n"
 
-#: src/ftp.c:1006
+#: src/ftp.c:1009
 msgid "File has already been retrieved.\n"
 msgstr "该文件已经被获取了。\n"
 
-#: src/ftp.c:1042
+#: src/ftp.c:1045
 msgid "Cannot initiate PASV transfer.\n"
 msgstr "无法启动 PASV 传输。\n"
 
-#: src/ftp.c:1046
+#: src/ftp.c:1049
 msgid "Cannot parse PASV response.\n"
 msgstr "无法解析 PASV 响应内容。\n"
 
-#: src/ftp.c:1063
+#: src/ftp.c:1066
 #, c-format
 msgid "couldn't connect to %s port %d: %s\n"
 msgstr "无法连接到 %s 端口号 %d: %s\n"
 
-#: src/ftp.c:1117
+#: src/ftp.c:1120
 #, c-format
 msgid "Bind error (%s).\n"
 msgstr "Bind 错误 (%s)。\n"
 
-#: src/ftp.c:1123
+#: src/ftp.c:1126
 msgid "Invalid PORT.\n"
 msgstr "PORT 命令无效。\n"
 
-#: src/ftp.c:1169
+#: src/ftp.c:1172
 msgid ""
 "\n"
 "REST failed, starting from scratch.\n"
@@ -589,17 +589,17 @@ msgstr ""
 "\n"
 "断点续传 (REST) 失败，重头开始下载。\n"
 
-#: src/ftp.c:1209
+#: src/ftp.c:1212
 #, c-format
 msgid "File %s exists.\n"
 msgstr "文件 %s 已存在。\n"
 
-#: src/ftp.c:1215
+#: src/ftp.c:1218
 #, c-format
 msgid "No such file %s.\n"
 msgstr "文件 %s 不存在。\n"
 
-#: src/ftp.c:1261
+#: src/ftp.c:1264
 #, c-format
 msgid ""
 "No such file %s.\n"
@@ -608,7 +608,7 @@ msgstr ""
 "文件 %s 不存在。\n"
 "\n"
 
-#: src/ftp.c:1311
+#: src/ftp.c:1314
 #, c-format
 msgid ""
 "No such file or directory %s.\n"
@@ -617,40 +617,40 @@ msgstr ""
 "文件或目录 %s 不存在。\n"
 "\n"
 
-#: src/ftp.c:1470 src/http.c:2483
+#: src/ftp.c:1473 src/http.c:2483
 #, c-format
 msgid "%s has sprung into existence.\n"
 msgstr "%s 突然出现。\n"
 
-#: src/ftp.c:1552
+#: src/ftp.c:1557
 #, c-format
 msgid "%s: %s, closing control connection.\n"
 msgstr "%s：%s，正在关闭控制连接。\n"
 
-#: src/ftp.c:1564
+#: src/ftp.c:1569
 #, c-format
 msgid "%s (%s) - Data connection: %s; "
 msgstr "%s (%s) - 数据连接：%s；"
 
-#: src/ftp.c:1579
+#: src/ftp.c:1584
 msgid "Control connection closed.\n"
 msgstr "已关闭控制连接。\n"
 
-#: src/ftp.c:1597
+#: src/ftp.c:1602
 msgid "Data transfer aborted.\n"
 msgstr "数据传输已被中止。\n"
 
-#: src/ftp.c:1814
+#: src/ftp.c:1826
 #, c-format
 msgid "File %s already there; not retrieving.\n"
 msgstr "文件 %s 已存在；不获取。\n"
 
-#: src/ftp.c:1899 src/http.c:3923
+#: src/ftp.c:1911 src/http.c:3915
 #, c-format
 msgid "(try:%2d)"
 msgstr "(尝试次数：%2d)"
 
-#: src/ftp.c:1987 src/http.c:4332
+#: src/ftp.c:1999 src/http.c:4324
 #, c-format
 msgid ""
 "%s (%s) - written to stdout %s[%s]\n"
@@ -659,7 +659,7 @@ msgstr ""
 "%s (%s) - 已写入标准输出 %s[%s]\n"
 "\n"
 
-#: src/ftp.c:1988 src/http.c:4333
+#: src/ftp.c:2000 src/http.c:4325
 #, c-format
 msgid ""
 "%s (%s) - %s saved [%s]\n"
@@ -668,40 +668,40 @@ msgstr ""
 "%s (%s) - %s 已保存 [%s]\n"
 "\n"
 
-#: src/ftp.c:2048 src/main.c:1867 src/metalink.c:426 src/recur.c:499
-#: src/recur.c:730 src/retr.c:1129
+#: src/ftp.c:2060 src/main.c:1875 src/metalink.c:426 src/recur.c:499
+#: src/recur.c:734 src/retr.c:1141
 #, c-format
 msgid "Removing %s.\n"
 msgstr "正在删除 %s。\n"
 
-#: src/ftp.c:2101
+#: src/ftp.c:2113
 #, c-format
 msgid "Using %s as listing tmp file.\n"
 msgstr "使用 %s 作为列表临时文件。\n"
 
-#: src/ftp.c:2118
+#: src/ftp.c:2130
 #, c-format
 msgid "Removed %s.\n"
 msgstr "已删除 %s。\n"
 
-#: src/ftp.c:2156
+#: src/ftp.c:2168
 #, c-format
 msgid "Recursion depth %d exceeded max. depth %d.\n"
 msgstr "链接递归深度 %d 超过最大值 %d。\n"
 
-#: src/ftp.c:2226
+#: src/ftp.c:2238
 #, c-format
 msgid "Remote file no newer than local file %s -- not retrieving.\n"
 msgstr "远程文件比本地文件 %s 更老 -- 不获取。\n"
 
-#: src/ftp.c:2234
+#: src/ftp.c:2246
 #, c-format
 msgid ""
 "Remote file is newer than local file %s -- retrieving.\n"
 "\n"
 msgstr "远程文件较本地文件 %s 新 -- 获取。\n"
 
-#: src/ftp.c:2241
+#: src/ftp.c:2253
 #, c-format
 msgid ""
 "The sizes do not match (local %s) -- retrieving.\n"
@@ -710,11 +710,11 @@ msgstr ""
 "文件大小不符 (本地文件 %s) -- 获取。\n"
 "\n"
 
-#: src/ftp.c:2259
+#: src/ftp.c:2271
 msgid "Invalid name of the symlink, skipping.\n"
 msgstr "无效的符号连接名，跳过。\n"
 
-#: src/ftp.c:2276
+#: src/ftp.c:2288
 #, c-format
 msgid ""
 "Already have correct symlink %s -> %s\n"
@@ -723,62 +723,62 @@ msgstr ""
 "已经存在正确的符号连接 %s -> %s\n"
 "\n"
 
-#: src/ftp.c:2285
+#: src/ftp.c:2297
 #, c-format
 msgid "Creating symlink %s -> %s\n"
 msgstr "正在创建符号链接 %s -> %s\n"
 
-#: src/ftp.c:2295
+#: src/ftp.c:2307
 #, c-format
 msgid "Symlinks not supported, skipping symlink %s.\n"
 msgstr "不支持符号连接，正在跳过符号连接 %s。\n"
 
-#: src/ftp.c:2307
+#: src/ftp.c:2319
 #, c-format
 msgid "Skipping directory %s.\n"
 msgstr "正在跳过目录 %s。\n"
 
-#: src/ftp.c:2316
+#: src/ftp.c:2328
 #, c-format
 msgid "%s: unknown/unsupported file type.\n"
 msgstr "%s：未知的/不支持的文件类型。\n"
 
-#: src/ftp.c:2356
+#: src/ftp.c:2368
 #, c-format
 msgid "%s: corrupt time-stamp.\n"
 msgstr "%s：错误的时间戳标记。\n"
 
-#: src/ftp.c:2380
+#: src/ftp.c:2392
 #, c-format
 msgid "Will not retrieve dirs since depth is %d (max %d).\n"
 msgstr "因为目录深度为 %d (最大值为 %d)，所以不获取目录。\n"
 
-#: src/ftp.c:2430
+#: src/ftp.c:2442
 #, c-format
 msgid "Not descending to %s as it is excluded/not-included.\n"
 msgstr "不进入 %s 目录因为其已被排除或未被包含进来。\n"
 
-#: src/ftp.c:2519 src/ftp.c:2533
+#: src/ftp.c:2531 src/ftp.c:2545
 #, c-format
 msgid "Rejecting %s.\n"
 msgstr "拒绝 %s。\n"
 
-#: src/ftp.c:2556
+#: src/ftp.c:2568
 #, c-format
 msgid "Error matching %s against %s: %s\n"
 msgstr "%s 和 %s 匹配错误: %s\n"
 
-#: src/ftp.c:2612
+#: src/ftp.c:2624
 #, c-format
 msgid "No matches on pattern %s.\n"
 msgstr "没有与模式 %s 相符合的。\n"
 
-#: src/ftp.c:2683
+#: src/ftp.c:2695
 #, c-format
 msgid "Wrote HTML-ized index to %s [%s].\n"
 msgstr "已经将 HTML 格式的索引写入到 %s [%s]。\n"
 
-#: src/ftp.c:2688
+#: src/ftp.c:2700
 #, c-format
 msgid "Wrote HTML-ized index to %s.\n"
 msgstr "已经将 HTML 格式的索引写入到 %s。\n"
@@ -821,82 +821,82 @@ msgstr "GnuTLS：未实现‘secure-protocol’选项值 %d\n"
 msgid "Please report this issue to bug-wget@gnu.org\n"
 msgstr "请将此问题报告到 bug-wget@gnu.org\n"
 
-#: src/gnutls.c:688 src/openssl.c:679
+#: src/gnutls.c:692 src/openssl.c:679
 msgid "ERROR"
 msgstr "错误"
 
-#: src/gnutls.c:688 src/openssl.c:679
+#: src/gnutls.c:692 src/openssl.c:679
 msgid "WARNING"
 msgstr "警告"
 
-#: src/gnutls.c:694 src/openssl.c:688
+#: src/gnutls.c:702 src/openssl.c:692
 #, c-format
 msgid "%s: No certificate presented by %s.\n"
 msgstr "%s: %s 未提出证书。\n"
 
-#: src/gnutls.c:700
+#: src/gnutls.c:708
 #, c-format
 msgid "%s: The certificate of %s is not trusted.\n"
 msgstr "%s: %s 的证书不可信。\n"
 
-#: src/gnutls.c:701
+#: src/gnutls.c:709
 #, c-format
 msgid "%s: The certificate of %s hasn't got a known issuer.\n"
 msgstr "%s: %s 的证书颁发者未知。\n"
 
-#: src/gnutls.c:702
+#: src/gnutls.c:710
 #, c-format
 msgid "%s: The certificate of %s has been revoked.\n"
 msgstr "%s: %s 的证书已经过期。\n"
 
-#: src/gnutls.c:703
+#: src/gnutls.c:711
 #, c-format
 msgid "%s: The certificate signer of %s was not a CA.\n"
 msgstr "%s: 证书 %s 的签发者不是一个 CA。\n"
 
-#: src/gnutls.c:704
+#: src/gnutls.c:712
 #, c-format
 msgid "%s: The certificate of %s was signed using an insecure algorithm.\n"
 msgstr "%s: %s 的证书使用不安全的算法签名。\n"
 
-#: src/gnutls.c:705
+#: src/gnutls.c:713
 #, c-format
 msgid "%s: The certificate of %s is not yet activated.\n"
 msgstr "%s: %s 的证书还未生效。\n"
 
-#: src/gnutls.c:706
+#: src/gnutls.c:714
 #, c-format
 msgid "%s: The certificate of %s has expired.\n"
 msgstr "%s: %s 的证书已经过期。\n"
 
-#: src/gnutls.c:717
+#: src/gnutls.c:725
 #, c-format
 msgid "Error initializing X509 certificate: %s\n"
 msgstr "初始化 X509 证书错误: %s\n"
 
-#: src/gnutls.c:726
+#: src/gnutls.c:734
 msgid "No certificate found\n"
 msgstr "未找到证书\n"
 
-#: src/gnutls.c:733
+#: src/gnutls.c:741
 #, c-format
 msgid "Error parsing certificate: %s\n"
 msgstr "解析证书时发生错误: %s。\n"
 
-#: src/gnutls.c:740
+#: src/gnutls.c:748
 msgid "The certificate has not yet been activated\n"
 msgstr "证书还未激活\n"
 
-#: src/gnutls.c:745
+#: src/gnutls.c:753
 msgid "The certificate has expired\n"
 msgstr "证书已经过期\n"
 
-#: src/gnutls.c:751
+#: src/gnutls.c:759
 #, c-format
 msgid "The certificate's owner does not match hostname %s\n"
 msgstr "证书所有者与主机名 %s 不符\n"
 
-#: src/gnutls.c:760
+#: src/gnutls.c:768
 msgid "Certificate must be X.509\n"
 msgstr "证书必须是 X.509 格式\n"
 
@@ -979,7 +979,7 @@ msgstr "再次使用存在的到 %s:%d 的连接。\n"
 msgid "Failed reading proxy response: %s\n"
 msgstr "无法读取代理响应：%s\n"
 
-#: src/http.c:2116 src/http.c:3191 src/http.c:4126
+#: src/http.c:2116 src/http.c:3191 src/http.c:4118
 #, c-format
 msgid "%s ERROR %d: %s.\n"
 msgstr "%s 错误 %d：%s。\n"
@@ -1110,72 +1110,72 @@ msgstr "长度："
 msgid "ignored"
 msgstr "已忽略"
 
-#: src/http.c:3824
+#: src/http.c:3823
 msgid "Warning: wildcards not supported in HTTP.\n"
 msgstr "警告：HTTP 不支持通配符。\n"
 
-#: src/http.c:3913
+#: src/http.c:3905
 msgid "Spider mode enabled. Check if remote file exists.\n"
 msgstr "打开 Spider 模式。检查是否存在远程文件。\n"
 
-#: src/http.c:4001
+#: src/http.c:3993
 #, c-format
 msgid "Cannot write to %s (%s).\n"
 msgstr "无法写入 %s (%s)。\n"
 
-#: src/http.c:4012
+#: src/http.c:4004
 msgid "Required attribute missing from Header received.\n"
 msgstr "接收的响应头中缺少必要的属性。\n"
 
-#: src/http.c:4017
+#: src/http.c:4009
 msgid "Username/Password Authentication Failed.\n"
 msgstr "用户名/密码认证失败。\n"
 
-#: src/http.c:4023
+#: src/http.c:4015
 msgid "Cannot write to WARC file.\n"
 msgstr "无法写入 WARC 文件。\n"
 
-#: src/http.c:4029
+#: src/http.c:4021
 msgid "Cannot write to temporary WARC file.\n"
 msgstr "无法写入临时 WARC 文件。\n"
 
-#: src/http.c:4034
+#: src/http.c:4026
 msgid "Unable to establish SSL connection.\n"
 msgstr "无法建立 SSL 连接。\n"
 
-#: src/http.c:4040
+#: src/http.c:4032
 #, c-format
 msgid "Cannot unlink %s (%s).\n"
 msgstr "无法清除 %s 的链接 (%s)。\n"
 
-#: src/http.c:4050
+#: src/http.c:4042
 #, c-format
 msgid "ERROR: Redirection (%d) without location.\n"
 msgstr "错误：重定向 (%d) 但没有指定位置。\n"
 
-#: src/http.c:4072
+#: src/http.c:4064
 msgid ""
 "Could not find Metalink data in HTTP response. Downloading file using HTTP "
 "GET.\n"
 msgstr "无法从 HTTP 响应中找到 Metalink 数据。使用 HTTP GET 下载文件。\n"
 
-#: src/http.c:4081
+#: src/http.c:4073
 msgid "Metalink headers found. Switching to Metalink mode.\n"
 msgstr "发现 Metalink 响应头。将切换到 Metalink 模式。\n"
 
-#: src/http.c:4121
+#: src/http.c:4113
 msgid "Remote file does not exist -- broken link!!!\n"
 msgstr "远程文件不存在 -- 链接失效！！！\n"
 
-#: src/http.c:4143
+#: src/http.c:4135
 msgid "Last-modified header missing -- time-stamps turned off.\n"
 msgstr "缺少“Last-modified”文件头 -- 关闭时间戳标记。\n"
 
-#: src/http.c:4151
+#: src/http.c:4143
 msgid "Last-modified header invalid -- time-stamp ignored.\n"
 msgstr "无效的“Last-modified”文件头 -- 忽略时间戳标记。\n"
 
-#: src/http.c:4181
+#: src/http.c:4173
 #, c-format
 msgid ""
 "Server file no newer than local file %s -- not retrieving.\n"
@@ -1184,16 +1184,16 @@ msgstr ""
 "远程文件比本地文件 %s 更老 -- 不获取。\n"
 "\n"
 
-#: src/http.c:4189
+#: src/http.c:4181
 #, c-format
 msgid "The sizes do not match (local %s) -- retrieving.\n"
 msgstr "文件大小不符 (本地文件 %s) -- 获取。\n"
 
-#: src/http.c:4198
+#: src/http.c:4190
 msgid "Remote file is newer, retrieving.\n"
 msgstr "远程文件较新，获取。\n"
 
-#: src/http.c:4216
+#: src/http.c:4208
 msgid ""
 "Remote file exists and could contain links to other resources -- "
 "retrieving.\n"
@@ -1202,7 +1202,7 @@ msgstr ""
 "存在远程文件且可能含有到其它资源的链接 -- 获取。\n"
 "\n"
 
-#: src/http.c:4222
+#: src/http.c:4214
 msgid ""
 "Remote file exists but does not contain any link -- not retrieving.\n"
 "\n"
@@ -1210,7 +1210,7 @@ msgstr ""
 "存在远程文件但不含任何链接 -- 无法获取。\n"
 "\n"
 
-#: src/http.c:4231
+#: src/http.c:4223
 msgid ""
 "Remote file exists and could contain further links,\n"
 "but recursion is disabled -- not retrieving.\n"
@@ -1220,7 +1220,7 @@ msgstr ""
 "但不能进行递归操作 -- 无法获取。\n"
 "\n"
 
-#: src/http.c:4237
+#: src/http.c:4229
 msgid ""
 "Remote file exists.\n"
 "\n"
@@ -1228,12 +1228,12 @@ msgstr ""
 "存在远程文件。\n"
 "\n"
 
-#: src/http.c:4246
+#: src/http.c:4238
 #, c-format
 msgid "%s URL: %s %2d %s\n"
 msgstr "%s URL: %s %2d %s\n"
 
-#: src/http.c:4296
+#: src/http.c:4288
 #, c-format
 msgid ""
 "%s (%s) - written to stdout %s[%s/%s]\n"
@@ -1242,7 +1242,7 @@ msgstr ""
 "%s (%s) - 已写入至标准输出 %s[%s/%s]\n"
 "\n"
 
-#: src/http.c:4297
+#: src/http.c:4289
 #, c-format
 msgid ""
 "%s (%s) - %s saved [%s/%s]\n"
@@ -1251,57 +1251,57 @@ msgstr ""
 "%s (%s) - 已保存 %s [%s/%s])\n"
 "\n"
 
-#: src/http.c:4358
+#: src/http.c:4350
 #, c-format
 msgid "%s (%s) - Connection closed at byte %s. "
 msgstr "%s (%s) - 在 %s 字节处连接关闭。"
 
-#: src/http.c:4381
+#: src/http.c:4373
 #, c-format
 msgid "%s (%s) - Read error at byte %s (%s)."
 msgstr "%s (%s) - 在 %s 字节处发生读取错误 (%s)。"
 
-#: src/http.c:4390
+#: src/http.c:4382
 #, c-format
 msgid "%s (%s) - Read error at byte %s/%s (%s). "
 msgstr "%s (%s) - 在 %s/%s 字节处发生读取错误 (%s)。"
 
-#: src/http.c:4625
+#: src/http.c:4617
 #, c-format
 msgid "Unsupported quality of protection '%s'.\n"
 msgstr "不支持的保护质量 '%s'。\n"
 
-#: src/http.c:4630
+#: src/http.c:4622
 #, c-format
 msgid "Unsupported algorithm '%s'.\n"
 msgstr "不支持的算法‘%s’。\n"
 
-#: src/init.c:542
+#: src/init.c:543
 #, c-format
 msgid "%s: WGETRC points to %s, which doesn't exist.\n"
 msgstr "%s: WGETRC指向 %s，但它并不存在。\n"
 
-#: src/init.c:643 src/netrc.c:246
+#: src/init.c:644 src/netrc.c:246
 #, c-format
 msgid "%s: Cannot read %s (%s).\n"
 msgstr "%s：无法读取 %s (%s)。\n"
 
-#: src/init.c:660
+#: src/init.c:661
 #, c-format
 msgid "%s: Error in %s at line %d.\n"
 msgstr "%1$s：错误发生于第 %3$d 行的 %2$s。\n"
 
-#: src/init.c:666
+#: src/init.c:667
 #, c-format
 msgid "%s: Syntax error in %s at line %d.\n"
 msgstr "%1$s: 第 %3$d 行的 %2$s 处发生语法错误。\n"
 
-#: src/init.c:671
+#: src/init.c:672
 #, c-format
 msgid "%s: Unknown command %s in %s at line %d.\n"
 msgstr "%1$s: 未知的命令 %2$s 在第 %4$d 行 %3$s 处。\n"
 
-#: src/init.c:708
+#: src/init.c:709
 #, c-format
 msgid ""
 "Parsing system wgetrc file (env SYSTEM_WGETRC) failed.  Please check\n"
@@ -1312,7 +1312,7 @@ msgstr ""
 "'%s'，\n"
 "或使用 --config 参数指定另一个配置文件。\n"
 
-#: src/init.c:723
+#: src/init.c:724
 #, c-format
 msgid ""
 "Parsing system wgetrc file failed.  Please check\n"
@@ -1323,64 +1323,69 @@ msgstr ""
 "'%s'，\n"
 "或使用 --config 参数指定另一个配置文件。\n"
 
-#: src/init.c:739
+#: src/init.c:740
 #, c-format
 msgid "%s: Warning: Both system and user wgetrc point to %s.\n"
 msgstr "%s：警告：系统与用户的 wgetrc 都指向 %s。\n"
 
-#: src/init.c:929
+#: src/init.c:930
 #, c-format
 msgid "%s: Invalid --execute command %s\n"
 msgstr "%s：无效的 --execute 命令 %s\n"
 
-#: src/init.c:974
+#: src/init.c:991
 #, c-format
 msgid "%s: %s: Invalid boolean %s; use `on' or `off'.\n"
 msgstr "%s：%s：无效的布尔值 %s；请使用“on”或“off”。\n"
 
-#: src/init.c:991
+#: src/init.c:1024
+#, fuzzy, c-format
+msgid "%s: %s: Invalid %s; use `on', `off' or `quiet'.\n"
+msgstr "%s：%s：无效的布尔值 %s；请使用“on”或“off”。\n"
+
+#: src/init.c:1042
 #, c-format
 msgid "%s: %s: Invalid number %s.\n"
 msgstr "%s：%s：无效数字 %s。\n"
 
-#: src/init.c:1072
+#: src/init.c:1123
 #, c-format
 msgid "%s: %s must only be used once\n"
 msgstr "%s: %s 只能单次使用\n"
 
-#: src/init.c:1227 src/init.c:1246
+#: src/init.c:1278 src/init.c:1297
 #, c-format
 msgid "%s: %s: Invalid byte value %s\n"
 msgstr "%s：%s：无效的字节数值 %s\n"
 
-#: src/init.c:1271
+#: src/init.c:1322
 #, c-format
 msgid "%s: %s: Invalid time period %s\n"
 msgstr "%s：%s：无效的时间周期 %s\n"
 
-#: src/init.c:1325 src/init.c:1436 src/init.c:1492 src/init.c:1558
-#: src/init.c:1577 src/init.c:1602
+#: src/init.c:1376 src/init.c:1487 src/init.c:1543 src/init.c:1609
+#: src/init.c:1628 src/init.c:1653
 #, c-format
 msgid "%s: %s: Invalid value %s.\n"
 msgstr "%s：%s：无效的值 %s。\n"
 
-#: src/init.c:1362
+#: src/init.c:1413
 #, c-format
 msgid "%s: %s: Invalid header %s.\n"
 msgstr "%s：%s：无效的文件头 %s。\n"
 
-#: src/init.c:1383
+#: src/init.c:1434
 #, c-format
 msgid "%s: %s: Invalid WARC header %s.\n"
 msgstr "%s：%s：无效的 WARC 头 %s。\n"
 
-#: src/init.c:1449
+#: src/init.c:1500
 #, c-format
 msgid "%s: %s: Invalid progress type %s.\n"
 msgstr "%s：%s：无效的进度指示方式 %s。\n"
 
 # 对应参数是逗号分隔的一个列表，不要变成顿号。
-#: src/init.c:1531
+#: src/init.c:1582
 #, c-format
 msgid ""
 "%s: %s: Invalid restriction %s,\n"
@@ -2625,22 +2630,22 @@ msgid ""
 "outputting to a regular file.\n"
 msgstr "-k 或 -r 只有在输出至普通文件的时候才可以与 -O 共用。\n"
 
-#: src/main.c:1886
+#: src/main.c:1894
 #, c-format
 msgid "No URLs found in %s.\n"
 msgstr "在 %s 中找不到 URL。\n"
 
-#: src/main.c:1902
+#: src/main.c:1910
 #, c-format
 msgid "Unable to parse metalink file %s.\n"
 msgstr "无法解析 metalink 文件 %s。\n"
 
-#: src/main.c:1932
+#: src/main.c:1940
 #, c-format
 msgid "Could not download all resources from %s.\n"
 msgstr "无法从 %s 下载所有资源。\n"
 
-#: src/main.c:1959
+#: src/main.c:1967
 #, c-format
 msgid ""
 "FINISHED --%s--\n"
@@ -2651,7 +2656,7 @@ msgstr ""
 "总用时：%2$s\n"
 "下载了：%3$d 个文件，%5$s (%6$s) 中的 %4$s\n"
 
-#: src/main.c:1973
+#: src/main.c:1981
 #, c-format
 msgid "Download quota of %s EXCEEDED!\n"
 msgstr "超过下载限额 (%s 字节)！\n"
@@ -2804,28 +2809,28 @@ msgstr "你的 OpenSSL 版本太老，不支持 TLSv1.2\n"
 msgid "OpenSSL: unimplemented 'secure-protocol' option value %d\n"
 msgstr "OpenSSL：未实现‘secure-protocol’选项值 %d\n"
 
-#: src/openssl.c:710
+#: src/openssl.c:714
 #, c-format
 msgid "%s: cannot verify %s's certificate, issued by %s:\n"
 msgstr "%s: 无法验证 %s 的由 %s 颁发的证书:\n"
 
-#: src/openssl.c:721
+#: src/openssl.c:725
 msgid "  Unable to locally verify the issuer's authority.\n"
 msgstr "  无法本地校验颁发者的权限。\n"
 
-#: src/openssl.c:726
+#: src/openssl.c:730
 msgid "  Self-signed certificate encountered.\n"
 msgstr "  出现了自己签名的证书。\n"
 
-#: src/openssl.c:729
+#: src/openssl.c:733
 msgid "  Issued certificate not yet valid.\n"
 msgstr "  颁发的证书还未生效。\n"
 
-#: src/openssl.c:732
+#: src/openssl.c:736
 msgid "  Issued certificate has expired.\n"
 msgstr "  颁发的证书已经过期。\n"
 
-#: src/openssl.c:817
+#: src/openssl.c:821
 #, c-format
 msgid ""
 "%s: no certificate subject alternative name matches\n"
@@ -2834,13 +2839,13 @@ msgstr ""
 "%s: 没有匹配的证书主体别名 (Subject Alternative Name)。\n"
 "\t请求的主机名为 %s。\n"
 
-#: src/openssl.c:834
+#: src/openssl.c:838
 #, c-format
 msgid ""
 "    %s: certificate common name %s doesn't match requested host name %s.\n"
 msgstr "    %s: 证书通用名 %s 与所要求的主机名 %s 不符。\n"
 
-#: src/openssl.c:866
+#: src/openssl.c:870
 #, c-format
 msgid ""
 "    %s: certificate common name is invalid (contains a NUL character).\n"
@@ -2851,7 +2856,7 @@ msgstr ""
 "    这可能意味着该主机所声称的身份与实际不符。\n"
 "    (也就是说，它不是真正的 %s)。\n"
 
-#: src/openssl.c:884
+#: src/openssl.c:888
 #, c-format
 msgid "To connect to %s insecurely, use `--no-check-certificate'.\n"
 msgstr "要以不安全的方式连接至 %s，使用“--no-check-certificate”。\n"
@@ -2872,13 +2877,14 @@ msgstr "无效的进度指示方式 %s；不会改变原来的方式。\n"
 
 #. TRANSLATORS: "ETA" is English-centric, but this must
 #. be short, ideally 3 chars.  Abbreviate if necessary.
-#: src/progress.c:857
-#, c-format
-msgid "   eta %s"
+#: src/progress.c:858
+#, fuzzy, c-format
+msgid "    eta %s"
 msgstr "  剩余 %s"
 
-#: src/progress.c:1165
-msgid "   in "
+#: src/progress.c:1153
+#, fuzzy
+msgid "    in "
 msgstr "  用时 "
 
 #: src/ptimer.c:158
@@ -2910,12 +2916,12 @@ msgstr "解析代理服务器 URL %s 时发生错误：%s。\n"
 msgid "Error in proxy URL %s: Must be HTTP.\n"
 msgstr "代理服务器 URL %s 错误：必须是 HTTP。\n"
 
-#: src/retr.c:904
+#: src/retr.c:908
 #, c-format
 msgid "%d redirections exceeded.\n"
 msgstr "已超过 %d 次重定向。\n"
 
-#: src/retr.c:1153
+#: src/retr.c:1165
 msgid ""
 "Giving up.\n"
 "\n"
@@ -2923,7 +2929,7 @@ msgstr ""
 "放弃操作。\n"
 "\n"
 
-#: src/retr.c:1153
+#: src/retr.c:1165
 msgid ""
 "Retrying.\n"
 "\n"

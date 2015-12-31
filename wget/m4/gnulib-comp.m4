@@ -82,6 +82,7 @@ AC_DEFUN([gl_EARLY],
   # Code from module fd-hook:
   # Code from module fd-safer-flag:
   # Code from module float:
+  # Code from module flock:
   # Code from module fnmatch:
   # Code from module fseek:
   # Code from module fseeko:
@@ -217,6 +218,7 @@ AC_DEFUN([gl_EARLY],
   # Code from module strptime:
   # Code from module strtok_r:
   # Code from module strtoll:
+  # Code from module sys_file:
   # Code from module sys_ioctl:
   # Code from module sys_select:
   # Code from module sys_socket:
@@ -350,6 +352,12 @@ AC_DEFUN([gl_INIT],
   if test $REPLACE_ITOLD = 1; then
     AC_LIBOBJ([itold])
   fi
+  gl_FUNC_FLOCK
+  if test $HAVE_FLOCK = 0; then
+    AC_LIBOBJ([flock])
+    gl_PREREQ_FLOCK
+  fi
+  gl_HEADER_SYS_FILE_MODULE_INDICATOR([flock])
   gl_FUNC_FNMATCH_POSIX
   if test -n "$FNMATCH_H"; then
     AC_LIBOBJ([fnmatch])
@@ -858,6 +866,8 @@ AC_DEFUN([gl_INIT],
     gl_PREREQ_STRTOLL
   fi
   gl_STDLIB_MODULE_INDICATOR([strtoll])
+  gl_HEADER_SYS_FILE_H
+  AC_PROG_MKDIR_P
   gl_SYS_IOCTL_H
   AC_PROG_MKDIR_P
   gl_HEADER_SYS_SELECT
@@ -1136,6 +1146,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/float+.h
   lib/float.c
   lib/float.in.h
+  lib/flock.c
   lib/fnmatch.c
   lib/fnmatch.in.h
   lib/fnmatch_loop.c
@@ -1299,6 +1310,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/strtok_r.c
   lib/strtol.c
   lib/strtoll.c
+  lib/sys_file.in.h
   lib/sys_ioctl.in.h
   lib/sys_select.in.h
   lib/sys_socket.c
@@ -1378,6 +1390,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/fcntl.m4
   m4/fcntl_h.m4
   m4/float_h.m4
+  m4/flock.m4
   m4/fnmatch.m4
   m4/fseek.m4
   m4/fseeko.m4
@@ -1511,6 +1524,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/strptime.m4
   m4/strtok_r.m4
   m4/strtoll.m4
+  m4/sys_file_h.m4
   m4/sys_ioctl_h.m4
   m4/sys_select_h.m4
   m4/sys_socket_h.m4

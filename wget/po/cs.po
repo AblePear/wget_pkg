@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wget 1.16.3.124\n"
 "Report-Msgid-Bugs-To: bug-wget@gnu.org\n"
-"POT-Creation-Date: 2015-11-15 15:11+0100\n"
+"POT-Creation-Date: 2015-12-11 18:42+0100\n"
 "PO-Revision-Date: 2015-09-20 20:28+0200\n"
 "Last-Translator: Petr Pisar <petr.pisar@atlas.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -461,86 +461,86 @@ msgstr ", %s zbývá"
 msgid " (unauthoritative)\n"
 msgstr " (není směrodatné)\n"
 
-#: src/ftp.c:377
+#: src/ftp.c:378
 msgid "Could not initialize SSL. It will be disabled."
 msgstr "SSL nelze inicializovat. Bude zakázáno."
 
-#: src/ftp.c:457
+#: src/ftp.c:460
 #, c-format
 msgid "Logging in as %s ... "
 msgstr "Probíhá přihlašování jako %s… "
 
-#: src/ftp.c:476 src/ftp.c:562 src/ftp.c:629 src/ftp.c:694 src/ftp.c:928
-#: src/ftp.c:981 src/ftp.c:1028 src/ftp.c:1091 src/ftp.c:1152 src/ftp.c:1243
-#: src/ftp.c:1293
+#: src/ftp.c:479 src/ftp.c:565 src/ftp.c:632 src/ftp.c:697 src/ftp.c:931
+#: src/ftp.c:984 src/ftp.c:1031 src/ftp.c:1094 src/ftp.c:1155 src/ftp.c:1246
+#: src/ftp.c:1296
 msgid "Error in server response, closing control connection.\n"
 msgstr ""
 "Řídicí spojení bude ukončeno, protože server odpověděl chybovým hlášením.\n"
 
-#: src/ftp.c:483
+#: src/ftp.c:486
 msgid "Error in server greeting.\n"
 msgstr "Úvodní odpověď serveru je chybná.\n"
 
-#: src/ftp.c:490 src/ftp.c:702 src/ftp.c:936 src/ftp.c:1036 src/ftp.c:1101
-#: src/ftp.c:1162 src/ftp.c:1253 src/ftp.c:1303
+#: src/ftp.c:493 src/ftp.c:705 src/ftp.c:939 src/ftp.c:1039 src/ftp.c:1104
+#: src/ftp.c:1165 src/ftp.c:1256 src/ftp.c:1306
 msgid "Write failed, closing control connection.\n"
 msgstr "Řídicí spojení bude ukončeno, protože nelze zapsat data.\n"
 
-#: src/ftp.c:496
+#: src/ftp.c:499
 msgid "The server refuses login.\n"
 msgstr "Server odmítá přihlášení.\n"
 
-#: src/ftp.c:502
+#: src/ftp.c:505
 msgid "Login incorrect.\n"
 msgstr "Chyba při přihlášení.\n"
 
-#: src/ftp.c:508
+#: src/ftp.c:511
 msgid "Logged in!\n"
 msgstr "Přihlášeno!\n"
 
-#: src/ftp.c:528
+#: src/ftp.c:531
 msgid "Server did not accept the 'PBSZ 0' command.\n"
 msgstr "Server nepřijal příkaz „PBSZ 0“.\n"
 
-#: src/ftp.c:538
+#: src/ftp.c:541
 #, c-format
 msgid "Server did not accept the 'PROT %c' command.\n"
 msgstr "Server nepřijal příkaz „PROT %c“.\n"
 
-#: src/ftp.c:570
+#: src/ftp.c:573
 msgid "Server error, can't determine system type.\n"
 msgstr ""
 "Nelze zjistit typ vzdáleného operačního systému, protože server odpověděl "
 "chybovým hlášením.\n"
 
-#: src/ftp.c:579 src/ftp.c:1071 src/ftp.c:1135 src/ftp.c:1178
+#: src/ftp.c:582 src/ftp.c:1074 src/ftp.c:1138 src/ftp.c:1181
 msgid "done.    "
 msgstr "hotovo.  "
 
-#: src/ftp.c:682 src/ftp.c:954 src/ftp.c:998 src/ftp.c:1273 src/ftp.c:1322
+#: src/ftp.c:685 src/ftp.c:957 src/ftp.c:1001 src/ftp.c:1276 src/ftp.c:1325
 msgid "done.\n"
 msgstr "hotovo.\n"
 
-#: src/ftp.c:709
+#: src/ftp.c:712
 #, c-format
 msgid "Unknown type `%c', closing control connection.\n"
 msgstr ""
 "Řídicí spojení bude ukončeno, protože je požadován neznámý typ přenosu "
 "„%c“.\n"
 
-#: src/ftp.c:721
+#: src/ftp.c:724
 msgid "done.  "
 msgstr "hotovo."
 
-#: src/ftp.c:727
+#: src/ftp.c:730
 msgid "==> CWD not needed.\n"
 msgstr "==> CWD není potřeba.\n"
 
-#: src/ftp.c:911
+#: src/ftp.c:914
 msgid "Logically impossible section reached in getftp()"
 msgstr "Dosažena logicky nemožná sekce v getftp()"
 
-#: src/ftp.c:912
+#: src/ftp.c:915
 #, c-format
 msgid ""
 "cwd_count: %d\n"
@@ -551,7 +551,7 @@ msgstr ""
 "cwd_start: %d\n"
 "cwd_end: %d\n"
 
-#: src/ftp.c:942
+#: src/ftp.c:945
 #, c-format
 msgid ""
 "No such directory %s.\n"
@@ -560,37 +560,37 @@ msgstr ""
 "Adresář %s neexistuje.\n"
 "\n"
 
-#: src/ftp.c:963
+#: src/ftp.c:966
 msgid "==> CWD not required.\n"
 msgstr "==> CWD není potřeba.\n"
 
-#: src/ftp.c:1006
+#: src/ftp.c:1009
 msgid "File has already been retrieved.\n"
 msgstr "Soubor již byl přenesen.\n"
 
-#: src/ftp.c:1042
+#: src/ftp.c:1045
 msgid "Cannot initiate PASV transfer.\n"
 msgstr "Nelze spustit pasivní přenos dat.\n"
 
-#: src/ftp.c:1046
+#: src/ftp.c:1049
 msgid "Cannot parse PASV response.\n"
 msgstr "Odpověď na PASV není pochopitelná.\n"
 
-#: src/ftp.c:1063
+#: src/ftp.c:1066
 #, c-format
 msgid "couldn't connect to %s port %d: %s\n"
 msgstr "s %s na portu %d se nelze spojit: %s\n"
 
-#: src/ftp.c:1117
+#: src/ftp.c:1120
 #, c-format
 msgid "Bind error (%s).\n"
 msgstr "Chyba při přilepování (bind) (%s).\n"
 
-#: src/ftp.c:1123
+#: src/ftp.c:1126
 msgid "Invalid PORT.\n"
 msgstr "Neplatný PORT.\n"
 
-#: src/ftp.c:1169
+#: src/ftp.c:1172
 msgid ""
 "\n"
 "REST failed, starting from scratch.\n"
@@ -598,17 +598,17 @@ msgstr ""
 "\n"
 "Příkaz REST selhal, přenos začne od začátku souboru.\n"
 
-#: src/ftp.c:1209
+#: src/ftp.c:1212
 #, c-format
 msgid "File %s exists.\n"
 msgstr "Soubor %s existuje.\n"
 
-#: src/ftp.c:1215
+#: src/ftp.c:1218
 #, c-format
 msgid "No such file %s.\n"
 msgstr "Soubor %s neexistuje.\n"
 
-#: src/ftp.c:1261
+#: src/ftp.c:1264
 #, c-format
 msgid ""
 "No such file %s.\n"
@@ -617,7 +617,7 @@ msgstr ""
 "Soubor %s neexistuje.\n"
 "\n"
 
-#: src/ftp.c:1311
+#: src/ftp.c:1314
 #, c-format
 msgid ""
 "No such file or directory %s.\n"
@@ -626,40 +626,40 @@ msgstr ""
 "Soubor či adresář %s neexistuje.\n"
 "\n"
 
-#: src/ftp.c:1470 src/http.c:2483
+#: src/ftp.c:1473 src/http.c:2483
 #, c-format
 msgid "%s has sprung into existence.\n"
 msgstr "%s se objevil.\n"
 
-#: src/ftp.c:1552
+#: src/ftp.c:1557
 #, c-format
 msgid "%s: %s, closing control connection.\n"
 msgstr "%s: %s, řídicí spojení bude ukončeno.\n"
 
-#: src/ftp.c:1564
+#: src/ftp.c:1569
 #, c-format
 msgid "%s (%s) - Data connection: %s; "
 msgstr "%s (%s) – Datové spojení: %s; "
 
-#: src/ftp.c:1579
+#: src/ftp.c:1584
 msgid "Control connection closed.\n"
 msgstr "Řídicí spojení bylo ukončeno.\n"
 
-#: src/ftp.c:1597
+#: src/ftp.c:1602
 msgid "Data transfer aborted.\n"
 msgstr "Přenos dat byl předčasně ukončen.\n"
 
-#: src/ftp.c:1814
+#: src/ftp.c:1826
 #, c-format
 msgid "File %s already there; not retrieving.\n"
 msgstr "Soubor %s je již přítomen, nebude přenášen.\n"
 
-#: src/ftp.c:1899 src/http.c:3923
+#: src/ftp.c:1911 src/http.c:3915
 #, c-format
 msgid "(try:%2d)"
 msgstr "(pokus:%2d)"
 
-#: src/ftp.c:1987 src/http.c:4332
+#: src/ftp.c:1999 src/http.c:4324
 #, c-format
 msgid ""
 "%s (%s) - written to stdout %s[%s]\n"
@@ -668,7 +668,7 @@ msgstr ""
 "%s (%s) – zapsáno na standardní výstup %s[%s]\n"
 "\n"
 
-#: src/ftp.c:1988 src/http.c:4333
+#: src/ftp.c:2000 src/http.c:4325
 #, c-format
 msgid ""
 "%s (%s) - %s saved [%s]\n"
@@ -677,35 +677,35 @@ msgstr ""
 "%s (%s) – %s uložen [%s]\n"
 "\n"
 
-#: src/ftp.c:2048 src/main.c:1867 src/metalink.c:426 src/recur.c:499
-#: src/recur.c:730 src/retr.c:1129
+#: src/ftp.c:2060 src/main.c:1875 src/metalink.c:426 src/recur.c:499
+#: src/recur.c:734 src/retr.c:1141
 #, c-format
 msgid "Removing %s.\n"
 msgstr "Maže se %s.\n"
 
-#: src/ftp.c:2101
+#: src/ftp.c:2113
 #, c-format
 msgid "Using %s as listing tmp file.\n"
 msgstr "Seznam souborů bude dočasně uložen v %s.\n"
 
-#: src/ftp.c:2118
+#: src/ftp.c:2130
 #, c-format
 msgid "Removed %s.\n"
 msgstr "Soubor %s byl odstraněn.\n"
 
-#: src/ftp.c:2156
+#: src/ftp.c:2168
 #, c-format
 msgid "Recursion depth %d exceeded max. depth %d.\n"
 msgstr "Hloubka rekurze %d překročila maximální hloubku %d.\n"
 
-#: src/ftp.c:2226
+#: src/ftp.c:2238
 #, c-format
 msgid "Remote file no newer than local file %s -- not retrieving.\n"
 msgstr ""
 "Vzdálený soubor není novější než lokální soubor %s, a není jej třeba "
 "stahovat.\n"
 
-#: src/ftp.c:2234
+#: src/ftp.c:2246
 #, c-format
 msgid ""
 "Remote file is newer than local file %s -- retrieving.\n"
@@ -714,7 +714,7 @@ msgstr ""
 "Vzdálený soubor je novější než lokální soubor %s, a je jej třeba stáhnout.\n"
 "\n"
 
-#: src/ftp.c:2241
+#: src/ftp.c:2253
 #, c-format
 msgid ""
 "The sizes do not match (local %s) -- retrieving.\n"
@@ -723,11 +723,11 @@ msgstr ""
 "Velikosti se neshodují (lokální %s), stahuji.\n"
 "\n"
 
-#: src/ftp.c:2259
+#: src/ftp.c:2271
 msgid "Invalid name of the symlink, skipping.\n"
 msgstr "Přeskakuje se symbolický odkaz, neboť název odkazu není platný.\n"
 
-#: src/ftp.c:2276
+#: src/ftp.c:2288
 #, c-format
 msgid ""
 "Already have correct symlink %s -> %s\n"
@@ -736,67 +736,67 @@ msgstr ""
 "Korektní symbolický odkaz %s -> %s již existuje.\n"
 "\n"
 
-#: src/ftp.c:2285
+#: src/ftp.c:2297
 #, c-format
 msgid "Creating symlink %s -> %s\n"
 msgstr "Vytváří se symbolický odkaz %s -> %s\n"
 
-#: src/ftp.c:2295
+#: src/ftp.c:2307
 #, c-format
 msgid "Symlinks not supported, skipping symlink %s.\n"
 msgstr ""
 "Symbolické odkazy nejsou podporovány, symbolický odkaz %s bude vynechán.\n"
 
-#: src/ftp.c:2307
+#: src/ftp.c:2319
 #, c-format
 msgid "Skipping directory %s.\n"
 msgstr "Adresář %s bude vynechán.\n"
 
-#: src/ftp.c:2316
+#: src/ftp.c:2328
 #, c-format
 msgid "%s: unknown/unsupported file type.\n"
 msgstr "%s: neznámý/nepodporovaný typ souboru.\n"
 
-#: src/ftp.c:2356
+#: src/ftp.c:2368
 #, c-format
 msgid "%s: corrupt time-stamp.\n"
 msgstr "%s: časové razítko souboru je porušené.\n"
 
-#: src/ftp.c:2380
+#: src/ftp.c:2392
 #, c-format
 msgid "Will not retrieve dirs since depth is %d (max %d).\n"
 msgstr ""
 "Podadresáře se nebudou přenášet, protože již bylo dosaženo hloubky %d "
 "(maximum je %d).\n"
 
-#: src/ftp.c:2430
+#: src/ftp.c:2442
 #, c-format
 msgid "Not descending to %s as it is excluded/not-included.\n"
 msgstr ""
 "Do adresáře %s se nesestoupí, protože tento adresář se buď má vynechat, nebo "
 "nebyl zadán k procházení.\n"
 
-#: src/ftp.c:2519 src/ftp.c:2533
+#: src/ftp.c:2531 src/ftp.c:2545
 #, c-format
 msgid "Rejecting %s.\n"
 msgstr "%s se zamítá.\n"
 
-#: src/ftp.c:2556
+#: src/ftp.c:2568
 #, c-format
 msgid "Error matching %s against %s: %s\n"
 msgstr "Při porovnávání %s s %s došlo k chybě: %s\n"
 
-#: src/ftp.c:2612
+#: src/ftp.c:2624
 #, c-format
 msgid "No matches on pattern %s.\n"
 msgstr "Vzorku %s nic neodpovídá.\n"
 
-#: src/ftp.c:2683
+#: src/ftp.c:2695
 #, c-format
 msgid "Wrote HTML-ized index to %s [%s].\n"
 msgstr "Výpis adresáře v HTML formátu byl zapsán do %s [%s].\n"
 
-#: src/ftp.c:2688
+#: src/ftp.c:2700
 #, c-format
 msgid "Wrote HTML-ized index to %s.\n"
 msgstr "Výpis adresáře v HTML formátu byl zapsán do %s.\n"
@@ -840,82 +840,82 @@ msgid "Please report this issue to bug-wget@gnu.org\n"
 msgstr ""
 "Prosím, tento problém nahlaste (anglicky) na adresu <bug-wget@gnu.org>\n"
 
-#: src/gnutls.c:688 src/openssl.c:679
+#: src/gnutls.c:692 src/openssl.c:679
 msgid "ERROR"
 msgstr "CHYBA"
 
-#: src/gnutls.c:688 src/openssl.c:679
+#: src/gnutls.c:692 src/openssl.c:679
 msgid "WARNING"
 msgstr "VAROVÁNÍ"
 
-#: src/gnutls.c:694 src/openssl.c:688
+#: src/gnutls.c:702 src/openssl.c:692
 #, c-format
 msgid "%s: No certificate presented by %s.\n"
 msgstr "%s: %s nepředložil žádný certifikát.\n"
 
-#: src/gnutls.c:700
+#: src/gnutls.c:708
 #, c-format
 msgid "%s: The certificate of %s is not trusted.\n"
 msgstr "%s: Certifikát %s není důvěryhodný.\n"
 
-#: src/gnutls.c:701
+#: src/gnutls.c:709
 #, c-format
 msgid "%s: The certificate of %s hasn't got a known issuer.\n"
 msgstr "%s: Certifikát %s nemá známého vydavatele.\n"
 
-#: src/gnutls.c:702
+#: src/gnutls.c:710
 #, c-format
 msgid "%s: The certificate of %s has been revoked.\n"
 msgstr "%s: Certifikát %s byl odvolán.\n"
 
-#: src/gnutls.c:703
+#: src/gnutls.c:711
 #, c-format
 msgid "%s: The certificate signer of %s was not a CA.\n"
 msgstr "%s: Podepisovatel certifikátu %s nebyl certifikační autorita.\n"
 
-#: src/gnutls.c:704
+#: src/gnutls.c:712
 #, c-format
 msgid "%s: The certificate of %s was signed using an insecure algorithm.\n"
 msgstr "%s: Certifikát pro %s byl podepsán pomocí nebezpečného algoritmu.\n"
 
-#: src/gnutls.c:705
+#: src/gnutls.c:713
 #, c-format
 msgid "%s: The certificate of %s is not yet activated.\n"
 msgstr "%s: Certifikát pro %s ještě nevstoupil v platnost.\n"
 
-#: src/gnutls.c:706
+#: src/gnutls.c:714
 #, c-format
 msgid "%s: The certificate of %s has expired.\n"
 msgstr "%s: Certifikátu pro %s vypršela platnost.\n"
 
-#: src/gnutls.c:717
+#: src/gnutls.c:725
 #, c-format
 msgid "Error initializing X509 certificate: %s\n"
 msgstr "Chyba při inicializaci X509 certifikátu: %s\n"
 
-#: src/gnutls.c:726
+#: src/gnutls.c:734
 msgid "No certificate found\n"
 msgstr "Žádný certifikát nenalezen\n"
 
-#: src/gnutls.c:733
+#: src/gnutls.c:741
 #, c-format
 msgid "Error parsing certificate: %s\n"
 msgstr "Chyba při rozebírání certifikátu: %s\n"
 
-#: src/gnutls.c:740
+#: src/gnutls.c:748
 msgid "The certificate has not yet been activated\n"
 msgstr "Certifikát ještě nenabyl platnosti.\n"
 
-#: src/gnutls.c:745
+#: src/gnutls.c:753
 msgid "The certificate has expired\n"
 msgstr "Certifikátu uplynula doba platnosti\n"
 
-#: src/gnutls.c:751
+#: src/gnutls.c:759
 #, c-format
 msgid "The certificate's owner does not match hostname %s\n"
 msgstr "Jméno vlastníka certifikátu se neshoduje se jménem počítače %s\n"
 
-#: src/gnutls.c:760
+#: src/gnutls.c:768
 msgid "Certificate must be X.509\n"
 msgstr "Certifikát musí být typu X.509\n"
 
@@ -1000,7 +1000,7 @@ msgstr "Využije se existující spojení s %s:%d.\n"
 msgid "Failed reading proxy response: %s\n"
 msgstr "Chyba při čtení odpovědi od proxy: %s\n"
 
-#: src/http.c:2116 src/http.c:3191 src/http.c:4126
+#: src/http.c:2116 src/http.c:3191 src/http.c:4118
 #, c-format
 msgid "%s ERROR %d: %s.\n"
 msgstr "%s CHYBA %d: %s.\n"
@@ -1131,51 +1131,51 @@ msgstr "Délka: "
 msgid "ignored"
 msgstr "je ignorována"
 
-#: src/http.c:3824
+#: src/http.c:3823
 msgid "Warning: wildcards not supported in HTTP.\n"
 msgstr "Varování: HTTP nepodporuje žolíkové znaky.\n"
 
-#: src/http.c:3913
+#: src/http.c:3905
 msgid "Spider mode enabled. Check if remote file exists.\n"
 msgstr "Aktivován režim pavouka. Kontroluje, zda vzdálený soubor existuje.\n"
 
-#: src/http.c:4001
+#: src/http.c:3993
 #, c-format
 msgid "Cannot write to %s (%s).\n"
 msgstr "Nelze zapsat do %s (%s).\n"
 
-#: src/http.c:4012
+#: src/http.c:4004
 msgid "Required attribute missing from Header received.\n"
 msgstr "V přijaté hlavičce chybí požadovaný atribut.\n"
 
-#: src/http.c:4017
+#: src/http.c:4009
 msgid "Username/Password Authentication Failed.\n"
 msgstr "Autentizace jménem a heslem se nezdařila.\n"
 
-#: src/http.c:4023
+#: src/http.c:4015
 msgid "Cannot write to WARC file.\n"
 msgstr "Nelze zapsat do souboru WARC.\n"
 
-#: src/http.c:4029
+#: src/http.c:4021
 msgid "Cannot write to temporary WARC file.\n"
 msgstr "Nelze zapsat do dočasného souboru WARC.\n"
 
-#: src/http.c:4034
+#: src/http.c:4026
 msgid "Unable to establish SSL connection.\n"
 msgstr "Nebylo možné navázat SSL spojení.\n"
 
-#: src/http.c:4040
+#: src/http.c:4032
 #, c-format
 msgid "Cannot unlink %s (%s).\n"
 msgstr "%s nelze smazat (%s).\n"
 
 # , c-format
-#: src/http.c:4050
+#: src/http.c:4042
 #, c-format
 msgid "ERROR: Redirection (%d) without location.\n"
 msgstr "CHYBA: Přesměrování (%d) bez udané nové adresy.\n"
 
-#: src/http.c:4072
+#: src/http.c:4064
 msgid ""
 "Could not find Metalink data in HTTP response. Downloading file using HTTP "
 "GET.\n"
@@ -1183,27 +1183,27 @@ msgstr ""
 "V odpovědi HTTP nebylo možné najít metalinková data. Soubor se stahuje\n"
 "pomocí HTTP GET.\n"
 
-#: src/http.c:4081
+#: src/http.c:4073
 msgid "Metalink headers found. Switching to Metalink mode.\n"
 msgstr "Nalezeny hlavičky metalinku. Přepíná se do režimu metalinku.\n"
 
-#: src/http.c:4121
+#: src/http.c:4113
 msgid "Remote file does not exist -- broken link!!!\n"
 msgstr "Vzdálený soubor neexistuje – slepý odkaz!!!\n"
 
-#: src/http.c:4143
+#: src/http.c:4135
 msgid "Last-modified header missing -- time-stamps turned off.\n"
 msgstr ""
 "Nelze použít časová razítka, protože v odpovědi serveru \n"
 "schází hlavička „Last-modified“.\n"
 
-#: src/http.c:4151
+#: src/http.c:4143
 msgid "Last-modified header invalid -- time-stamp ignored.\n"
 msgstr ""
 "Časové razítko souboru bude ignorováno, protože hlavička \n"
 "„Last-modified“ obsahuje neplatné údaje.\n"
 
-#: src/http.c:4181
+#: src/http.c:4173
 #, c-format
 msgid ""
 "Server file no newer than local file %s -- not retrieving.\n"
@@ -1212,16 +1212,16 @@ msgstr ""
 "Soubor na serveru není novější než lokální soubor %s – nebude přenášen.\n"
 "\n"
 
-#: src/http.c:4189
+#: src/http.c:4181
 #, c-format
 msgid "The sizes do not match (local %s) -- retrieving.\n"
 msgstr "Velikosti se neshodují (lokální %s), stahuji.\n"
 
-#: src/http.c:4198
+#: src/http.c:4190
 msgid "Remote file is newer, retrieving.\n"
 msgstr "Lokální soubor je starší a vzdálený soubor se proto bude přenášet.\n"
 
-#: src/http.c:4216
+#: src/http.c:4208
 msgid ""
 "Remote file exists and could contain links to other resources -- "
 "retrieving.\n"
@@ -1231,7 +1231,7 @@ msgstr ""
 "stahuji.\n"
 "\n"
 
-#: src/http.c:4222
+#: src/http.c:4214
 msgid ""
 "Remote file exists but does not contain any link -- not retrieving.\n"
 "\n"
@@ -1239,7 +1239,7 @@ msgstr ""
 "Vzdálený soubor existuje, ale neobsahuje žádné odkazy – nestahuji.\n"
 "\n"
 
-#: src/http.c:4231
+#: src/http.c:4223
 msgid ""
 "Remote file exists and could contain further links,\n"
 "but recursion is disabled -- not retrieving.\n"
@@ -1248,7 +1248,7 @@ msgstr ""
 "Vzdálený soubor existuje a možná obsahuje další odkazy,\n"
 "avšak rekurze je vypnuta – nestahuji.\n"
 
-#: src/http.c:4237
+#: src/http.c:4229
 msgid ""
 "Remote file exists.\n"
 "\n"
@@ -1256,12 +1256,12 @@ msgstr ""
 "Vzdálený soubor existuje.\n"
 "\n"
 
-#: src/http.c:4246
+#: src/http.c:4238
 #, c-format
 msgid "%s URL: %s %2d %s\n"
 msgstr "%s URL: %s %2d %s\n"
 
-#: src/http.c:4296
+#: src/http.c:4288
 #, c-format
 msgid ""
 "%s (%s) - written to stdout %s[%s/%s]\n"
@@ -1270,7 +1270,7 @@ msgstr ""
 "%s (%s) – zapsáno na standardní výstup %s[%s/%s]\n"
 "\n"
 
-#: src/http.c:4297
+#: src/http.c:4289
 #, c-format
 msgid ""
 "%s (%s) - %s saved [%s/%s]\n"
@@ -1279,57 +1279,57 @@ msgstr ""
 "%s (%s) – %s uloženo [%s/%s]\n"
 "\n"
 
-#: src/http.c:4358
+#: src/http.c:4350
 #, c-format
 msgid "%s (%s) - Connection closed at byte %s. "
 msgstr "%s (%s) – Spojení ukončeno na bajtu %s. "
 
-#: src/http.c:4381
+#: src/http.c:4373
 #, c-format
 msgid "%s (%s) - Read error at byte %s (%s)."
 msgstr "%s (%s) – Chyba při čtení dat na bajtu %s (%s)."
 
-#: src/http.c:4390
+#: src/http.c:4382
 #, c-format
 msgid "%s (%s) - Read error at byte %s/%s (%s). "
 msgstr "%s (%s) – Chyba při čtení dat na bajtu %s/%s (%s). "
 
-#: src/http.c:4625
+#: src/http.c:4617
 #, c-format
 msgid "Unsupported quality of protection '%s'.\n"
 msgstr "Nepodporovaná kvalita ochrany „%s“.\n"
 
-#: src/http.c:4630
+#: src/http.c:4622
 #, c-format
 msgid "Unsupported algorithm '%s'.\n"
 msgstr "Nepodporovaný algoritmus „%s“.\n"
 
-#: src/init.c:542
+#: src/init.c:543
 #, c-format
 msgid "%s: WGETRC points to %s, which doesn't exist.\n"
 msgstr "%s: WGETRC ukazuje na %s, který ale neexistuje.\n"
 
-#: src/init.c:643 src/netrc.c:246
+#: src/init.c:644 src/netrc.c:246
 #, c-format
 msgid "%s: Cannot read %s (%s).\n"
 msgstr "%s: Nelze přečíst %s (%s).\n"
 
-#: src/init.c:660
+#: src/init.c:661
 #, c-format
 msgid "%s: Error in %s at line %d.\n"
 msgstr "%s: Chyba v %s na řádku %d.\n"
 
-#: src/init.c:666
+#: src/init.c:667
 #, c-format
 msgid "%s: Syntax error in %s at line %d.\n"
 msgstr "%s: Syntaktická chyba v %s na řádku %d.\n"
 
-#: src/init.c:671
+#: src/init.c:672
 #, c-format
 msgid "%s: Unknown command %s in %s at line %d.\n"
 msgstr "%s: Neznámý příkaz %s v %s na řádku %d.\n"
 
-#: src/init.c:708
+#: src/init.c:709
 #, c-format
 msgid ""
 "Parsing system wgetrc file (env SYSTEM_WGETRC) failed.  Please check\n"
@@ -1341,7 +1341,7 @@ msgstr ""
 "Prosím, prověřte „%s“\n"
 "nebo určete jiný soubor pomocí --config.\n"
 
-#: src/init.c:723
+#: src/init.c:724
 #, c-format
 msgid ""
 "Parsing system wgetrc file failed.  Please check\n"
@@ -1352,66 +1352,73 @@ msgstr ""
 "„%s“\n"
 "nebo určete jiný soubor pomocí --config.\n"
 
-#: src/init.c:739
+#: src/init.c:740
 #, c-format
 msgid "%s: Warning: Both system and user wgetrc point to %s.\n"
 msgstr ""
 "%s: Varování: Globální i uživatelský wgetrc jsou shodně uloženy v %s.\n"
 
-#: src/init.c:929
+#: src/init.c:930
 #, c-format
 msgid "%s: Invalid --execute command %s\n"
 msgstr "%s: Neplatný příkaz --execute %s\n"
 
-#: src/init.c:974
+#: src/init.c:991
 #, c-format
 msgid "%s: %s: Invalid boolean %s; use `on' or `off'.\n"
 msgstr ""
 "%s: %s: Neplatná pravdivostní hodnota %s, zadejte „on“ (zapnuto) nebo "
 "„off“ (vypnuto).\n"
 
-#: src/init.c:991
+#: src/init.c:1024
+#, fuzzy, c-format
+msgid "%s: %s: Invalid %s; use `on', `off' or `quiet'.\n"
+msgstr ""
+"%s: %s: Neplatná pravdivostní hodnota %s, zadejte „on“ (zapnuto) nebo "
+"„off“ (vypnuto).\n"
+
+#: src/init.c:1042
 #, c-format
 msgid "%s: %s: Invalid number %s.\n"
 msgstr "%s: %s: Neplatné číslo %s\n"
 
-#: src/init.c:1072
+#: src/init.c:1123
 #, c-format
 msgid "%s: %s must only be used once\n"
 msgstr "%s: %s lze použít jen jednou\n"
 
-#: src/init.c:1227 src/init.c:1246
+#: src/init.c:1278 src/init.c:1297
 #, c-format
 msgid "%s: %s: Invalid byte value %s\n"
 msgstr "%s: %s: Neplatná hodnota bajtu %s\n"
 
-#: src/init.c:1271
+#: src/init.c:1322
 #, c-format
 msgid "%s: %s: Invalid time period %s\n"
 msgstr "%s: %s: Neplatná časová perioda %s\n"
 
-#: src/init.c:1325 src/init.c:1436 src/init.c:1492 src/init.c:1558
-#: src/init.c:1577 src/init.c:1602
+#: src/init.c:1376 src/init.c:1487 src/init.c:1543 src/init.c:1609
+#: src/init.c:1628 src/init.c:1653
 #, c-format
 msgid "%s: %s: Invalid value %s.\n"
 msgstr "%s: %s: Neplatná hodnota %s.\n"
 
-#: src/init.c:1362
+#: src/init.c:1413
 #, c-format
 msgid "%s: %s: Invalid header %s.\n"
 msgstr "%s: %s: Neplatná hlavička %s\n"
 
-#: src/init.c:1383
+#: src/init.c:1434
 #, c-format
 msgid "%s: %s: Invalid WARC header %s.\n"
 msgstr "%s: %s: Neplatná hlavička WARC %s.\n"
 
-#: src/init.c:1449
+#: src/init.c:1500
 #, c-format
 msgid "%s: %s: Invalid progress type %s.\n"
 msgstr "%s: %s: Neplatný druh indikace postupu %s.\n"
 
-#: src/init.c:1531
+#: src/init.c:1582
 #, c-format
 msgid ""
 "%s: %s: Invalid restriction %s,\n"
@@ -2813,22 +2820,22 @@ msgstr ""
 "Přepínač -k nebo -r lze použít spolu s -O pouze tehdy, je-li výstupem\n"
 "obyčejný soubor.\n"
 
-#: src/main.c:1886
+#: src/main.c:1894
 #, c-format
 msgid "No URLs found in %s.\n"
 msgstr "V souboru „%s“ nebyla nalezena žádná URL.\n"
 
-#: src/main.c:1902
+#: src/main.c:1910
 #, c-format
 msgid "Unable to parse metalink file %s.\n"
 msgstr "Metalinkový soubor %s nebylo možné rozebrat.\n"
 
-#: src/main.c:1932
+#: src/main.c:1940
 #, c-format
 msgid "Could not download all resources from %s.\n"
 msgstr "Ne všechny zdroje bylo možné stáhnout z %s.\n"
 
-#: src/main.c:1959
+#: src/main.c:1967
 #, c-format
 msgid ""
 "FINISHED --%s--\n"
@@ -2839,7 +2846,7 @@ msgstr ""
 "Celkový skutečný čas: %s\n"
 "Staženo: %d souborů, %s za %s (%s)\n"
 
-#: src/main.c:1973
+#: src/main.c:1981
 #, c-format
 msgid "Download quota of %s EXCEEDED!\n"
 msgstr "Kvóta %s na stahování PŘEKROČENA!\n"
@@ -2997,28 +3004,28 @@ msgstr "Vaše verze OpenSSL je příliš stará, aby podporovala TLSv1.2\n"
 msgid "OpenSSL: unimplemented 'secure-protocol' option value %d\n"
 msgstr "OpenSSL: neimplementovaná hodnota %d volby „secure-protocol“\n"
 
-#: src/openssl.c:710
+#: src/openssl.c:714
 #, c-format
 msgid "%s: cannot verify %s's certificate, issued by %s:\n"
 msgstr "%s: certifikát pro %s vydaný %s nelze ověřit:\n"
 
-#: src/openssl.c:721
+#: src/openssl.c:725
 msgid "  Unable to locally verify the issuer's authority.\n"
 msgstr "  Autoritu vydavatele nelze lokálně ověřit.\n"
 
-#: src/openssl.c:726
+#: src/openssl.c:730
 msgid "  Self-signed certificate encountered.\n"
 msgstr "  Nalezen certifikát podepsaný sám sebou.\n"
 
-#: src/openssl.c:729
+#: src/openssl.c:733
 msgid "  Issued certificate not yet valid.\n"
 msgstr "  Vydaný certifikát ještě nenabyl platnosti.\n"
 
-#: src/openssl.c:732
+#: src/openssl.c:736
 msgid "  Issued certificate has expired.\n"
 msgstr "  Vydanému certifikátu uplynula doba platnosti.\n"
 
-#: src/openssl.c:817
+#: src/openssl.c:821
 #, c-format
 msgid ""
 "%s: no certificate subject alternative name matches\n"
@@ -3027,7 +3034,7 @@ msgstr ""
 "%s: žádné alternativní jméno z certifikátu se neshoduje\n"
 "\ts požadovaným jménem počítače %s.\n"
 
-#: src/openssl.c:834
+#: src/openssl.c:838
 #, c-format
 msgid ""
 "    %s: certificate common name %s doesn't match requested host name %s.\n"
@@ -3035,7 +3042,7 @@ msgstr ""
 "    %s: obecné jméno (CN) certifikátu %s se neshoduje s požadovaným jménem "
 "počítače %s.\n"
 
-#: src/openssl.c:866
+#: src/openssl.c:870
 #, c-format
 msgid ""
 "    %s: certificate common name is invalid (contains a NUL character).\n"
@@ -3046,7 +3053,7 @@ msgstr ""
 "    To může ukazovat na to, že stroj není tím, za koho se vydává (to jest,\n"
 "    ve skutečnosti to není %s).\n"
 
-#: src/openssl.c:884
+#: src/openssl.c:888
 #, c-format
 msgid "To connect to %s insecurely, use `--no-check-certificate'.\n"
 msgstr "Pro nezabezpečené spojení s %s použijte „--no-check-certificate“.\n"
@@ -3067,13 +3074,14 @@ msgstr "%s není platné určení způsobu indikace, ponecháno nezměněno.\n"
 
 #. TRANSLATORS: "ETA" is English-centric, but this must
 #. be short, ideally 3 chars.  Abbreviate if necessary.
-#: src/progress.c:857
-#, c-format
-msgid "   eta %s"
+#: src/progress.c:858
+#, fuzzy, c-format
+msgid "    eta %s"
 msgstr " zbývá %s"
 
-#: src/progress.c:1165
-msgid "   in "
+#: src/progress.c:1153
+#, fuzzy
+msgid "    in "
 msgstr "   za "
 
 #: src/ptimer.c:158
@@ -3105,12 +3113,12 @@ msgstr "Chyba rozebírání URL proxy serveru %s: %s.\n"
 msgid "Error in proxy URL %s: Must be HTTP.\n"
 msgstr "Chyba v URL Proxy %s: Musí být HTTP.\n"
 
-#: src/retr.c:904
+#: src/retr.c:908
 #, c-format
 msgid "%d redirections exceeded.\n"
 msgstr "Překročeno %d přesměrování.\n"
 
-#: src/retr.c:1153
+#: src/retr.c:1165
 msgid ""
 "Giving up.\n"
 "\n"
@@ -3118,7 +3126,7 @@ msgstr ""
 "Ani poslední pokus nebyl úspěšný.\n"
 "\n"
 
-#: src/retr.c:1153
+#: src/retr.c:1165
 msgid ""
 "Retrying.\n"
 "\n"

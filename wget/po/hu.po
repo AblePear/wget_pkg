@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wget 1.16.1.46\n"
 "Report-Msgid-Bugs-To: bug-wget@gnu.org\n"
-"POT-Creation-Date: 2015-11-15 15:11+0100\n"
+"POT-Creation-Date: 2015-12-11 18:42+0100\n"
 "PO-Revision-Date: 2015-02-12 22:54+0100\n"
 "Last-Translator: Gabor Kelemen <kelemeng@gnome.hu>\n"
 "Language-Team: Hungarian <translation-team-hu@lists.sourceforge.net>\n"
@@ -456,81 +456,81 @@ msgstr ", %s van hátra"
 msgid " (unauthoritative)\n"
 msgstr " (nem hiteles)\n"
 
-#: src/ftp.c:377
+#: src/ftp.c:378
 msgid "Could not initialize SSL. It will be disabled."
 msgstr ""
 
-#: src/ftp.c:457
+#: src/ftp.c:460
 #, c-format
 msgid "Logging in as %s ... "
 msgstr "Belépés mint %s … "
 
-#: src/ftp.c:476 src/ftp.c:562 src/ftp.c:629 src/ftp.c:694 src/ftp.c:928
-#: src/ftp.c:981 src/ftp.c:1028 src/ftp.c:1091 src/ftp.c:1152 src/ftp.c:1243
-#: src/ftp.c:1293
+#: src/ftp.c:479 src/ftp.c:565 src/ftp.c:632 src/ftp.c:697 src/ftp.c:931
+#: src/ftp.c:984 src/ftp.c:1031 src/ftp.c:1094 src/ftp.c:1155 src/ftp.c:1246
+#: src/ftp.c:1296
 msgid "Error in server response, closing control connection.\n"
 msgstr "Hiba a kiszolgáló válaszában, vezérlőkapcsolat lezárása.\n"
 
-#: src/ftp.c:483
+#: src/ftp.c:486
 msgid "Error in server greeting.\n"
 msgstr "Hiba a kiszolgáló üdvözlésében.\n"
 
-#: src/ftp.c:490 src/ftp.c:702 src/ftp.c:936 src/ftp.c:1036 src/ftp.c:1101
-#: src/ftp.c:1162 src/ftp.c:1253 src/ftp.c:1303
+#: src/ftp.c:493 src/ftp.c:705 src/ftp.c:939 src/ftp.c:1039 src/ftp.c:1104
+#: src/ftp.c:1165 src/ftp.c:1256 src/ftp.c:1306
 msgid "Write failed, closing control connection.\n"
 msgstr "Írás sikertelen, vezérlőkapcsolat bezárva.\n"
 
-#: src/ftp.c:496
+#: src/ftp.c:499
 msgid "The server refuses login.\n"
 msgstr "A kiszolgáló visszautasítja a belépést.\n"
 
-#: src/ftp.c:502
+#: src/ftp.c:505
 msgid "Login incorrect.\n"
 msgstr "A belépés helytelen.\n"
 
-#: src/ftp.c:508
+#: src/ftp.c:511
 msgid "Logged in!\n"
 msgstr "Belépve!\n"
 
-#: src/ftp.c:528
+#: src/ftp.c:531
 msgid "Server did not accept the 'PBSZ 0' command.\n"
 msgstr ""
 
-#: src/ftp.c:538
+#: src/ftp.c:541
 #, c-format
 msgid "Server did not accept the 'PROT %c' command.\n"
 msgstr ""
 
-#: src/ftp.c:570
+#: src/ftp.c:573
 msgid "Server error, can't determine system type.\n"
 msgstr "Kiszolgálóhiba, a rendszer típusa nem határozható meg.\n"
 
-#: src/ftp.c:579 src/ftp.c:1071 src/ftp.c:1135 src/ftp.c:1178
+#: src/ftp.c:582 src/ftp.c:1074 src/ftp.c:1138 src/ftp.c:1181
 msgid "done.    "
 msgstr "kész.    "
 
-#: src/ftp.c:682 src/ftp.c:954 src/ftp.c:998 src/ftp.c:1273 src/ftp.c:1322
+#: src/ftp.c:685 src/ftp.c:957 src/ftp.c:1001 src/ftp.c:1276 src/ftp.c:1325
 msgid "done.\n"
 msgstr "kész.\n"
 
-#: src/ftp.c:709
+#: src/ftp.c:712
 #, c-format
 msgid "Unknown type `%c', closing control connection.\n"
 msgstr "Ismeretlen típus: „%c”, a vezérlőkapcsolat lezárásra kerül.\n"
 
-#: src/ftp.c:721
+#: src/ftp.c:724
 msgid "done.  "
 msgstr "kész.  "
 
-#: src/ftp.c:727
+#: src/ftp.c:730
 msgid "==> CWD not needed.\n"
 msgstr "==> CWD nem szükséges.\n"
 
-#: src/ftp.c:911
+#: src/ftp.c:914
 msgid "Logically impossible section reached in getftp()"
 msgstr "Logikailag lehetetlen szakasz elérve a getftp()-ben"
 
-#: src/ftp.c:912
+#: src/ftp.c:915
 #, c-format
 msgid ""
 "cwd_count: %d\n"
@@ -541,7 +541,7 @@ msgstr ""
 "cwd_start: %d\n"
 "cwd_end: %d\n"
 
-#: src/ftp.c:942
+#: src/ftp.c:945
 #, c-format
 msgid ""
 "No such directory %s.\n"
@@ -550,37 +550,37 @@ msgstr ""
 "Nincs ilyen könyvtár: %s.\n"
 "\n"
 
-#: src/ftp.c:963
+#: src/ftp.c:966
 msgid "==> CWD not required.\n"
 msgstr "==> CWD nem szükséges.\n"
 
-#: src/ftp.c:1006
+#: src/ftp.c:1009
 msgid "File has already been retrieved.\n"
 msgstr "A fájl már le van töltve.\n"
 
-#: src/ftp.c:1042
+#: src/ftp.c:1045
 msgid "Cannot initiate PASV transfer.\n"
 msgstr "Nem kezdeményezhető PASV átvitel.\n"
 
-#: src/ftp.c:1046
+#: src/ftp.c:1049
 msgid "Cannot parse PASV response.\n"
 msgstr "A PASV válasz nem dolgozható fel.\n"
 
-#: src/ftp.c:1063
+#: src/ftp.c:1066
 #, c-format
 msgid "couldn't connect to %s port %d: %s\n"
 msgstr "nem lehet csatlakozni %s %d. portjához: %s\n"
 
-#: src/ftp.c:1117
+#: src/ftp.c:1120
 #, c-format
 msgid "Bind error (%s).\n"
 msgstr "Hozzárendelési hiba (%s).\n"
 
-#: src/ftp.c:1123
+#: src/ftp.c:1126
 msgid "Invalid PORT.\n"
 msgstr "Érvénytelen PORT.\n"
 
-#: src/ftp.c:1169
+#: src/ftp.c:1172
 msgid ""
 "\n"
 "REST failed, starting from scratch.\n"
@@ -588,19 +588,19 @@ msgstr ""
 "\n"
 "REST sikertelen, kezdés elölről.\n"
 
-#: src/ftp.c:1209
+#: src/ftp.c:1212
 #, c-format
 msgid "File %s exists.\n"
 msgstr ""
 "A fájl (%s) létezik.\n"
 "\n"
 
-#: src/ftp.c:1215
+#: src/ftp.c:1218
 #, c-format
 msgid "No such file %s.\n"
 msgstr "Nincs ilyen fájl: %s.\n"
 
-#: src/ftp.c:1261
+#: src/ftp.c:1264
 #, c-format
 msgid ""
 "No such file %s.\n"
@@ -609,7 +609,7 @@ msgstr ""
 "Nincs ilyen fájl: %s.\n"
 "\n"
 
-#: src/ftp.c:1311
+#: src/ftp.c:1314
 #, c-format
 msgid ""
 "No such file or directory %s.\n"
@@ -618,40 +618,40 @@ msgstr ""
 "Nincs ilyen fájl vagy könyvtár: %s.\n"
 "\n"
 
-#: src/ftp.c:1470 src/http.c:2483
+#: src/ftp.c:1473 src/http.c:2483
 #, c-format
 msgid "%s has sprung into existence.\n"
 msgstr "%s létrejött.\n"
 
-#: src/ftp.c:1552
+#: src/ftp.c:1557
 #, c-format
 msgid "%s: %s, closing control connection.\n"
 msgstr "%s: %s, vezérlőkapcsolat lezárása.\n"
 
-#: src/ftp.c:1564
+#: src/ftp.c:1569
 #, c-format
 msgid "%s (%s) - Data connection: %s; "
 msgstr "%s (%s) -- Adatkapcsolat: %s; "
 
-#: src/ftp.c:1579
+#: src/ftp.c:1584
 msgid "Control connection closed.\n"
 msgstr "Vezérlőkapcsolat lezárva.\n"
 
-#: src/ftp.c:1597
+#: src/ftp.c:1602
 msgid "Data transfer aborted.\n"
 msgstr "Adatátvitel megszakítva.\n"
 
-#: src/ftp.c:1814
+#: src/ftp.c:1826
 #, c-format
 msgid "File %s already there; not retrieving.\n"
 msgstr "A fájl (%s) már megvan, nem kerül letöltésre.\n"
 
-#: src/ftp.c:1899 src/http.c:3923
+#: src/ftp.c:1911 src/http.c:3915
 #, c-format
 msgid "(try:%2d)"
 msgstr "(próba:%2d)"
 
-#: src/ftp.c:1987 src/http.c:4332
+#: src/ftp.c:1999 src/http.c:4324
 #, c-format
 msgid ""
 "%s (%s) - written to stdout %s[%s]\n"
@@ -660,7 +660,7 @@ msgstr ""
 "%s (%s) -- szabványos kimenetre mentve %s[%s]\n"
 "\n"
 
-#: src/ftp.c:1988 src/http.c:4333
+#: src/ftp.c:2000 src/http.c:4325
 #, c-format
 msgid ""
 "%s (%s) - %s saved [%s]\n"
@@ -669,33 +669,33 @@ msgstr ""
 "%s (%s) -- %s mentve [%s]\n"
 "\n"
 
-#: src/ftp.c:2048 src/main.c:1867 src/metalink.c:426 src/recur.c:499
-#: src/recur.c:730 src/retr.c:1129
+#: src/ftp.c:2060 src/main.c:1875 src/metalink.c:426 src/recur.c:499
+#: src/recur.c:734 src/retr.c:1141
 #, c-format
 msgid "Removing %s.\n"
 msgstr "%s eltávolítása.\n"
 
-#: src/ftp.c:2101
+#: src/ftp.c:2113
 #, c-format
 msgid "Using %s as listing tmp file.\n"
 msgstr "%s kerül felhasználásra felsorolási átmeneti fájlként.\n"
 
-#: src/ftp.c:2118
+#: src/ftp.c:2130
 #, c-format
 msgid "Removed %s.\n"
 msgstr "%s eltávolítva.\n"
 
-#: src/ftp.c:2156
+#: src/ftp.c:2168
 #, c-format
 msgid "Recursion depth %d exceeded max. depth %d.\n"
 msgstr "A(z) %d rekurziós mélység túllépte a maximális %d mélységet.\n"
 
-#: src/ftp.c:2226
+#: src/ftp.c:2238
 #, c-format
 msgid "Remote file no newer than local file %s -- not retrieving.\n"
 msgstr "A távoli fájl nem újabb a helyi %s fájlnál -- nem kerül letöltésre.\n"
 
-#: src/ftp.c:2234
+#: src/ftp.c:2246
 #, c-format
 msgid ""
 "Remote file is newer than local file %s -- retrieving.\n"
@@ -704,7 +704,7 @@ msgstr ""
 "A távoli fájl újabb a helyi %s fájlnál -- letöltésre kerül.\n"
 "\n"
 
-#: src/ftp.c:2241
+#: src/ftp.c:2253
 #, c-format
 msgid ""
 "The sizes do not match (local %s) -- retrieving.\n"
@@ -713,11 +713,11 @@ msgstr ""
 "A méretek nem egyeznek (a helyi: %s) -- letöltésre kerül.\n"
 "\n"
 
-#: src/ftp.c:2259
+#: src/ftp.c:2271
 msgid "Invalid name of the symlink, skipping.\n"
 msgstr "A szimbolikus link neve érvénytelen, kihagyás.\n"
 
-#: src/ftp.c:2276
+#: src/ftp.c:2288
 #, c-format
 msgid ""
 "Already have correct symlink %s -> %s\n"
@@ -726,64 +726,64 @@ msgstr ""
 "Már létezik a helyes %s → %s szimbolikus link\n"
 "\n"
 
-#: src/ftp.c:2285
+#: src/ftp.c:2297
 #, c-format
 msgid "Creating symlink %s -> %s\n"
 msgstr "A(z) %s → %s szimbolikus link létrehozása\n"
 
-#: src/ftp.c:2295
+#: src/ftp.c:2307
 #, c-format
 msgid "Symlinks not supported, skipping symlink %s.\n"
 msgstr ""
 "A szimbolikus linkek nem támogatottak, a(z) %s szimbolikus link kihagyva.\n"
 
-#: src/ftp.c:2307
+#: src/ftp.c:2319
 #, c-format
 msgid "Skipping directory %s.\n"
 msgstr "A könyvtár (%s) kihagyása.\n"
 
-#: src/ftp.c:2316
+#: src/ftp.c:2328
 #, c-format
 msgid "%s: unknown/unsupported file type.\n"
 msgstr "%s: ismeretlen/nem támogatott fájltípus.\n"
 
-#: src/ftp.c:2356
+#: src/ftp.c:2368
 #, c-format
 msgid "%s: corrupt time-stamp.\n"
 msgstr "%s: sérült időpecsét.\n"
 
-#: src/ftp.c:2380
+#: src/ftp.c:2392
 #, c-format
 msgid "Will not retrieve dirs since depth is %d (max %d).\n"
 msgstr "A könyvtárak letöltése kihagyva, mivel a mélység %d (max %d).\n"
 
-#: src/ftp.c:2430
+#: src/ftp.c:2442
 #, c-format
 msgid "Not descending to %s as it is excluded/not-included.\n"
 msgstr ""
 "A következőbe belépés kihagyva: %s, mert ki van zárva/nincs kijelölve.\n"
 
-#: src/ftp.c:2519 src/ftp.c:2533
+#: src/ftp.c:2531 src/ftp.c:2545
 #, c-format
 msgid "Rejecting %s.\n"
 msgstr "%s visszautasítása.\n"
 
-#: src/ftp.c:2556
+#: src/ftp.c:2568
 #, c-format
 msgid "Error matching %s against %s: %s\n"
 msgstr "Hiba %s és %s illesztésekor: %s\n"
 
-#: src/ftp.c:2612
+#: src/ftp.c:2624
 #, c-format
 msgid "No matches on pattern %s.\n"
 msgstr "Nincs találat a mintához (%s).\n"
 
-#: src/ftp.c:2683
+#: src/ftp.c:2695
 #, c-format
 msgid "Wrote HTML-ized index to %s [%s].\n"
 msgstr "A HTML-esített index kiírva a fájlba (%s[%s]) fájlba.\n"
 
-#: src/ftp.c:2688
+#: src/ftp.c:2700
 #, c-format
 msgid "Wrote HTML-ized index to %s.\n"
 msgstr "A HTML-esített index kiírva a fájlba (%s).\n"
@@ -827,82 +827,82 @@ msgstr "GnuTLS: megvalósítatlan „secure-protocol” beállításérték: %d\
 msgid "Please report this issue to bug-wget@gnu.org\n"
 msgstr "Jelentse ezt a problémát a bug-wget@gnu.org címen\n"
 
-#: src/gnutls.c:688 src/openssl.c:679
+#: src/gnutls.c:692 src/openssl.c:679
 msgid "ERROR"
 msgstr "HIBA"
 
-#: src/gnutls.c:688 src/openssl.c:679
+#: src/gnutls.c:692 src/openssl.c:679
 msgid "WARNING"
 msgstr "FIGYELMEZTETÉS"
 
-#: src/gnutls.c:694 src/openssl.c:688
+#: src/gnutls.c:702 src/openssl.c:692
 #, c-format
 msgid "%s: No certificate presented by %s.\n"
 msgstr "%s: %s nem mutatott be tanúsítványt.\n"
 
-#: src/gnutls.c:700
+#: src/gnutls.c:708
 #, c-format
 msgid "%s: The certificate of %s is not trusted.\n"
 msgstr "%s: %s tanúsítványa nem megbízható.\n"
 
-#: src/gnutls.c:701
+#: src/gnutls.c:709
 #, c-format
 msgid "%s: The certificate of %s hasn't got a known issuer.\n"
 msgstr "%s: %s tanúsítványának nincs ismert kibocsátója.\n"
 
-#: src/gnutls.c:702
+#: src/gnutls.c:710
 #, c-format
 msgid "%s: The certificate of %s has been revoked.\n"
 msgstr "%s: %s tanúsítványát visszavonták.\n"
 
-#: src/gnutls.c:703
+#: src/gnutls.c:711
 #, c-format
 msgid "%s: The certificate signer of %s was not a CA.\n"
 msgstr "%s: %s tanúsítványát nem egy hitelesítésszolgáltató írta alá.\n"
 
-#: src/gnutls.c:704
+#: src/gnutls.c:712
 #, c-format
 msgid "%s: The certificate of %s was signed using an insecure algorithm.\n"
 msgstr "%s: %s tanúsítványát nem biztonságos algoritmussal írták alá.\n"
 
-#: src/gnutls.c:705
+#: src/gnutls.c:713
 #, c-format
 msgid "%s: The certificate of %s is not yet activated.\n"
 msgstr "%s: %s tanúsítványa még nincs aktiválva.\n"
 
-#: src/gnutls.c:706
+#: src/gnutls.c:714
 #, c-format
 msgid "%s: The certificate of %s has expired.\n"
 msgstr "%s: %s tanúsítványa lejárt.\n"
 
-#: src/gnutls.c:717
+#: src/gnutls.c:725
 #, c-format
 msgid "Error initializing X509 certificate: %s\n"
 msgstr "Hiba az X509 tanúsítvány előkészítésekor: %s\n"
 
-#: src/gnutls.c:726
+#: src/gnutls.c:734
 msgid "No certificate found\n"
 msgstr "Nem található tanúsítvány\n"
 
-#: src/gnutls.c:733
+#: src/gnutls.c:741
 #, c-format
 msgid "Error parsing certificate: %s\n"
 msgstr "Hiba a tanúsítvány feldolgozása közben: %s.\n"
 
-#: src/gnutls.c:740
+#: src/gnutls.c:748
 msgid "The certificate has not yet been activated\n"
 msgstr "A tanúsítványt még nem aktiválták.\n"
 
-#: src/gnutls.c:745
+#: src/gnutls.c:753
 msgid "The certificate has expired\n"
 msgstr "A tanúsítvány lejárt.\n"
 
-#: src/gnutls.c:751
+#: src/gnutls.c:759
 #, c-format
 msgid "The certificate's owner does not match hostname %s\n"
 msgstr "A tanúsítvány tulajdonosa nem felel meg a gépnévnek (%s).\n"
 
-#: src/gnutls.c:760
+#: src/gnutls.c:768
 msgid "Certificate must be X.509\n"
 msgstr "A tanúsítványnak X.509-nek kell lennie\n"
 
@@ -985,7 +985,7 @@ msgstr "Újrahasználom a kapcsolatot a következőhöz: %s:%d.\n"
 msgid "Failed reading proxy response: %s\n"
 msgstr "A proxy válasz olvasása meghiúsult: %s\n"
 
-#: src/http.c:2116 src/http.c:3191 src/http.c:4126
+#: src/http.c:2116 src/http.c:3191 src/http.c:4118
 #, c-format
 msgid "%s ERROR %d: %s.\n"
 msgstr "%s HIBA %d: %s.\n"
@@ -1107,74 +1107,74 @@ msgstr "Hossz: "
 msgid "ignored"
 msgstr "figyelmen kívül hagyva"
 
-#: src/http.c:3824
+#: src/http.c:3823
 msgid "Warning: wildcards not supported in HTTP.\n"
 msgstr "Figyelmeztetés: a helyettesítő karaktereket a HTTP nem támogatja.\n"
 
-#: src/http.c:3913
+#: src/http.c:3905
 msgid "Spider mode enabled. Check if remote file exists.\n"
 msgstr "A „spider” mód bekapcsolva. A távoli fájl létezésének ellenőrzése.\n"
 
-#: src/http.c:4001
+#: src/http.c:3993
 #, c-format
 msgid "Cannot write to %s (%s).\n"
 msgstr "%s nem írható (%s).\n"
 
-#: src/http.c:4012
+#: src/http.c:4004
 msgid "Required attribute missing from Header received.\n"
 msgstr "A kapott fejlécből hiányzik egy kötelező attribútum.\n"
 
-#: src/http.c:4017
+#: src/http.c:4009
 msgid "Username/Password Authentication Failed.\n"
 msgstr "A felhasználónév/jelszó hitelesítés meghiúsult.\n"
 
-#: src/http.c:4023
+#: src/http.c:4015
 msgid "Cannot write to WARC file.\n"
 msgstr "Nem írható a WARC fájl.\n"
 
-#: src/http.c:4029
+#: src/http.c:4021
 msgid "Cannot write to temporary WARC file.\n"
 msgstr "Az ideiglenes WARC fájl nem írható.\n"
 
-#: src/http.c:4034
+#: src/http.c:4026
 msgid "Unable to establish SSL connection.\n"
 msgstr "Nem lehet létrehozni SSL-kapcsolatot.\n"
 
-#: src/http.c:4040
+#: src/http.c:4032
 #, c-format
 msgid "Cannot unlink %s (%s).\n"
 msgstr "%s nem törölhető (%s).\n"
 
-#: src/http.c:4050
+#: src/http.c:4042
 #, c-format
 msgid "ERROR: Redirection (%d) without location.\n"
 msgstr "HIBA: Átirányítás (%d) hely nélkül.\n"
 
-#: src/http.c:4072
+#: src/http.c:4064
 msgid ""
 "Could not find Metalink data in HTTP response. Downloading file using HTTP "
 "GET.\n"
 msgstr ""
 
-#: src/http.c:4081
+#: src/http.c:4073
 msgid "Metalink headers found. Switching to Metalink mode.\n"
 msgstr ""
 
-#: src/http.c:4121
+#: src/http.c:4113
 msgid "Remote file does not exist -- broken link!!!\n"
 msgstr "A távoli fájl nem létezik -- hibás hivatkozás!\n"
 
-#: src/http.c:4143
+#: src/http.c:4135
 msgid "Last-modified header missing -- time-stamps turned off.\n"
 msgstr "Az Utolsó módosítás fejléc hiányzik -- az időbélyegek kikapcsolva.\n"
 
-#: src/http.c:4151
+#: src/http.c:4143
 msgid "Last-modified header invalid -- time-stamp ignored.\n"
 msgstr ""
 "Az Utolsó módosítás fejléc érvénytelen -- az időbélyeg figyelmen kívül "
 "hagyva.\n"
 
-#: src/http.c:4181
+#: src/http.c:4173
 #, c-format
 msgid ""
 "Server file no newer than local file %s -- not retrieving.\n"
@@ -1183,16 +1183,16 @@ msgstr ""
 "A kiszolgálón lévő %s fájl nem újabb mint a helyi -- nem kerül letöltésre.\n"
 "\n"
 
-#: src/http.c:4189
+#: src/http.c:4181
 #, c-format
 msgid "The sizes do not match (local %s) -- retrieving.\n"
 msgstr "A méretek nem egyeznek (a helyi: %s) -- letöltésre kerül.\n"
 
-#: src/http.c:4198
+#: src/http.c:4190
 msgid "Remote file is newer, retrieving.\n"
 msgstr "A távoli fájl újabb, letöltésre kerül.\n"
 
-#: src/http.c:4216
+#: src/http.c:4208
 msgid ""
 "Remote file exists and could contain links to other resources -- "
 "retrieving.\n"
@@ -1202,7 +1202,7 @@ msgstr ""
 "letöltésre kerül.\n"
 "\n"
 
-#: src/http.c:4222
+#: src/http.c:4214
 msgid ""
 "Remote file exists but does not contain any link -- not retrieving.\n"
 "\n"
@@ -1210,7 +1210,7 @@ msgstr ""
 "A távoli fájl létezik, de nem tartalmaz hivatkozásokat -- nem kerül "
 "letöltésre.\n"
 
-#: src/http.c:4231
+#: src/http.c:4223
 msgid ""
 "Remote file exists and could contain further links,\n"
 "but recursion is disabled -- not retrieving.\n"
@@ -1220,7 +1220,7 @@ msgstr ""
 "de a rekurzió le van tiltva -- nem kerül letöltésre.\n"
 "\n"
 
-#: src/http.c:4237
+#: src/http.c:4229
 msgid ""
 "Remote file exists.\n"
 "\n"
@@ -1228,12 +1228,12 @@ msgstr ""
 "A távoli fájl létezik.\n"
 "\n"
 
-#: src/http.c:4246
+#: src/http.c:4238
 #, c-format
 msgid "%s URL: %s %2d %s\n"
 msgstr "%s URL: %s %2d %s\n"
 
-#: src/http.c:4296
+#: src/http.c:4288
 #, c-format
 msgid ""
 "%s (%s) - written to stdout %s[%s/%s]\n"
@@ -1242,7 +1242,7 @@ msgstr ""
 "%s (%s) -- %s kiírva a szabványos kimenetre [%s/%s]\n"
 "\n"
 
-#: src/http.c:4297
+#: src/http.c:4289
 #, c-format
 msgid ""
 "%s (%s) - %s saved [%s/%s]\n"
@@ -1251,57 +1251,57 @@ msgstr ""
 "%s (%s) -- %s mentve [%s/%s]\n"
 "\n"
 
-#: src/http.c:4358
+#: src/http.c:4350
 #, c-format
 msgid "%s (%s) - Connection closed at byte %s. "
 msgstr "%s (%s) -- A kapcsolat lezárva a(z) %s. bájtnál. "
 
-#: src/http.c:4381
+#: src/http.c:4373
 #, c-format
 msgid "%s (%s) - Read error at byte %s (%s)."
 msgstr "%s (%s) -- Olvasási hiba a(z) %s. bájtnál (%s). "
 
-#: src/http.c:4390
+#: src/http.c:4382
 #, c-format
 msgid "%s (%s) - Read error at byte %s/%s (%s). "
 msgstr "%s (%s) -- Olvasási hiba a(z) %s/%s. bájtnál (%s). "
 
-#: src/http.c:4625
+#: src/http.c:4617
 #, c-format
 msgid "Unsupported quality of protection '%s'.\n"
 msgstr "Nem támogatott védelmi minőség: „%s”.\n"
 
-#: src/http.c:4630
+#: src/http.c:4622
 #, c-format
 msgid "Unsupported algorithm '%s'.\n"
 msgstr "Nem támogatott algoritmus: „%s”.\n"
 
-#: src/init.c:542
+#: src/init.c:543
 #, c-format
 msgid "%s: WGETRC points to %s, which doesn't exist.\n"
 msgstr "%s: A WGETRC a nem létező %s elemre mutat.\n"
 
-#: src/init.c:643 src/netrc.c:246
+#: src/init.c:644 src/netrc.c:246
 #, c-format
 msgid "%s: Cannot read %s (%s).\n"
 msgstr "%s: %s nem olvasható (%s).\n"
 
-#: src/init.c:660
+#: src/init.c:661
 #, c-format
 msgid "%s: Error in %s at line %d.\n"
 msgstr "%s: Hiba a következőben: %s, a(z) %d. sornál.\n"
 
-#: src/init.c:666
+#: src/init.c:667
 #, c-format
 msgid "%s: Syntax error in %s at line %d.\n"
 msgstr "%s: Szintaktikai hiba a következőben: %s, a(z) %d. sornál.\n"
 
-#: src/init.c:671
+#: src/init.c:672
 #, c-format
 msgid "%s: Unknown command %s in %s at line %d.\n"
 msgstr "%s: Ismeretlen parancs (%s) a következőben: %s, a(z) %d. sornál.\n"
 
-#: src/init.c:708
+#: src/init.c:709
 #, c-format
 msgid ""
 "Parsing system wgetrc file (env SYSTEM_WGETRC) failed.  Please check\n"
@@ -1312,7 +1312,7 @@ msgstr ""
 "Ellenőrizze a következőt: „%s”,\n"
 "vagy adjon meg másik fájlt a --config kapcsolóval.\n"
 
-#: src/init.c:723
+#: src/init.c:724
 #, c-format
 msgid ""
 "Parsing system wgetrc file failed.  Please check\n"
@@ -1323,67 +1323,74 @@ msgstr ""
 "Ellenőrizze a következőt: „%s”,\n"
 "vagy adjon meg másik fájlt a --config kapcsolóval.\n"
 
-#: src/init.c:739
+#: src/init.c:740
 #, c-format
 msgid "%s: Warning: Both system and user wgetrc point to %s.\n"
 msgstr ""
 "%s: Figyelmeztetés: Mind a rendszer, mind a felhasználói wgetrc a(z) %s "
 "elemre mutat.\n"
 
-#: src/init.c:929
+#: src/init.c:930
 #, c-format
 msgid "%s: Invalid --execute command %s\n"
 msgstr "%s: Érvénytelen --execute parancs: %s\n"
 
-#: src/init.c:974
+#: src/init.c:991
 #, c-format
 msgid "%s: %s: Invalid boolean %s; use `on' or `off'.\n"
 msgstr ""
 "%s: %s: Érvénytelen logikai érték: %s, használja az „on” vagy „off” "
 "szavakat.\n"
 
-#: src/init.c:991
+#: src/init.c:1024
+#, fuzzy, c-format
+msgid "%s: %s: Invalid %s; use `on', `off' or `quiet'.\n"
+msgstr ""
+"%s: %s: Érvénytelen logikai érték: %s, használja az „on” vagy „off” "
+"szavakat.\n"
+
+#: src/init.c:1042
 #, c-format
 msgid "%s: %s: Invalid number %s.\n"
 msgstr "%s: %s: Érvénytelen szám: %s.\n"
 
-#: src/init.c:1072
+#: src/init.c:1123
 #, c-format
 msgid "%s: %s must only be used once\n"
 msgstr "%s: a(z) %s csak egyszer használható\n"
 
-#: src/init.c:1227 src/init.c:1246
+#: src/init.c:1278 src/init.c:1297
 #, c-format
 msgid "%s: %s: Invalid byte value %s\n"
 msgstr "%s: %s: Érvénytelen bájtérték: %s\n"
 
-#: src/init.c:1271
+#: src/init.c:1322
 #, c-format
 msgid "%s: %s: Invalid time period %s\n"
 msgstr "%s: %s: Érvénytelen időintervallum: %s\n"
 
-#: src/init.c:1325 src/init.c:1436 src/init.c:1492 src/init.c:1558
-#: src/init.c:1577 src/init.c:1602
+#: src/init.c:1376 src/init.c:1487 src/init.c:1543 src/init.c:1609
+#: src/init.c:1628 src/init.c:1653
 #, c-format
 msgid "%s: %s: Invalid value %s.\n"
 msgstr "%s: %s: Érvénytelen érték: %s.\n"
 
-#: src/init.c:1362
+#: src/init.c:1413
 #, c-format
 msgid "%s: %s: Invalid header %s.\n"
 msgstr "%s: %s: Érvénytelen fejléc: %s.\n"
 
-#: src/init.c:1383
+#: src/init.c:1434
 #, c-format
 msgid "%s: %s: Invalid WARC header %s.\n"
 msgstr "%s: %s: Érvénytelen WARC fejléc: %s.\n"
 
-#: src/init.c:1449
+#: src/init.c:1500
 #, c-format
 msgid "%s: %s: Invalid progress type %s.\n"
 msgstr "%s: %s: Érvénytelen folyamattípus: %s.\n"
 
-#: src/init.c:1531
+#: src/init.c:1582
 #, fuzzy, c-format
 msgid ""
 "%s: %s: Invalid restriction %s,\n"
@@ -2810,22 +2817,22 @@ msgid ""
 msgstr ""
 "A -k és a -O csak akkor használható együtt, ha normál fájl a kimenet.\n"
 
-#: src/main.c:1886
+#: src/main.c:1894
 #, c-format
 msgid "No URLs found in %s.\n"
 msgstr "Nem található URL a következőben: %s.\n"
 
-#: src/main.c:1902
+#: src/main.c:1910
 #, fuzzy, c-format
 msgid "Unable to parse metalink file %s.\n"
 msgstr "%s nem törölhető: %s\n"
 
-#: src/main.c:1932
+#: src/main.c:1940
 #, c-format
 msgid "Could not download all resources from %s.\n"
 msgstr ""
 
-#: src/main.c:1959
+#: src/main.c:1967
 #, c-format
 msgid ""
 "FINISHED --%s--\n"
@@ -2836,7 +2843,7 @@ msgstr ""
 "Valóságban eltelt teljes idő: %s\n"
 "Letöltve: %d fájl, %s %s alatt (%s)\n"
 
-#: src/main.c:1973
+#: src/main.c:1981
 #, c-format
 msgid "Download quota of %s EXCEEDED!\n"
 msgstr "A letöltési korlát (%s) TÚLLÉPVE!\n"
@@ -2992,28 +2999,28 @@ msgstr "Az OpenSSL verzió túl régi a TLSv1.2 támogatásához\n"
 msgid "OpenSSL: unimplemented 'secure-protocol' option value %d\n"
 msgstr "OpenSSL: megvalósítatlan „secure-protocol” beállításérték: %d\n"
 
-#: src/openssl.c:710
+#: src/openssl.c:714
 #, c-format
 msgid "%s: cannot verify %s's certificate, issued by %s:\n"
 msgstr "%s: %s %s által kiadott tanúsítványa nem ellenőrizhető:\n"
 
-#: src/openssl.c:721
+#: src/openssl.c:725
 msgid "  Unable to locally verify the issuer's authority.\n"
 msgstr "  A kibocsátó hitelessége nem ellenőrizhető helyileg.\n"
 
-#: src/openssl.c:726
+#: src/openssl.c:730
 msgid "  Self-signed certificate encountered.\n"
 msgstr "  Saját aláírású tanúsítvány.\n"
 
-#: src/openssl.c:729
+#: src/openssl.c:733
 msgid "  Issued certificate not yet valid.\n"
 msgstr "  A kibocsátott tanúsítvány még nem érvényes.\n"
 
-#: src/openssl.c:732
+#: src/openssl.c:736
 msgid "  Issued certificate has expired.\n"
 msgstr "  A kibocsátott tanúsítvány lejárt.\n"
 
-#: src/openssl.c:817
+#: src/openssl.c:821
 #, c-format
 msgid ""
 "%s: no certificate subject alternative name matches\n"
@@ -3022,14 +3029,14 @@ msgstr ""
 "%s: a tanúsítvány alanyának alternatív neve nem egyezik\n"
 "\ta kért %s gépnévvel.\n"
 
-#: src/openssl.c:834
+#: src/openssl.c:838
 #, c-format
 msgid ""
 "    %s: certificate common name %s doesn't match requested host name %s.\n"
 msgstr ""
 "    %s: a tanúsítvány %s általános neve nem egyezik a kért %s gépnévvel.\n"
 
-#: src/openssl.c:866
+#: src/openssl.c:870
 #, c-format
 msgid ""
 "    %s: certificate common name is invalid (contains a NUL character).\n"
@@ -3041,7 +3048,7 @@ msgstr ""
 "    Ez azt jelezheti, hogy a gép nem az, akinek mondja magát\n"
 "    (azaz nem a valódi %s).\n"
 
-#: src/openssl.c:884
+#: src/openssl.c:888
 #, c-format
 msgid "To connect to %s insecurely, use `--no-check-certificate'.\n"
 msgstr ""
@@ -3064,13 +3071,14 @@ msgstr "Érvénytelen pontstílus meghatározás: %s; változatlanul hagyva.\n"
 
 #. TRANSLATORS: "ETA" is English-centric, but this must
 #. be short, ideally 3 chars.  Abbreviate if necessary.
-#: src/progress.c:857
-#, c-format
-msgid "   eta %s"
+#: src/progress.c:858
+#, fuzzy, c-format
+msgid "    eta %s"
 msgstr "  kész: %s"
 
-#: src/progress.c:1165
-msgid "   in "
+#: src/progress.c:1153
+#, fuzzy
+msgid "    in "
 msgstr "  idő "
 
 #: src/ptimer.c:158
@@ -3102,12 +3110,12 @@ msgstr "Hiba a proxy URL feldolgozása közben: %s: %s.\n"
 msgid "Error in proxy URL %s: Must be HTTP.\n"
 msgstr "Hiba a(z) %s proxy URL-ben: HTTP kell legyen.\n"
 
-#: src/retr.c:904
+#: src/retr.c:908
 #, c-format
 msgid "%d redirections exceeded.\n"
 msgstr "%d átirányítás túllépve.\n"
 
-#: src/retr.c:1153
+#: src/retr.c:1165
 msgid ""
 "Giving up.\n"
 "\n"
@@ -3115,7 +3123,7 @@ msgstr ""
 "Feladás.\n"
 "\n"
 
-#: src/retr.c:1153
+#: src/retr.c:1165
 msgid ""
 "Retrying.\n"
 "\n"

@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wget 1.16.3.124\n"
 "Report-Msgid-Bugs-To: bug-wget@gnu.org\n"
-"POT-Creation-Date: 2015-11-15 15:11+0100\n"
+"POT-Creation-Date: 2015-12-11 18:42+0100\n"
 "PO-Revision-Date: 2015-10-17 23:41+0200\n"
 "Last-Translator: Carlos E. Robinson <carlos.e.r@opensuse.org>\n"
 "Language-Team: Spanish <es@tp.org.es>\n"
@@ -497,13 +497,13 @@ msgstr ", quedan %s"
 msgid " (unauthoritative)\n"
 msgstr " (probablemente)\n"
 
-#: src/ftp.c:377
+#: src/ftp.c:378
 msgid "Could not initialize SSL. It will be disabled."
 msgstr "No se pudo iniciar SSL, se desactivará."
 
 # mmmm... no estoy seguro de esto...
 # ¿Así no es mejor? (nl)
-#: src/ftp.c:457
+#: src/ftp.c:460
 #, c-format
 msgid "Logging in as %s ... "
 msgstr "Identificándose como %s ... "
@@ -514,9 +514,9 @@ msgstr "Identificándose como %s ... "
 # a nuestra costumbre - cll
 # einch! que tengo familiares güiris ;-) , pero tienes razón -Salva
 #
-#: src/ftp.c:476 src/ftp.c:562 src/ftp.c:629 src/ftp.c:694 src/ftp.c:928
-#: src/ftp.c:981 src/ftp.c:1028 src/ftp.c:1091 src/ftp.c:1152 src/ftp.c:1243
-#: src/ftp.c:1293
+#: src/ftp.c:479 src/ftp.c:565 src/ftp.c:632 src/ftp.c:697 src/ftp.c:931
+#: src/ftp.c:984 src/ftp.c:1031 src/ftp.c:1094 src/ftp.c:1155 src/ftp.c:1246
+#: src/ftp.c:1296
 msgid "Error in server response, closing control connection.\n"
 msgstr "Error en la respuesta del servidor, cerrando la conexión de control.\n"
 
@@ -525,7 +525,7 @@ msgstr "Error en la respuesta del servidor, cerrando la conexión de control.\n"
 # bien - Salva
 # No está bien, es confuso. Recepción suena a recibir... (nl)
 #
-#: src/ftp.c:483
+#: src/ftp.c:486
 msgid "Error in server greeting.\n"
 msgstr "Error en el saludo del servidor.\n"
 
@@ -538,8 +538,8 @@ msgstr "Error en el saludo del servidor.\n"
 #
 # Además, he añadido el artículo a `conexión' - cll
 #
-#: src/ftp.c:490 src/ftp.c:702 src/ftp.c:936 src/ftp.c:1036 src/ftp.c:1101
-#: src/ftp.c:1162 src/ftp.c:1253 src/ftp.c:1303
+#: src/ftp.c:493 src/ftp.c:705 src/ftp.c:939 src/ftp.c:1039 src/ftp.c:1104
+#: src/ftp.c:1165 src/ftp.c:1256 src/ftp.c:1306
 msgid "Write failed, closing control connection.\n"
 msgstr "Fallo de escritura, cerrando la conexión de control.\n"
 
@@ -563,7 +563,7 @@ msgstr "Fallo de escritura, cerrando la conexión de control.\n"
 # equivalente, en todos los mensajes del fichero. Espero que te parezca
 # oportuno - cll
 #
-#: src/ftp.c:496
+#: src/ftp.c:499
 msgid "The server refuses login.\n"
 msgstr "El servidor ha rechazado el acceso.\n"
 
@@ -571,7 +571,7 @@ msgstr "El servidor ha rechazado el acceso.\n"
 # usuario, ¿verdad? - cll
 # sí -Salva
 #
-#: src/ftp.c:502
+#: src/ftp.c:505
 msgid "Login incorrect.\n"
 msgstr "Nombre de usuario incorrecto.\n"
 
@@ -579,52 +579,52 @@ msgstr "Nombre de usuario incorrecto.\n"
 # gracias! :) -Salva
 #
 # Preferiría algo como "Conectado" o algo así. sv
-#: src/ftp.c:508
+#: src/ftp.c:511
 msgid "Logged in!\n"
 msgstr "¡Dentro!\n"
 
-#: src/ftp.c:528
+#: src/ftp.c:531
 msgid "Server did not accept the 'PBSZ 0' command.\n"
 msgstr "El servidor no aceptó la orden 'PBSZ 0'.\n"
 
-#: src/ftp.c:538
+#: src/ftp.c:541
 #, c-format
 msgid "Server did not accept the 'PROT %c' command.\n"
 msgstr "El servidor no aceptó la orden 'PROT %c'.\n"
 
-#: src/ftp.c:570
+#: src/ftp.c:573
 msgid "Server error, can't determine system type.\n"
 msgstr "Error del servidor, no se pudo determinar el tipo de sistema.\n"
 
-#: src/ftp.c:579 src/ftp.c:1071 src/ftp.c:1135 src/ftp.c:1178
+#: src/ftp.c:582 src/ftp.c:1074 src/ftp.c:1138 src/ftp.c:1181
 msgid "done.    "
 msgstr "hecho.   "
 
-#: src/ftp.c:682 src/ftp.c:954 src/ftp.c:998 src/ftp.c:1273 src/ftp.c:1322
+#: src/ftp.c:685 src/ftp.c:957 src/ftp.c:1001 src/ftp.c:1276 src/ftp.c:1325
 msgid "done.\n"
 msgstr "hecho.\n"
 
 # He añadido el artículo a `conexión' - cll
 #
-#: src/ftp.c:709
+#: src/ftp.c:712
 #, c-format
 msgid "Unknown type `%c', closing control connection.\n"
 msgstr "Tipo desconocido `%c', cerrando la conexión de control.\n"
 
-#: src/ftp.c:721
+#: src/ftp.c:724
 msgid "done.  "
 msgstr "hecho.  "
 
-#: src/ftp.c:727
+#: src/ftp.c:730
 msgid "==> CWD not needed.\n"
 msgstr "==> no se necesita CWD.\n"
 
-#: src/ftp.c:911
+#: src/ftp.c:914
 msgid "Logically impossible section reached in getftp()"
 msgstr "Sección lógicamente imposible alcanzada en getftp()"
 
 # CER: Pendiente de traducir, si se puede. Creo que no se debe, pueden ser tokens.
-#: src/ftp.c:912
+#: src/ftp.c:915
 #, c-format
 msgid ""
 "cwd_count: %d\n"
@@ -635,7 +635,7 @@ msgstr ""
 "cwd_start: %d\n"
 "cwd_end: %d\n"
 
-#: src/ftp.c:942
+#: src/ftp.c:945
 #, c-format
 msgid ""
 "No such directory %s.\n"
@@ -644,7 +644,7 @@ msgstr ""
 "No existe el directorio %s.\n"
 "\n"
 
-#: src/ftp.c:963
+#: src/ftp.c:966
 msgid "==> CWD not required.\n"
 msgstr "==> no se requiere CWD.\n"
 
@@ -653,19 +653,19 @@ msgstr "==> no se requiere CWD.\n"
 # CER, 20101031: no sé cual era el texto inglés original de ese comentario (ahora está en fuzzy), en la actualidad parece demasiado largo. -> Ah, es que es una traducción automática de otro msgid con comentario y todo:
 # File %s already there; not retrieving.\n
 # El fichero `%s' ya está ahí, no se recupera.\n
-#: src/ftp.c:1006
+#: src/ftp.c:1009
 msgid "File has already been retrieved.\n"
 msgstr "El fichero ya fué recuperado.\n"
 
-#: src/ftp.c:1042
+#: src/ftp.c:1045
 msgid "Cannot initiate PASV transfer.\n"
 msgstr "No se pudo iniciar la trasferencia PASV.\n"
 
-#: src/ftp.c:1046
+#: src/ftp.c:1049
 msgid "Cannot parse PASV response.\n"
 msgstr "No se pudo analizar la respuesta PASV.\n"
 
-#: src/ftp.c:1063
+#: src/ftp.c:1066
 #, c-format
 msgid "couldn't connect to %s port %d: %s\n"
 msgstr "no se pudo conectar con %s puerto %d:%s\n"
@@ -682,17 +682,17 @@ msgstr "no se pudo conectar con %s puerto %d:%s\n"
 #
 # CER, 20101031: si es una llamada a función, entonces falta una "a"
 #
-#: src/ftp.c:1117
+#: src/ftp.c:1120
 #, c-format
 msgid "Bind error (%s).\n"
 msgstr "Error en la llamada a “bind” (%s).\n"
 
 # Ya no está "prohibido" usar esta palabra. sv
-#: src/ftp.c:1123
+#: src/ftp.c:1126
 msgid "Invalid PORT.\n"
 msgstr "PUERTO inválido.\n"
 
-#: src/ftp.c:1169
+#: src/ftp.c:1172
 msgid ""
 "\n"
 "REST failed, starting from scratch.\n"
@@ -700,17 +700,17 @@ msgstr ""
 "\n"
 "El comando REST no funcionó, se empezará desde el principio\n"
 
-#: src/ftp.c:1209
+#: src/ftp.c:1212
 #, c-format
 msgid "File %s exists.\n"
 msgstr "El fichero %s existe.\n"
 
-#: src/ftp.c:1215
+#: src/ftp.c:1218
 #, c-format
 msgid "No such file %s.\n"
 msgstr "No existe tal fichero %s.\n"
 
-#: src/ftp.c:1261
+#: src/ftp.c:1264
 #, c-format
 msgid ""
 "No such file %s.\n"
@@ -719,7 +719,7 @@ msgstr ""
 "No existe tal fichero %s.\n"
 "\n"
 
-#: src/ftp.c:1311
+#: src/ftp.c:1314
 #, c-format
 msgid ""
 "No such file or directory %s.\n"
@@ -728,34 +728,34 @@ msgstr ""
 "No existe tal fichero o directorio %s.\n"
 "\n"
 
-#: src/ftp.c:1470 src/http.c:2483
+#: src/ftp.c:1473 src/http.c:2483
 #, c-format
 msgid "%s has sprung into existence.\n"
 msgstr "%s de repente existe.\n"
 
 # He añadido el artículo a `conexión' - cll
 #
-#: src/ftp.c:1552
+#: src/ftp.c:1557
 #, c-format
 msgid "%s: %s, closing control connection.\n"
 msgstr "%s: %s, cerrando la conexión de control.\n"
 
-#: src/ftp.c:1564
+#: src/ftp.c:1569
 #, c-format
 msgid "%s (%s) - Data connection: %s; "
 msgstr "%s (%s) - Conexión de datos: %s; "
 
-#: src/ftp.c:1579
+#: src/ftp.c:1584
 msgid "Control connection closed.\n"
 msgstr "Conexión de control cerrada.\n"
 
-#: src/ftp.c:1597
+#: src/ftp.c:1602
 msgid "Data transfer aborted.\n"
 msgstr "Trasferencia de datos abortada.\n"
 
 # `no recuperando' no me suena muy español, te propongo la alternativa
 # más "humanizada", `no se recupera' - cll
-#: src/ftp.c:1814
+#: src/ftp.c:1826
 #, c-format
 msgid "File %s already there; not retrieving.\n"
 msgstr "El fichero %s ya está ahí, no se recupera.\n"
@@ -763,12 +763,12 @@ msgstr "El fichero %s ya está ahí, no se recupera.\n"
 # nota jjrs: no sería mejor intento?
 # pues sí - Salva
 # decididamente si - cll
-#: src/ftp.c:1899 src/http.c:3923
+#: src/ftp.c:1911 src/http.c:3915
 #, c-format
 msgid "(try:%2d)"
 msgstr "(intento:%2d)"
 
-#: src/ftp.c:1987 src/http.c:4332
+#: src/ftp.c:1999 src/http.c:4324
 #, c-format
 msgid ""
 "%s (%s) - written to stdout %s[%s]\n"
@@ -777,7 +777,7 @@ msgstr ""
 "%s (%s) - escritos a stdout %s[%s]\n"
 "\n"
 
-#: src/ftp.c:1988 src/http.c:4333
+#: src/ftp.c:2000 src/http.c:4325
 #, c-format
 msgid ""
 "%s (%s) - %s saved [%s]\n"
@@ -786,13 +786,13 @@ msgstr ""
 "%s (%s) - %s guardado [%s]\n"
 "\n"
 
-#: src/ftp.c:2048 src/main.c:1867 src/metalink.c:426 src/recur.c:499
-#: src/recur.c:730 src/retr.c:1129
+#: src/ftp.c:2060 src/main.c:1875 src/metalink.c:426 src/recur.c:499
+#: src/recur.c:734 src/retr.c:1141
 #, c-format
 msgid "Removing %s.\n"
 msgstr "Eliminando %s.\n"
 
-#: src/ftp.c:2101
+#: src/ftp.c:2113
 #, c-format
 msgid "Using %s as listing tmp file.\n"
 msgstr "Usando %s como fichero temporal de listado.\n"
@@ -801,24 +801,24 @@ msgstr "Usando %s como fichero temporal de listado.\n"
 # emplean con frecuencia para adjetivar un sustantivo, sin embargo, en
 # español sirven para hacer referencia a una acción. Esto es, deben ir
 # después del sustantivo - cll
-#: src/ftp.c:2118
+#: src/ftp.c:2130
 #, c-format
 msgid "Removed %s.\n"
 msgstr "%s eliminado.\n"
 
-#: src/ftp.c:2156
+#: src/ftp.c:2168
 #, c-format
 msgid "Recursion depth %d exceeded max. depth %d.\n"
 msgstr "La profundidad de recursión %d excedió la máxima de %d.\n"
 
-#: src/ftp.c:2226
+#: src/ftp.c:2238
 #, c-format
 msgid "Remote file no newer than local file %s -- not retrieving.\n"
 msgstr ""
 "El fichero remoto no es más moderno que el fichero local %s -- no se "
 "descargará.\n"
 
-#: src/ftp.c:2234
+#: src/ftp.c:2246
 #, c-format
 msgid ""
 "Remote file is newer than local file %s -- retrieving.\n"
@@ -828,7 +828,7 @@ msgstr ""
 "\n"
 
 # CER, 20101031: cambio recuperando por descargando por consistencia con otros. Tiene pinta de ser una copia de otro msg de otra linea.
-#: src/ftp.c:2241
+#: src/ftp.c:2253
 #, c-format
 msgid ""
 "The sizes do not match (local %s) -- retrieving.\n"
@@ -841,11 +841,11 @@ msgstr ""
 # expresadas en gerundio, ..., prefiero una forma impersonal como `se
 # omite' - cll
 #
-#: src/ftp.c:2259
+#: src/ftp.c:2271
 msgid "Invalid name of the symlink, skipping.\n"
 msgstr "El nombre del enlace simbólico no es válido, se omite.\n"
 
-#: src/ftp.c:2276
+#: src/ftp.c:2288
 #, c-format
 msgid ""
 "Already have correct symlink %s -> %s\n"
@@ -854,35 +854,35 @@ msgstr ""
 "Ya se tiene el enlace simbólico correcto %s -> %s\n"
 "\n"
 
-#: src/ftp.c:2285
+#: src/ftp.c:2297
 #, c-format
 msgid "Creating symlink %s -> %s\n"
 msgstr "Creando enlace simbólico %s -> %s\n"
 
 # Lo dicho de los gerundios por formas impersonales - cll
-#: src/ftp.c:2295
+#: src/ftp.c:2307
 #, c-format
 msgid "Symlinks not supported, skipping symlink %s.\n"
 msgstr "No se admiten enlaces simbólicos, se omite el enlace simbólico %s.\n"
 
-#: src/ftp.c:2307
+#: src/ftp.c:2319
 #, c-format
 msgid "Skipping directory %s.\n"
 msgstr "Omitiendo el directorio %s.\n"
 
-#: src/ftp.c:2316
+#: src/ftp.c:2328
 #, c-format
 msgid "%s: unknown/unsupported file type.\n"
 msgstr "%s: tipo de fichero desconocido/no soportado.\n"
 
 # sigo las indicaciones del texto "pifias" para time-stamp.
 # CER: 20101118: No se a que se refiere, en gugle sólo sale este .po con esa frase.
-#: src/ftp.c:2356
+#: src/ftp.c:2368
 #, c-format
 msgid "%s: corrupt time-stamp.\n"
 msgstr "%s: marca-de-tiempo corrupta.\n"
 
-#: src/ftp.c:2380
+#: src/ftp.c:2392
 #, c-format
 msgid "Will not retrieve dirs since depth is %d (max %d).\n"
 msgstr ""
@@ -891,17 +891,17 @@ msgstr ""
 # Los gerundios me parecen poco apropiados para construir predicados
 # normales y corrientes como intentas en este mensaje. En su lugar, te
 # propongo la forma alternativa `se desciende' - cll
-#: src/ftp.c:2430
+#: src/ftp.c:2442
 #, c-format
 msgid "Not descending to %s as it is excluded/not-included.\n"
 msgstr "No se desciende hasta %s por estar excluido/no-incluido.\n"
 
-#: src/ftp.c:2519 src/ftp.c:2533
+#: src/ftp.c:2531 src/ftp.c:2545
 #, c-format
 msgid "Rejecting %s.\n"
 msgstr "Rechazando %s.\n"
 
-#: src/ftp.c:2556
+#: src/ftp.c:2568
 #, c-format
 msgid "Error matching %s against %s: %s\n"
 msgstr "Error ajustando %s a %s: %s\n"
@@ -914,17 +914,17 @@ msgstr "Error ajustando %s a %s: %s\n"
 # mensaje que habeis puesto me parece una traducción excelente - cll#
 # Algo no es *parecido* a un patrón. Algo *cumple* con un patrón. (nl)
 # Bien, pero aceptaré la matización cd C.S. Suarez de 'se ajusta a...' -Salva#
-#: src/ftp.c:2612
+#: src/ftp.c:2624
 #, c-format
 msgid "No matches on pattern %s.\n"
 msgstr "No hay nada que se ajuste al patrón %s.\n"
 
-#: src/ftp.c:2683
+#: src/ftp.c:2695
 #, c-format
 msgid "Wrote HTML-ized index to %s [%s].\n"
 msgstr "Se escribió un índice en HTML a %s [%s].\n"
 
-#: src/ftp.c:2688
+#: src/ftp.c:2700
 #, c-format
 msgid "Wrote HTML-ized index to %s.\n"
 msgstr "Se escribió un índice en HTML a %s.\n"
@@ -970,82 +970,82 @@ msgstr "GnuTLS: valor de opción %d de 'secure-protocol' no implementada\n"
 msgid "Please report this issue to bug-wget@gnu.org\n"
 msgstr "Por favor, reporte éste problema a bug-wget@gnu.org.\n"
 
-#: src/gnutls.c:688 src/openssl.c:679
+#: src/gnutls.c:692 src/openssl.c:679
 msgid "ERROR"
 msgstr "ERROR"
 
-#: src/gnutls.c:688 src/openssl.c:679
+#: src/gnutls.c:692 src/openssl.c:679
 msgid "WARNING"
 msgstr "AVISO"
 
-#: src/gnutls.c:694 src/openssl.c:688
+#: src/gnutls.c:702 src/openssl.c:692
 #, c-format
 msgid "%s: No certificate presented by %s.\n"
 msgstr "%s: %s no ha presentado certificado.\n"
 
-#: src/gnutls.c:700
+#: src/gnutls.c:708
 #, c-format
 msgid "%s: The certificate of %s is not trusted.\n"
 msgstr "%s: El certificado de %s no es confiable.\n"
 
-#: src/gnutls.c:701
+#: src/gnutls.c:709
 #, c-format
 msgid "%s: The certificate of %s hasn't got a known issuer.\n"
 msgstr "%s: El certificado de %s no tiene un emisor conocido.\n"
 
-#: src/gnutls.c:702
+#: src/gnutls.c:710
 #, c-format
 msgid "%s: The certificate of %s has been revoked.\n"
 msgstr "%s: El certificado de %s ha sido revocado.\n"
 
-#: src/gnutls.c:703
+#: src/gnutls.c:711
 #, c-format
 msgid "%s: The certificate signer of %s was not a CA.\n"
 msgstr "%s: El signatario del certificado de %s no es una AC.\n"
 
-#: src/gnutls.c:704
+#: src/gnutls.c:712
 #, c-format
 msgid "%s: The certificate of %s was signed using an insecure algorithm.\n"
 msgstr "%s: El certificado de %s fue firmado usando un algoritmo inseguro.\n"
 
-#: src/gnutls.c:705
+#: src/gnutls.c:713
 #, c-format
 msgid "%s: The certificate of %s is not yet activated.\n"
 msgstr "%s: El certificado de %s no está aún activado.\n"
 
-#: src/gnutls.c:706
+#: src/gnutls.c:714
 #, c-format
 msgid "%s: The certificate of %s has expired.\n"
 msgstr "%s: El certificado de %s ha expirado.\n"
 
-#: src/gnutls.c:717
+#: src/gnutls.c:725
 #, c-format
 msgid "Error initializing X509 certificate: %s\n"
 msgstr "Error inicializando el certificado X509: %s\n"
 
-#: src/gnutls.c:726
+#: src/gnutls.c:734
 msgid "No certificate found\n"
 msgstr "No se encontró certificado\n"
 
-#: src/gnutls.c:733
+#: src/gnutls.c:741
 #, c-format
 msgid "Error parsing certificate: %s\n"
 msgstr "Error analizando el certificado: %s\n"
 
-#: src/gnutls.c:740
+#: src/gnutls.c:748
 msgid "The certificate has not yet been activated\n"
 msgstr "El certificado no ha sido aún activado\n"
 
-#: src/gnutls.c:745
+#: src/gnutls.c:753
 msgid "The certificate has expired\n"
 msgstr "Ha expirado el certificado\n"
 
-#: src/gnutls.c:751
+#: src/gnutls.c:759
 #, c-format
 msgid "The certificate's owner does not match hostname %s\n"
 msgstr "El propietario del certificado no se ajusta al nombre de equipo %s\n"
 
-#: src/gnutls.c:760
+#: src/gnutls.c:768
 msgid "Certificate must be X.509\n"
 msgstr "El certificado debe ser X.509\n"
 
@@ -1133,7 +1133,7 @@ msgstr "Reutilizando la conexión con %s:%d.\n"
 msgid "Failed reading proxy response: %s\n"
 msgstr "Fallo leyendo la respuesta del proxy: %s.\n"
 
-#: src/http.c:2116 src/http.c:3191 src/http.c:4126
+#: src/http.c:2116 src/http.c:3191 src/http.c:4118
 #, c-format
 msgid "%s ERROR %d: %s.\n"
 msgstr "%s ERROR %d: %s.\n"
@@ -1276,51 +1276,51 @@ msgstr "Longitud: "
 msgid "ignored"
 msgstr "descartado"
 
-#: src/http.c:3824
+#: src/http.c:3823
 msgid "Warning: wildcards not supported in HTTP.\n"
 msgstr "Aviso: no se admiten comodines en HTTP.\n"
 
 # CER, 20101031: ¿Admitimos humor? ?Modo arácnido? ;-)
-#: src/http.c:3913
+#: src/http.c:3905
 msgid "Spider mode enabled. Check if remote file exists.\n"
 msgstr "Modo arácnido activado. Comprobar si el fichero remoto existe.\n"
 
-#: src/http.c:4001
+#: src/http.c:3993
 #, c-format
 msgid "Cannot write to %s (%s).\n"
 msgstr "No se puede escribir a %s (%s).\n"
 
-#: src/http.c:4012
+#: src/http.c:4004
 msgid "Required attribute missing from Header received.\n"
 msgstr "Recibido el atributo requerido que faltaba de la cabecera.\n"
 
-#: src/http.c:4017
+#: src/http.c:4009
 msgid "Username/Password Authentication Failed.\n"
 msgstr "La autentificación usuario/contraseña falló.\n"
 
-#: src/http.c:4023
+#: src/http.c:4015
 msgid "Cannot write to WARC file.\n"
 msgstr "No se puede escribir en fichero WARC..\n"
 
-#: src/http.c:4029
+#: src/http.c:4021
 msgid "Cannot write to temporary WARC file.\n"
 msgstr "No se puede escribir en fichero WARC temporal.\n"
 
-#: src/http.c:4034
+#: src/http.c:4026
 msgid "Unable to establish SSL connection.\n"
 msgstr "No se pudo establecer la conexión SSL.\n"
 
-#: src/http.c:4040
+#: src/http.c:4032
 #, c-format
 msgid "Cannot unlink %s (%s).\n"
 msgstr "No se puede des-enlazar %s (%s).\n"
 
-#: src/http.c:4050
+#: src/http.c:4042
 #, c-format
 msgid "ERROR: Redirection (%d) without location.\n"
 msgstr "ERROR: redirección (%d) sin localización.\n"
 
-#: src/http.c:4072
+#: src/http.c:4064
 msgid ""
 "Could not find Metalink data in HTTP response. Downloading file using HTTP "
 "GET.\n"
@@ -1328,29 +1328,29 @@ msgstr ""
 "No se pudo encontrar los datos Metalink en la respuesta HTTP. Descargando el "
 "fichero usando HTTP GET.\n"
 
-#: src/http.c:4081
+#: src/http.c:4073
 msgid "Metalink headers found. Switching to Metalink mode.\n"
 msgstr "Se han encontrado cabeceras Metalink. Cambiando a modo Metalink.\n"
 
-#: src/http.c:4121
+#: src/http.c:4113
 msgid "Remote file does not exist -- broken link!!!\n"
 msgstr "No existe el fichero remoto -- ¡¡¡enlace roto!!!\n"
 
 # así se entiende mejor -Salva
 # CER, 20101031: Mejor así:  Falta la fecha de -> Falta la cabecera de fecha de ; y apagadas -> desactivadas
-#: src/http.c:4143
+#: src/http.c:4135
 msgid "Last-modified header missing -- time-stamps turned off.\n"
 msgstr ""
 "Falta la cabecera de fecha de la última modificación -- marcas de tiempo "
 "desactivadas.\n"
 
-#: src/http.c:4151
+#: src/http.c:4143
 msgid "Last-modified header invalid -- time-stamp ignored.\n"
 msgstr ""
 "La cabecera de fecha de última modificación es inválida -- marca de tiempo "
 "descartada.\n"
 
-#: src/http.c:4181
+#: src/http.c:4173
 #, c-format
 msgid ""
 "Server file no newer than local file %s -- not retrieving.\n"
@@ -1360,16 +1360,16 @@ msgstr ""
 "descargará.\n"
 "\n"
 
-#: src/http.c:4189
+#: src/http.c:4181
 #, c-format
 msgid "The sizes do not match (local %s) -- retrieving.\n"
 msgstr "Los tamaños no concuerdan (%s local) -- recuperando.\n"
 
-#: src/http.c:4198
+#: src/http.c:4190
 msgid "Remote file is newer, retrieving.\n"
 msgstr "El fichero remoto es más nuevo, recuperando.\n"
 
-#: src/http.c:4216
+#: src/http.c:4208
 msgid ""
 "Remote file exists and could contain links to other resources -- "
 "retrieving.\n"
@@ -1379,7 +1379,7 @@ msgstr ""
 "descargando.\n"
 "\n"
 
-#: src/http.c:4222
+#: src/http.c:4214
 msgid ""
 "Remote file exists but does not contain any link -- not retrieving.\n"
 "\n"
@@ -1387,7 +1387,7 @@ msgstr ""
 "El fichero remoto existe pero no contiene ningún enlace -- no se "
 "descargará.\n"
 
-#: src/http.c:4231
+#: src/http.c:4223
 msgid ""
 "Remote file exists and could contain further links,\n"
 "but recursion is disabled -- not retrieving.\n"
@@ -1397,7 +1397,7 @@ msgstr ""
 "pero la recursión está desactivada -- no se recupera.\n"
 "\n"
 
-#: src/http.c:4237
+#: src/http.c:4229
 msgid ""
 "Remote file exists.\n"
 "\n"
@@ -1405,12 +1405,12 @@ msgstr ""
 "El fichero remoto existe.\n"
 "\n"
 
-#: src/http.c:4246
+#: src/http.c:4238
 #, c-format
 msgid "%s URL: %s %2d %s\n"
 msgstr "%s URL: %s %2d %s\n"
 
-#: src/http.c:4296
+#: src/http.c:4288
 #, c-format
 msgid ""
 "%s (%s) - written to stdout %s[%s/%s]\n"
@@ -1419,7 +1419,7 @@ msgstr ""
 "%s (%s) - escritos a stdout %s[%s/%s]\n"
 "\n"
 
-#: src/http.c:4297
+#: src/http.c:4289
 #, c-format
 msgid ""
 "%s (%s) - %s saved [%s/%s]\n"
@@ -1428,57 +1428,57 @@ msgstr ""
 "%s (%s) - %s guardado [%s/%s]\n"
 "\n"
 
-#: src/http.c:4358
+#: src/http.c:4350
 #, c-format
 msgid "%s (%s) - Connection closed at byte %s. "
 msgstr "%s (%s) - Conexión cerrada en el byte %s. "
 
-#: src/http.c:4381
+#: src/http.c:4373
 #, c-format
 msgid "%s (%s) - Read error at byte %s (%s)."
 msgstr "%s (%s) - Error de lectura en el byte %s (%s)."
 
-#: src/http.c:4390
+#: src/http.c:4382
 #, c-format
 msgid "%s (%s) - Read error at byte %s/%s (%s). "
 msgstr "%s (%s) - Error de lectura en el byte %s/%s (%s). "
 
-#: src/http.c:4625
+#: src/http.c:4617
 #, c-format
 msgid "Unsupported quality of protection '%s'.\n"
 msgstr "Calidad de protección no soportada '%s'.\n"
 
-#: src/http.c:4630
+#: src/http.c:4622
 #, c-format
 msgid "Unsupported algorithm '%s'.\n"
 msgstr "Algoritmo no soportado '%s'.\n"
 
-#: src/init.c:542
+#: src/init.c:543
 #, c-format
 msgid "%s: WGETRC points to %s, which doesn't exist.\n"
 msgstr "%s: WGETRC apunta a %s, el cual no existe.\n"
 
-#: src/init.c:643 src/netrc.c:246
+#: src/init.c:644 src/netrc.c:246
 #, c-format
 msgid "%s: Cannot read %s (%s).\n"
 msgstr "%s: No se pudo leer %s (%s).\n"
 
-#: src/init.c:660
+#: src/init.c:661
 #, c-format
 msgid "%s: Error in %s at line %d.\n"
 msgstr "%s: Error en %s en la línea %d.\n"
 
-#: src/init.c:666
+#: src/init.c:667
 #, c-format
 msgid "%s: Syntax error in %s at line %d.\n"
 msgstr "%s: Error de sintaxis en %s en la línea %d.\n"
 
-#: src/init.c:671
+#: src/init.c:672
 #, c-format
 msgid "%s: Unknown command %s in %s at line %d.\n"
 msgstr "%s: orden desconocida %s en %s en línea %d.\n"
 
-#: src/init.c:708
+#: src/init.c:709
 #, c-format
 msgid ""
 "Parsing system wgetrc file (env SYSTEM_WGETRC) failed.  Please check\n"
@@ -1490,7 +1490,7 @@ msgstr ""
 "'%s',\n"
 "o especifique un fichero diferente usando --config.\n"
 
-#: src/init.c:723
+#: src/init.c:724
 #, c-format
 msgid ""
 "Parsing system wgetrc file failed.  Please check\n"
@@ -1502,68 +1502,74 @@ msgstr ""
 "o especifique un fichero diferente usando --config.\n"
 
 # CER, 20101031: cambio atención por aviso (warning), por consistencia.
-#: src/init.c:739
+#: src/init.c:740
 #, c-format
 msgid "%s: Warning: Both system and user wgetrc point to %s.\n"
 msgstr ""
 "%s: Aviso: tanto el fichero wgetrc de usuario como el del sistema apuntan a "
 "%s.\n"
 
-#: src/init.c:929
+#: src/init.c:930
 #, c-format
 msgid "%s: Invalid --execute command %s\n"
 msgstr "%s: Inválido --ejecute orden %s\n"
 
 # Te cambio la `o' antes de `off' por `u' - cll
-#: src/init.c:974
+#: src/init.c:991
 #, c-format
 msgid "%s: %s: Invalid boolean %s; use `on' or `off'.\n"
 msgstr "%s: %s: booleano inválido %s; use `on' u `off'.\n"
 
-#: src/init.c:991
+# Te cambio la `o' antes de `off' por `u' - cll
+#: src/init.c:1024
+#, fuzzy, c-format
+msgid "%s: %s: Invalid %s; use `on', `off' or `quiet'.\n"
+msgstr "%s: %s: booleano inválido %s; use `on' u `off'.\n"
+
+#: src/init.c:1042
 #, c-format
 msgid "%s: %s: Invalid number %s.\n"
 msgstr "%s: %s: número inválido %s.\n"
 
-#: src/init.c:1072
+#: src/init.c:1123
 #, c-format
 msgid "%s: %s must only be used once\n"
 msgstr "%s: %s sólo debe usarse una vez\n"
 
-#: src/init.c:1227 src/init.c:1246
+#: src/init.c:1278 src/init.c:1297
 #, c-format
 msgid "%s: %s: Invalid byte value %s\n"
 msgstr "%s: %s: valor byte inválido %s.\n"
 
-#: src/init.c:1271
+#: src/init.c:1322
 #, c-format
 msgid "%s: %s: Invalid time period %s\n"
 msgstr "%s: %s: periodo de tiempo inválido %s.\n"
 
-#: src/init.c:1325 src/init.c:1436 src/init.c:1492 src/init.c:1558
-#: src/init.c:1577 src/init.c:1602
+#: src/init.c:1376 src/init.c:1487 src/init.c:1543 src/init.c:1609
+#: src/init.c:1628 src/init.c:1653
 #, c-format
 msgid "%s: %s: Invalid value %s.\n"
 msgstr "%s: %s: valor %s inválido.\n"
 
-#: src/init.c:1362
+#: src/init.c:1413
 #, c-format
 msgid "%s: %s: Invalid header %s.\n"
 msgstr "%s: %s: cabecera %s inválida.\n"
 
-#: src/init.c:1383
+#: src/init.c:1434
 #, c-format
 msgid "%s: %s: Invalid WARC header %s.\n"
 msgstr "%s: %s: cabecera WARC inválida  %s.\n"
 
 # CER, 20101031:  No estoy seguro si estas cadenas debo poner la ultima %s en el centro o al final, porque no se si es una palabra o valor o una frase.
-#: src/init.c:1449
+#: src/init.c:1500
 #, c-format
 msgid "%s: %s: Invalid progress type %s.\n"
 msgstr "%s: %s: tipo de progreso %s inválido.\n"
 
 # CER, 20101031: creo que son tokens, no traducibles.
-#: src/init.c:1531
+#: src/init.c:1582
 #, c-format
 msgid ""
 "%s: %s: Invalid restriction %s,\n"
@@ -3018,17 +3024,17 @@ msgstr ""
 "-k o -r puede ser usado junto con -O sólo si la salida va a un fichero "
 "regular.\n"
 
-#: src/main.c:1886
+#: src/main.c:1894
 #, c-format
 msgid "No URLs found in %s.\n"
 msgstr "No se han encontrado URLs en %s.\n"
 
-#: src/main.c:1902
+#: src/main.c:1910
 #, c-format
 msgid "Unable to parse metalink file %s.\n"
 msgstr "No se pudo analizar el fichero metalink %s.\n"
 
-#: src/main.c:1932
+#: src/main.c:1940
 #, c-format
 msgid "Could not download all resources from %s.\n"
 msgstr "No se pudo descargar todos los recursos desde %s\n"
@@ -3036,7 +3042,7 @@ msgstr "No se pudo descargar todos los recursos desde %s\n"
 # `Bajados' es una traducción demasiado literal. Como en uno de los
 # mensajes de ayuda que hay más arriba, y para ser coherente, con lo que
 # allí te sugiero, te propongo ahora también `descargados' - cll
-#: src/main.c:1959
+#: src/main.c:1967
 #, c-format
 msgid ""
 "FINISHED --%s--\n"
@@ -3049,7 +3055,7 @@ msgstr ""
 
 # ¡Efectivamente! Ahora lo has puesto tu, ...  `download'=`descarga' -
 # cll
-#: src/main.c:1973
+#: src/main.c:1981
 #, c-format
 msgid "Download quota of %s EXCEEDED!\n"
 msgstr "¡Cuota de descarga de %s EXCEDIDA!\n"
@@ -3227,28 +3233,28 @@ msgstr "Su versión de OpenSSL es demasiado antigua para soportar TLSv1.2\n"
 msgid "OpenSSL: unimplemented 'secure-protocol' option value %d\n"
 msgstr "OpenSSL: valor de opción %d de 'secure-protocol' no implementada\n"
 
-#: src/openssl.c:710
+#: src/openssl.c:714
 #, c-format
 msgid "%s: cannot verify %s's certificate, issued by %s:\n"
 msgstr "%s: no se puede verificar el certificado de %s, emitido por %s:\n"
 
-#: src/openssl.c:721
+#: src/openssl.c:725
 msgid "  Unable to locally verify the issuer's authority.\n"
 msgstr "  Imposible verificar localmente la autoridad emisora.\n"
 
-#: src/openssl.c:726
+#: src/openssl.c:730
 msgid "  Self-signed certificate encountered.\n"
 msgstr "  Certificado auto-firmado encontrado.\n"
 
-#: src/openssl.c:729
+#: src/openssl.c:733
 msgid "  Issued certificate not yet valid.\n"
 msgstr "  El certificado emitido no es aún válido.\n"
 
-#: src/openssl.c:732
+#: src/openssl.c:736
 msgid "  Issued certificate has expired.\n"
 msgstr "  El certificado emitido ha expirado.\n"
 
-#: src/openssl.c:817
+#: src/openssl.c:821
 #, c-format
 msgid ""
 "%s: no certificate subject alternative name matches\n"
@@ -3257,7 +3263,7 @@ msgstr ""
 "%s: ningún nombre de sujeto alternativo del certificado encaja con\n"
 "\tel nombre de equipo %s solicitado.\n"
 
-#: src/openssl.c:834
+#: src/openssl.c:838
 #, c-format
 msgid ""
 "    %s: certificate common name %s doesn't match requested host name %s.\n"
@@ -3265,7 +3271,7 @@ msgstr ""
 "    %s: el nombre común %s del certificado no encaja con el nombre de equipo "
 "%s solicitado.\n"
 
-#: src/openssl.c:866
+#: src/openssl.c:870
 #, c-format
 msgid ""
 "    %s: certificate common name is invalid (contains a NUL character).\n"
@@ -3277,7 +3283,7 @@ msgstr ""
 "    Ésto puede ser una indicación de que el equipo no es quien dice ser\n"
 "    (o sea, que no es el verdadero %s).\n"
 
-#: src/openssl.c:884
+#: src/openssl.c:888
 #, c-format
 msgid "To connect to %s insecurely, use `--no-check-certificate'.\n"
 msgstr "Para conectar inseguramente a %s, use `--no-check-certificate'.\n"
@@ -3302,13 +3308,14 @@ msgstr ""
 
 #. TRANSLATORS: "ETA" is English-centric, but this must
 #. be short, ideally 3 chars.  Abbreviate if necessary.
-#: src/progress.c:857
-#, c-format
-msgid "   eta %s"
+#: src/progress.c:858
+#, fuzzy, c-format
+msgid "    eta %s"
 msgstr "  eta %s"
 
-#: src/progress.c:1165
-msgid "   in "
+#: src/progress.c:1153
+#, fuzzy
+msgid "    in "
 msgstr "   en "
 
 #: src/ptimer.c:158
@@ -3340,12 +3347,12 @@ msgstr "Error analizando la URL del proxy %s: %s\n"
 msgid "Error in proxy URL %s: Must be HTTP.\n"
 msgstr "Error en la URL del proxy %s: Debe ser HTTP.\n"
 
-#: src/retr.c:904
+#: src/retr.c:908
 #, c-format
 msgid "%d redirections exceeded.\n"
 msgstr "Sobrepasadas las %d redirecciones.\n"
 
-#: src/retr.c:1153
+#: src/retr.c:1165
 msgid ""
 "Giving up.\n"
 "\n"
@@ -3353,7 +3360,7 @@ msgstr ""
 "Abandonando.\n"
 "\n"
 
-#: src/retr.c:1153
+#: src/retr.c:1165
 msgid ""
 "Retrying.\n"
 "\n"

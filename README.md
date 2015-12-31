@@ -1,8 +1,8 @@
-GNU Wget 1.17 for OS X
+GNU Wget 1.17.1 for OS X
 ========================
 
 This project builds a standard OS X installer package for [GNU wget][1]. 
-It contains the source distribution for wget 1.17 and [OpenSSL 1.0.2e][2].
+It contains the source distribution for wget 1.17.1 and [OpenSSL 1.0.2e][2].
 
 Dependencies
 ------------
