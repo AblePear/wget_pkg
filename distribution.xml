@@ -4,7 +4,7 @@
 
     <background alignment="center" file="background.png" mime-type="image/png" scaling="tofit"/>
     <welcome file="welcome.html" mime-type="text/html"/>
-    <license file="license.html" mime-type="text/html"/>
+    <license file="licenses.html" mime-type="text/html"/>
 
     <options customize="never"/>
 
