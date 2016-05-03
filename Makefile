@@ -50,6 +50,7 @@ $(TMP)/openssl/build/libcrypto.a : $(TMP)/openssl/built.stamp.txt | $$(dir $$@)
 	@:
 
 $(TMP)/openssl/built.stamp.txt : $(TMP)/openssl/configured.stamp.txt | $$(dir $$@)
+	cd $(TMP)/openssl/build && $(MAKE) depend
 	cd $(TMP)/openssl/build && $(MAKE)
 	date > $@
 
