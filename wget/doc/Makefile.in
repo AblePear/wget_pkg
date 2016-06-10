@@ -329,6 +329,8 @@ BITSIZEOF_SIG_ATOMIC_T = @BITSIZEOF_SIG_ATOMIC_T@
 BITSIZEOF_SIZE_T = @BITSIZEOF_SIZE_T@
 BITSIZEOF_WCHAR_T = @BITSIZEOF_WCHAR_T@
 BITSIZEOF_WINT_T = @BITSIZEOF_WINT_T@
+CARES_CFLAGS = @CARES_CFLAGS@
+CARES_LIBS = @CARES_LIBS@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
@@ -1798,7 +1800,10 @@ wget.pod: $(srcdir)/wget.texi version.texi
 	$(TEXI2POD) -D VERSION="$(VERSION)" $(srcdir)/wget.texi $@
 
 $(MAN): wget.pod
-	$(POD2MAN) --center="GNU Wget" --release="GNU Wget @VERSION@" --utf8 $? > $@
+	$(POD2MAN) --center="GNU Wget" --release="GNU Wget @VERSION@" --utf8 $? > $@; \
+	if [ $? != 0 ]; then \
+          $(POD2MAN) --center="GNU Wget" --release="GNU Wget @VERSION@" $? > $@; \
+	fi
 
 #wget.cat: $(MAN)
 #	nroff -man $? > $@

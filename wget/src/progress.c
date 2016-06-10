@@ -1164,6 +1164,8 @@ create_image (struct bar_progress *bp, double dl_total_time, bool done)
     }
 
   padding = bp->width - count_cols (bp->buffer);
+  assert (padding >= 0 && "Padding length became non-positive!");
+  padding = padding > 0 ? padding : 0;
   memset (p, ' ', padding);
   p += padding;
   *p = '\0';
@@ -1174,6 +1176,9 @@ create_image (struct bar_progress *bp, double dl_total_time, bool done)
    * from the release code since we do not want Wget to crash and burn when the
    * assertion fails. Instead Wget should continue downloading and display a
    * horrible and irritating progress bar that spams the screen with newlines.
+   *
+   * By default, all assertions are disabled in a Wget build and are enabled
+   * only with the --enable-assert configure option.
    */
   assert (count_cols (bp->buffer) == bp->width);
 }
@@ -1193,8 +1198,6 @@ display_image (char *buf)
 static void
 bar_set_params (char *params)
 {
-  char *term = getenv ("TERM");
-
   if (params)
     {
       char *param = strtok (params, ":");
@@ -1214,12 +1217,6 @@ bar_set_params (char *params)
           dots.  */
        || !isatty (fileno (stderr))
 #endif
-       /* Normally we don't depend on terminal type because the
-          progress bar only uses ^M to move the cursor to the
-          beginning of line, which works even on dumb terminals.  But
-          Jamie Zawinski reports that ^M and ^H tricks don't work in
-          Emacs shell buffers, and only make a mess.  */
-       || (term && 0 == strcmp (term, "emacs"))
        )
       && !current_impl_locked)
     {

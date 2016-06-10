@@ -274,7 +274,7 @@ retrieve_from_metalink (const metalink_t* metalink)
                       goto gpg_skip_verification;
                     }
 
-                  DEBUGP (("Veryfying signature %s:\n%s\n",
+                  DEBUGP (("Verifying signature %s:\n%s\n",
                            quote (msig->mediatype),
                            msig->signature));
 
@@ -342,10 +342,7 @@ retrieve_from_metalink (const metalink_t* metalink)
                   /* The list is null-terminated.  */
                   for (gpgsig = gpgres->signatures; gpgsig; gpgsig = gpgsig->next)
                     {
-                      DEBUGP (("Checking signature 0x%p\n",
-                               (void *) gpgsig));
-                      DEBUGP (("Summary=0x%x Status=0x%x\n",
-                               gpgsig->summary, gpgsig->status & 0xFFFF));
+                      DEBUGP (("Checking signature %s\n", gpgsig->fpr));
 
                       if (gpgsig->summary
                           & (GPGME_SIGSUM_VALID | GPGME_SIGSUM_GREEN))

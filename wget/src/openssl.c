@@ -35,6 +35,7 @@ as that of the covered work.  */
 #include <errno.h>
 #include <unistd.h>
 #include <string.h>
+#include <xalloc.h>
 
 #include <openssl/ssl.h>
 #include <openssl/x509v3.h>
@@ -506,6 +507,22 @@ ssl_connect_with_timeout_callback(void *arg)
   ctx->result = SSL_connect(ctx->ssl);
 }
 
+static const char *
+_sni_hostname(const char *hostname)
+{
+  size_t len = strlen(hostname);
+
+  char *sni_hostname = xmemdup(hostname, len + 1);
+
+  /* Remove trailing dot(s) to fix #47408.
+   * Regarding RFC 6066 (SNI): The hostname is represented as a byte
+   * string using ASCII encoding without a trailing dot. */
+  while (len && sni_hostname[--len] == '.')
+    sni_hostname[len] = 0;
+
+  return sni_hostname;
+}
+
 /* Perform the SSL handshake on file descriptor FD, which is assumed
    to be connected to an SSL server.  The SSL handle provided by
    OpenSSL is registered with the file descriptor FD using
@@ -532,7 +549,12 @@ ssl_connect_wget (int fd, const char *hostname, int *continue_session)
      then use it whenever we have a hostname.  If not, don't, ever. */
   if (! is_valid_ip_address (hostname))
     {
-      if (! SSL_set_tlsext_host_name (conn, hostname))
+      const char *sni_hostname = _sni_hostname(hostname);
+
+      long rc = SSL_set_tlsext_host_name (conn, sni_hostname);
+      xfree(sni_hostname);
+
+      if (rc == 0)
         {
           DEBUGP (("Failed to set TLS server-name indication."));
           goto error;
@@ -650,6 +672,65 @@ static char *_get_rfc2253_formatted (X509_NAME *name)
   return out ? out : xstrdup("");
 }
 
+/*
+ * Heavily modified from:
+ * https://www.owasp.org/index.php/Certificate_and_Public_Key_Pinning#OpenSSL
+ */
+static bool
+pkp_pin_peer_pubkey (X509* cert, const char *pinnedpubkey)
+{
+  /* Scratch */
+  int len1 = 0, len2 = 0;
+  char *buff1 = NULL, *temp = NULL;
+
+  /* Result is returned to caller */
+  bool result = false;
+
+  /* if a path wasn't specified, don't pin */
+  if (!pinnedpubkey)
+    return true;
+
+  if (!cert)
+    return result;
+
+  /* Begin Gyrations to get the subjectPublicKeyInfo     */
+  /* Thanks to Viktor Dukhovni on the OpenSSL mailing list */
+
+  /* https://groups.google.com/group/mailing.openssl.users/browse_thread
+   /thread/d61858dae102c6c7 */
+  len1 = i2d_X509_PUBKEY (X509_get_X509_PUBKEY (cert), NULL);
+  if (len1 < 1)
+    goto cleanup; /* failed */
+
+  /* https://www.openssl.org/docs/crypto/buffer.html */
+  buff1 = temp = OPENSSL_malloc (len1);
+  if (!buff1)
+    goto cleanup; /* failed */
+
+  /* https://www.openssl.org/docs/crypto/d2i_X509.html */
+  len2 = i2d_X509_PUBKEY (X509_get_X509_PUBKEY (cert), (unsigned char **) &temp);
+
+  /*
+   * These checks are verifying we got back the same values as when we
+   * sized the buffer. It's pretty weak since they should always be the
+   * same. But it gives us something to test.
+   */
+  if ((len1 != len2) || !temp || ((temp - buff1) != len1))
+    goto cleanup; /* failed */
+
+  /* End Gyrations */
+
+  /* The one good exit point */
+  result = wg_pin_peer_pubkey (pinnedpubkey, buff1, len1);
+
+ cleanup:
+  /* https://www.openssl.org/docs/crypto/buffer.html */
+  if (NULL != buff1)
+    OPENSSL_free (buff1);
+
+  return result;
+}
+
 /* Verify the validity of the certificate presented by the server.
    Also check that the "common name" of the server, as presented by
    its certificate, corresponds to HOST.  (HOST typically comes from
@@ -673,6 +754,7 @@ ssl_check_certificate (int fd, const char *host)
   long vresult;
   bool success = true;
   bool alt_name_checked = false;
+  bool pinsuccess = opt.pinnedpubkey == NULL;
 
   /* If the user has specified --no-check-cert, we still want to warn
      him about problems with the server's certificate.  */
@@ -683,7 +765,7 @@ ssl_check_certificate (int fd, const char *host)
   assert (conn != NULL);
 
   /* The user explicitly said to not check for the certificate.  */
-  if (opt.check_cert == CHECK_CERT_QUIET)
+  if (opt.check_cert == CHECK_CERT_QUIET && pinsuccess)
     return success;
 
   cert = SSL_get_peer_certificate (conn);
@@ -762,9 +844,12 @@ ssl_check_certificate (int fd, const char *host)
     {
       /* Test subject alternative names */
 
+      /* SNI hostname must not have a trailing dot */
+      const char *sni_hostname = _sni_hostname(host);
+
       /* Do we want to check for dNSNAmes or ipAddresses (see RFC 2818)?
        * Signal it by host_in_octet_string. */
-      ASN1_OCTET_STRING *host_in_octet_string = a2i_IPADDRESS (host);
+      ASN1_OCTET_STRING *host_in_octet_string = a2i_IPADDRESS (sni_hostname);
 
       int numaltnames = sk_GENERAL_NAME_num (subjectAltNames);
       int i;
@@ -799,7 +884,7 @@ ssl_check_certificate (int fd, const char *host)
                   if (0 <= ASN1_STRING_to_UTF8 (&name_in_utf8, name->d.dNSName))
                     {
                       /* Compare and check for NULL attack in ASN1_STRING */
-                      if (pattern_match ((char *)name_in_utf8, host) &&
+                      if (pattern_match ((char *)name_in_utf8, sni_hostname) &&
                             (strlen ((char *)name_in_utf8) ==
                                 (size_t) ASN1_STRING_length (name->d.dNSName)))
                         {
@@ -820,9 +905,11 @@ ssl_check_certificate (int fd, const char *host)
           logprintf (LOG_NOTQUIET,
               _("%s: no certificate subject alternative name matches\n"
                 "\trequested host name %s.\n"),
-                     severity, quote_n (1, host));
+                     severity, quote_n (1, sni_hostname));
           success = false;
         }
+
+      xfree(sni_hostname);
     }
 
   if (alt_name_checked == false)
@@ -877,6 +964,13 @@ ssl_check_certificate (int fd, const char *host)
         }
     }
 
+    pinsuccess = pkp_pin_peer_pubkey (cert, opt.pinnedpubkey);
+    if (!pinsuccess)
+      {
+        logprintf (LOG_ALWAYS, _("The public key does not match pinned public key!\n"));
+        success = false;
+      }
+
 
   if (success)
     DEBUGP (("X509 certificate successfully verified and matches host %s\n",
@@ -889,7 +983,8 @@ ssl_check_certificate (int fd, const char *host)
 To connect to %s insecurely, use `--no-check-certificate'.\n"),
                quotearg_style (escape_quoting_style, host));
 
-  return opt.check_cert == CHECK_CERT_ON ? success : true;
+  /* never return true if pinsuccess fails */
+  return !pinsuccess ? false : (opt.check_cert == CHECK_CERT_ON ? success : true);
 }
 
 /*

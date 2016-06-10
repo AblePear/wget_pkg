@@ -128,9 +128,16 @@ host_triplet = @host@
 @HAVE_PYTHON3_TRUE@	Test-cookie-domain-mismatch.py \
 @HAVE_PYTHON3_TRUE@	Test-cookie-expires.py Test-cookie.py \
 @HAVE_PYTHON3_TRUE@	Test-Head.py Test--https.py \
-@HAVE_PYTHON3_TRUE@	Test--https-crl.py Test-hsts.py Test-O.py \
-@HAVE_PYTHON3_TRUE@	Test-Post.py Test-504.py Test--spider-r.py \
-@HAVE_PYTHON3_TRUE@	Test--rejected-log.py \
+@HAVE_PYTHON3_TRUE@	Test--https-crl.py \
+@HAVE_PYTHON3_TRUE@	Test-missing-scheme-retval.py \
+@HAVE_PYTHON3_TRUE@	Test-pinnedpubkey-der-https.py \
+@HAVE_PYTHON3_TRUE@	Test-pinnedpubkey-der-no-check-https.py \
+@HAVE_PYTHON3_TRUE@	Test-pinnedpubkey-hash-https.py \
+@HAVE_PYTHON3_TRUE@	Test-pinnedpubkey-hash-no-check-fail-https.py \
+@HAVE_PYTHON3_TRUE@	Test-pinnedpubkey-pem-fail-https.py \
+@HAVE_PYTHON3_TRUE@	Test-pinnedpubkey-pem-https.py Test-hsts.py \
+@HAVE_PYTHON3_TRUE@	Test-O.py Test-Post.py Test-504.py \
+@HAVE_PYTHON3_TRUE@	Test--spider-r.py Test--rejected-log.py \
 @HAVE_PYTHON3_TRUE@	Test-redirect-crash.py \
 @HAVE_PYTHON3_TRUE@	Test-reserved-chars.py Test-condget.py \
 @HAVE_PYTHON3_TRUE@	$(am__EXEEXT_1)
@@ -488,6 +495,8 @@ BITSIZEOF_SIG_ATOMIC_T = @BITSIZEOF_SIG_ATOMIC_T@
 BITSIZEOF_SIZE_T = @BITSIZEOF_SIZE_T@
 BITSIZEOF_WCHAR_T = @BITSIZEOF_WCHAR_T@
 BITSIZEOF_WINT_T = @BITSIZEOF_WINT_T@
+CARES_CFLAGS = @CARES_CFLAGS@
+CARES_LIBS = @CARES_LIBS@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@

@@ -351,6 +351,7 @@ logputs (enum log_options o, const char *s)
 {
   FILE *fp;
   FILE *warcfp;
+  int errno_save = errno;
 
   check_redirect_output ();
   if (o == LOG_PROGRESS)
@@ -358,10 +359,14 @@ logputs (enum log_options o, const char *s)
   else
     fp = get_log_fp ();
 
+  errno = errno_save;
+
   if (fp == NULL)
     return;
 
   warcfp = get_warc_log_fp ();
+  errno = errno_save;
+
   CHECK_VERBOSE (o);
 
   FPUTS (s, fp);
@@ -373,6 +378,8 @@ logputs (enum log_options o, const char *s)
     logflush ();
   else
     needs_flushing = true;
+
+  errno = errno_save;
 }
 
 struct logvprintf_state {
@@ -543,8 +550,10 @@ logprintf (enum log_options o, const char *fmt, ...)
   va_list args;
   struct logvprintf_state lpstate;
   bool done;
+  int errno_saved = errno;
 
   check_redirect_output ();
+  errno = errno_saved;
   if (inhibit_logging)
     return;
   CHECK_VERBOSE (o);
@@ -561,6 +570,8 @@ logprintf (enum log_options o, const char *fmt, ...)
         exit (WGET_EXIT_GENERIC_ERROR);
     }
   while (!done);
+
+  errno = errno_saved;
 }
 
 #ifdef ENABLE_DEBUG

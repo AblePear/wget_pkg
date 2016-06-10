@@ -830,7 +830,8 @@ retrieve_url (struct url * orig_parsed, const char *origurl, char **file,
       if (redirection_count)
         oldrec = glob = false;
 
-      result = ftp_loop (u, &local_file, dt, proxy_url, recursive, glob);
+      result = ftp_loop (u, orig_parsed, &local_file, dt, proxy_url,
+                         recursive, glob);
       recursive = oldrec;
 
       /* There is a possibility of having HTTP being redirected to
@@ -872,11 +873,15 @@ retrieve_url (struct url * orig_parsed, const char *origurl, char **file,
       xfree (mynewloc);
       mynewloc = construced_newloc;
 
-      /* Reset UTF-8 encoding state, keep the URI encoding and reset
+#ifdef ENABLE_IRI
+      /* Reset UTF-8 encoding state, set the URI encoding and reset
          the content encoding. */
       iri->utf8_encode = opt.enable_iri;
+      if (opt.encoding_remote)
+       set_uri_encoding (iri, opt.encoding_remote, true);
       set_content_encoding (iri, NULL);
       xfree (iri->orig_url);
+#endif
 
       /* Now, see if this new location makes sense. */
       newloc_parsed = url_parse (mynewloc, &up_error_code, iri, true);
@@ -1064,10 +1069,12 @@ retrieve_from_file (const char *file, bool html, int *count)
       if (dt & TEXTHTML)
         html = true;
 
+#ifdef ENABLE_IRI
       /* If we have a found a content encoding, use it.
        * ( == is okay, because we're checking for identical object) */
       if (iri->content_encoding != opt.locale)
           set_uri_encoding (iri, iri->content_encoding, false);
+#endif
 
       /* Reset UTF-8 encode status */
       iri->utf8_encode = opt.enable_iri;

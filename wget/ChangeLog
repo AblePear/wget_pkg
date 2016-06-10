@@ -1,3 +1,386 @@
+2016-06-09  Giuseppe Scrivano  <gscrivan@redhat.com>
+
+	NEWS: update
+
+2016-06-09  Giuseppe Scrivano  <gscrivan@redhat.com>
+
+	ftp: understand --trust-server-names on a HTTP->FTP redirect
+	If not --trust-server-names is used, FTP will also get the destination
+	file name from the original url specified by the user instead of the
+	redirected url.  Closes CVE-2016-4971.
+
+	* src/ftp.c (ftp_get_listing): Add argument original_url.
+	(getftp): Likewise.
+	(ftp_loop_internal): Likewise.  Use original_url to generate the
+	file name if --trust-server-names is not provided.
+	(ftp_retrieve_glob): Likewise.
+	(ftp_loop): Likewise.
+
+2016-06-07  Tim Rühsen  <tim.ruehsen@gmx.de>
+
+	Fix warnings for --disable-iri configure flag
+	* src/iri.h: Fix #define for parse_charset
+	* src/html-url.c: Surround some IRI code parts by #ifdef ENABLE_IRI
+	* src/http.c: Likewise
+	* src/iri.h: Likewise
+	* src/recur.c: Likewise
+	* src/retr.c: Likewise
+
+	Fix warning about redefinition of MAP_FAILED
+	* src/sysdep.h: Removed definition of MAP_FAILED
+	* src/utils.c: Check and define MAP_FAILED after including sys/mmap.h
+
+2016-06-03  Tim Rühsen  <tim.ruehsen@gmx.de>
+
+	Add new Test for missing scheme behavior
+	* testenv/Makefile.am: Add Test-missing-scheme-retval.py
+	* testenv: New file Test-missing-scheme-retval.py
+
+	Idea and Perl implementation by Zdenek Dohnal <zdohnal@redhat.com>
+
+2016-05-27  Tim Rühsen  <tim.ruehsen@gmx.de>
+
+	Fallback to pod2man without utf-8 on error
+	* doc/Makefile.am: Fallback to pod2man without utf-8 on error
+
+2016-05-26  Ander Juaristi  <ajuaristi@gmx.es>
+
+	Correct HSTS debug message
+	 * src/main.c (save_hsts): save the in-memory HSTS database to a file
+	   only if something changed.
+	 * src/hsts.c (struct hsts_store): new field 'changed'.
+	   (hsts_match): update field 'changed' accordingly.
+	   (hsts_store_entry): update field 'changed' accordingly.
+	   (hsts_store_has_changed): new function.
+	 * src/hsts.h (hsts_store_has_changed): new function.
+
+	Check the HSTS file is not world-writable
+	 * hsts.c (hsts_file_access_valid): check that the file is a regular
+	   file, and that it's not world-writable.
+	   (hsts_store_open): if the HSTS database file does not meet the
+	   above requirements, disable HSTS at all.
+
+2016-05-24  Tim Rühsen  <tim.ruehsen@gmx.de>
+
+	Improve description of Perl libraries needed for test suite
+	* README.checkout: Improve text about Perl libraries
+
+2016-05-23  Tim Rühsen  <tim.ruehsen@gmx.de>
+
+	Remove special handling for Emacs in progress bar code
+	* src/progress.c: Remove special 'emacs' code
+
+	Fixes #47989
+
+2016-04-25  Jernej Simončič  <jernej|s-wget@eternallybored.org>
+
+	Fix xsleep() for Windows (trivial change)
+	* src/mswindows.c (xsleep): Fix check for number of seconds
+
+2016-04-17  Sergio Gelato  <sergio.gelato@astro.su.se>
+
+	More accurate log message from do_conversion()
+	* src/iri.c (do_conversion): More accurate log message
+
+2016-04-17  Tim Rühsen  <tim.ruehsen@gmx.de>
+
+	Include sys/select.h if HAVE_LIBCARES
+	* src/hosts.c: Include sys/select.h if HAVE_LIBCARES
+
+	Reported-by: Gisle Vanem <gvanem@yahoo.no>
+
+2016-04-17  Gisle Vanem  <gvanem@yahoo.no>
+
+	Fix Windows gnulib/c-ares incompatibility of select()
+	* src/host.c: Undef 'select' on Windows
+
+2016-04-15  Tim Rühsen  <tim.ruehsen@gmx.de>
+
+	Set X flags for python tests
+	* testenv/*.py: Set eXecute flags
+
+	Regression from commit 926e42d4678689195a0bbed210c6d027db7cc390
+
+2016-04-11  Ander Juaristi  <ajuaristi@gmx.es>
+
+	Strictly comply with RFC 6797
+	 * src/hsts.c (hsts_store_entry): strictly comply with RFC 6797.
+
+	RFC 6797 states in section 8.1 that the UA's cached information should
+	only be updated if:
+
+	    "either or both of the max-age and includeSubDomains header field
+	    value tokens are conveying information different than that already
+	    maintained by the UA."
+
+2016-04-11  Ander Juaristi  <ajuaristi@gmx.es>
+
+	Correct HSTS database file description
+	 * src/hsts.c (hsts_store_dump): s/[:port]/<port>/
+
+2016-04-11  moparisthebest  <admin@moparisthebest.com>
+
+	Implement tests for new pinnedpubkey option
+	* testenv/Makefile.am: Add new tests
+	* testenv/Test-pinnedpubkey-der-https.py: New test
+	* testenv/Test-pinnedpubkey-der-no-check-https.py: New Test
+	* testenv/Test-pinnedpubkey-hash-https.py: New test
+	* testenv/Test-pinnedpubkey-hash-no-check-fail-https.py: New test
+	* testenv/Test-pinnedpubkey-pem-fail-https.py: New test
+	* testenv/Test-pinnedpubkey-pem-https.py: New test
+	* testenv/certs/README: How to generate public keys with openssl tool
+	* testenv/certs/server-pubkey.der: New key file (DER format)
+	* testenv/certs/server-pubkey.pem: New key file (PEM format)
+
+	Implement --pinnedpubkey option to pin public keys
+	* doc/wget.texi: Add description for --pinnedpubkey
+	* src/gnutls.c: New function pkp_pin_peer_pubkey(),
+	  (ssl_check_certificate): Check pinned cert via pkp_pin_peer_pubkey()
+	* src/init.c: Add option --pinnedpubkey
+	* src/main.c: Add option --pinnedpubkey
+	* src/openssl.c: New function pkp_pin_peer_pubkey(),
+	  (ssl_check_certificate): Check pinned cert via pkp_pin_peer_pubkey()
+	* src/options.h: Add new option variable 'pinnedpubkey'
+	* src/utils.c: New functions wg_pubkey_pem_to_der(), wg_pin_peer_pubkey()
+	* src/utils.h: Add prototype for wg_pin_peer_pubkey()
+
+2016-04-11  Tim Rühsen  <tim.ruehsen@gmx.de>
+
+	Use test file name for temp working directory name
+	* testenv/test/base_test.py (__init__): Use test file name for name,
+	  remove 'name' parameter
+	* testenv/test/http_test.py (__init__): Remove 'name' parameter
+	* testenv/*.py: Remove TEST_NAME
+
+	Using a fixed string (TEST_NAME) to build the working directory
+	for testing caused random failures (or successes) when tests
+	share the same TEST_NAME value. Not easy to find without digging
+	into the python test suite code.
+	We now use the test file name, which is unique within the test
+	environment.
+
+2016-04-11  Tim Rühsen  <tim.ruehsen@gmx.de>
+
+	Fix testenv/Test--rejected-log.py
+	* testenv/Test--rejected-log.py: Add missing tabs in expected output
+
+	Fail python tests when post_hook errors
+	* testenv/test/base_test.py (__exit__): Return self.tests_passed
+	  (__test_cleanup): Set self.tests_passed to False on exception
+
+2016-03-29  Darshit Shah  <darnir@gmail.com>
+
+	Print the fingerprint instead of the raw pointer in debugging message
+	* src/metalink.c (retrieve_from_metalink): Fix debug message to print the
+	fingerprint instead of a pointer.
+
+	* Do not delete the ChangeLog file since it is required by the Makefile
+	and breaks compilation
+
+2016-03-29  Darshit Shah  <darnir@gmail.com>
+
+	Revert "Print the fingerprint instead of the raw pointer in debugging message"
+	This reverts commit b916595168b6eb0f8868a67a9d214d5e0022871f.
+
+2016-03-28  Tim Rühsen  <tim.ruehsen@gmx.de>
+
+	Fixed URLs and references in wget.texi
+	* wget.texi: Replace server.com by example.com,
+	  replace ftp://wuarchive.wustl.edu by https://example.com,
+	  use HTTPS instead of HTTP where possible,
+	  fix list archive reference,
+	  remove reference to wget-notify@addictivecode.org,
+	  change bugtracker URL to bugtracker on Savannah,
+	  replace yoyodyne.com by example.com,
+	  fix URL to VMS port
+
+2016-03-25  Giuseppe Scrivano  <gscrivan@redhat.com>
+
+	* metalink.c (retrieve_from_metalink): Fix typo
+
+	Print the fingerprint instead of the raw pointer in debugging message
+	* src/metalink.c (retrieve_from_metalink): Fix debug message to print the
+	fingerprint instead of a pointer.
+
+2016-03-23  Tim Rühsen  <tim.ruehsen@gmx.de>
+
+	Add options --bind-dns-address and --dns-servers
+	* README.checkout: Add description for libares
+	* configure.ac: Add check for libares
+	* doc/wget.texi: Add docs for the new options
+	* src/build_info.c.in: Add +/-cares for --version output
+	* src/host.c:
+	  (merge_address_lists): New static function
+	  (address_list_from_hostent): New static function
+	  (wait_ares): New static function
+	  (callback): New static function
+	  (lookup_host): Add libares resolver code
+	* src/init.c: Add new options,
+	  (cleanup): Add cleanup code
+	* src/main.c: Add global libares channel variable
+	  (cmdline_option option_data): Add new options
+	  (print_help): Add short descriptions
+	  (main): Add libares init code
+	* src/options.h (struct options): Add option members
+
+	The new options allow to specify alternative DNS servers and
+	an alternate packet route for the resolver packets.
+	Wget has to built with libares, enabled at configure time by
+	./configure --with-cares.
+
+2016-03-16  Tim Rühsen  <tim.ruehsen@gmx.de>
+
+	Fix SNI server names with trailing dot(s)
+	* src/gnutls.c (ssl_connect_wget, ssl_check_certificate): Fix SNI server name
+	* src/openssl.c (ssl_connect_wget, ssl_check_certificate): Fix SNI server name
+
+	Fixes #47408
+
+2016-03-10  Tim Rühsen  <tim.ruehsen@gmx.de>
+
+	Fix links to original Robots Exclusion Standard
+	* doc/wget.texi: Fix links
+
+2016-03-05  Darshit Shah  <darnir@gmail.com>
+
+	Fix assertion in Progress bar
+	    * src/progress.c (create_image): Fix off-by-one error in assert()
+	    statement for progress bar width.
+	    Reported-By: Gisle Vanem <gvanem@yahoo.no>
+
+2016-03-03  Giuseppe Scrivano  <gscrivan@redhat.com>
+
+	src/url.c: fix make syntax-check
+
+2016-03-03  Maks Orlovich  <morlovich@google.com>
+
+	Parse <img srcset> attributes, they have image URLs.
+	* src/convert.h: Add link_noquote_html_p to permit rewriting URLs deep
+	                 inside attributes without adding extraneous quoting
+	* src/convert.c (convert_links): Honor link_noquote_html_p
+	* src/html_url.c (tag_handle_img): New function. Add srcset parsing.
+
+2016-03-01  Darshit Shah  <darnir@gmail.com>
+
+	Sanitize value sent to memset to prevent SEGFAULT
+
+2016-03-01  Darshit Shah  <darnir@reniac.com>
+
+	Update documentation about bahviour of -c
+	    * docs/wget.texi: -c will restart download from scratch if server
+	    does not support RANGE.
+
+	    Reported-By: David Chavez
+	    http://stackoverflow.com/questions/30147332/unexpected-behavior-of-wget
+
+2016-02-27  Tim Rühsen  <tim.ruehsen@gmx.de>
+
+	Fix writing WARC-Target-URI value
+	src/warc.c: Add function warc_write_header_uri(),
+	            Use it for creating WARC-Target-URI
+
+	Fixes #47281
+
+2016-02-13  Darshit Shah  <darnir@gmail.com>
+
+	Remove pointer to unused Mailing List
+	    * MAILING-LISTS: Remove pointer to old, unused mailing list for bug
+	    reports
+
+2016-02-11  Tim Rühsen  <tim.ruehsen@gmx.de>
+
+	Retain value of errno in logprintf(), logputs() even better
+	* src/log.c (logprintf,logputs): Save&Restore value of errno
+
+	Reported-by: Gisle Vanem <gvanem@yahoo.no>
+
+2016-02-10  Tim Rühsen  <tim.ruehsen@gmx.de>
+
+	Retain value of errno in logprintf()
+	* src/log.c (logprintf): Save&Restore value of errno
+
+	Reported-by: Gisle Vanem <gvanem@yahoo.no>
+
+2016-02-01  Tim Rühsen  <tim.ruehsen@gmx.de>
+
+	Set AM_SILENT_RULES to yes by default
+	* configure.ac: Set AM_SILENT_RULES to yes by default
+
+2016-02-01  Ander Juaristi  <ajuaristi@gmx.es>
+
+	Enforce 'RejectHeader' rule in tests
+	 * server/http/http_server.py (_Handler.RejectHeader): enforce
+	   'RejectHeader' rule.
+
+2015-12-20  Tim Rühsen  <tim.ruehsen@gmx.de>
+
+	Fix Test-iri-forced-remote
+	* tests/Test-iri-forced-remote.px: Fix encodings
+
+2015-12-18  Eli Zaretskii  <eliz@gnu.org>
+
+	Support non-ASCII URLs
+	* src/url.c [HAVE_ICONV]: Include iconv.h and langinfo.h.
+	(convert_fname): New function.
+	[HAVE_ICONV]: Convert file name from remote encoding to local
+	encoding.
+	(url_file_name): Call convert_fname.
+	(filechr_table): Don't consider bytes in 128..159 as control
+	characters.
+
+	* tests/Test-ftp-iri.px: Fix the expected file name to match the
+	new file-name recoding.  State the remote encoding explicitly on
+	the Wget command line.
+
+	* NEWS: Mention the URI recoding when built with libiconv.
+
+2015-12-18  Giuseppe Scrivano  <gscrivan@redhat.com>
+
+	* NEWS: Prepare new development cycle
+
+2015-12-17  Tim Rühsen  <tim.ruehsen@gmx.de>
+
+	Cleanup code
+	* src/iri.c (do_conversion): Code cleanup
+
+2015-12-17  Eli Zaretskii  <eliz@gnu.org>
+
+	Set URI encoding when redirected
+	* src/retr.c (retrieve_url): Set URI on redirection
+
+2015-12-17  Tim Rühsen  <tim.ruehsen@gmx.de>
+
+	Remove requesting X/Open 5, POSIX 1995
+	* src/sysdep.h: Remove #define _XOPEN_SOURCE 500
+
+2015-12-16  Eli Zaretskii  <eliz@gnu.org>
+
+	Avoid hanging on MS-Windows when invoked with --connect-timeout
+	* src/connect.c (connect_to_ip) [WIN32]: Don't call fd_close if
+	the connection timed out, to avoid hanging.
+
+2015-12-15  Tim Rühsen  <tim.ruehsen@gmx.de>
+
+	Fix iconv conversion
+	* src/iri.c: Kick out the last converted character from iconv()
+
+	Thanks to Eli Zaretskii <eliz@gnu.org> for suggesting the fix.
+	Reported-by: "Andries E. Brouwer" <Andries.Brouwer@cwi.nl>
+
+2015-12-14  Tim Rühsen  <tim.ruehsen@gmx.de>
+
+	Let Test-k survive on CygWin and Windows
+	* tests/Test-k.px: Use --restrict-file-names for CygWin/Windows
+	  filename requirements.
+
+2015-12-13  Ander Juaristi  <ajuaristi@gmx.es>
+
+	Fix leak in HSTS code
+	* src/hsts.c (hsts_store_open): close fp if open.
+
+	Remove unused variable in ftp code
+	* src/ftp.c (getftp): fix compiler warning for unused variable.
+
 2015-12-11  Giuseppe Scrivano  <gscrivan@redhat.com>
 
 	Tag release 1.17.1

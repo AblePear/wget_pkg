@@ -13,6 +13,12 @@
 const char *compiled_features[] =
 {
 
+#if defined HAVE_LIBCARES
+  "+cares",
+#else
+  "-cares",
+#endif
+
 #if defined ENABLE_DIGEST
   "+digest",
 #else
