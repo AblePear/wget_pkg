@@ -20,11 +20,15 @@ clean :
 
 
 ##### openssl ##########
-openssl_sources := $(shell find openssl -type f \! -name .DS_Store)
+openssl_sources := $(shell find openssl -type f \
+		\! -name Makefile \! -name .DS_Store)
+openssl_makefiles := $(shell find openssl -type f -name Makefile)
 openssl_dirs := $(shell find openssl -type d)
 
 openssl_build_sources := \
 		$(patsubst openssl/%, $(TMP)/openssl/build/%, $(openssl_sources))
+openssl_build_makefiles := \
+		$(patsubst openssl/%, $(TMP)/openssl/build/%, $(openssl_makefiles))
 openssl_build_dirs := \
 		$(TMP)/openssl/build \
 		$(patsubst openssl/%, $(TMP)/openssl/build/%, $(openssl_dirs))
@@ -54,11 +58,11 @@ $(TMP)/openssl/built.stamp.txt : $(TMP)/openssl/configured.stamp.txt | $$(dir $$
 	cd $(TMP)/openssl/build && $(MAKE)
 	date > $@
 
-$(TMP)/openssl/configured.stamp.txt : $(openssl_build_sources) | $$(dir $$@)
+$(TMP)/openssl/configured.stamp.txt : $(openssl_build_sources) | $(openssl_build_makefiles) $$(dir $$@)
 	cd $(TMP)/openssl/build && sh ./Configure $(openssl_configure_flags)
 	date > $@
 
-$(openssl_build_sources) : $(TMP)/openssl/build/% : openssl/% | $$(dir $$@)
+$(openssl_build_sources) $(openssl_build_makefiles) : $(TMP)/openssl/build/% : openssl/% | $$(dir $$@)
 	cp $< $@
 
 
