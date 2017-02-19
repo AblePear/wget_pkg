@@ -2,7 +2,7 @@ GNU Wget 1.18 for OS X
 ======================
 
 This project builds a standard OS X installer package for [GNU wget][1]. 
-It contains the source distribution for wget 1.18 and [OpenSSL 1.0.2h][2].
+It contains the source distribution for wget 1.18 and [OpenSSL 1.0.2k][2].
 
 Dependencies
 ------------
