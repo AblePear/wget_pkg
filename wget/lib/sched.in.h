@@ -1,5 +1,5 @@
-/* Replacement <sched.h> for platforms that lack it.
-   Copyright (C) 2008-2015 Free Software Foundation, Inc.
+/* A GNU-like <sched.h>.
+   Copyright (C) 2008-2017 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -23,6 +23,9 @@
 
 /* The include_next requires a split double-inclusion guard.  */
 #if @HAVE_SCHED_H@
+# if @HAVE_SYS_CDEFS_H@
+#  include <sys/cdefs.h>
+# endif
 # @INCLUDE_NEXT@ @NEXT_SCHED_H@
 #endif
 

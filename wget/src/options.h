@@ -43,6 +43,7 @@ struct options
   bool quiet;                   /* Are we quiet? */
   int ntry;                     /* Number of tries per URL */
   bool retry_connrefused;       /* Treat CONNREFUSED as non-fatal. */
+  char *retry_on_http_error;    /* Treat given HTTP errors as non-fatal. */
   bool background;              /* Whether we should work in background. */
   bool ignore_length;           /* Do we heed content-length at all?  */
   bool recursive;               /* Are we recursive? */
@@ -61,12 +62,13 @@ struct options
   bool add_hostdir;             /* Do we add hostname directory? */
   bool protocol_directories;    /* Whether to prepend "http"/"ftp" to dirs. */
   bool noclobber;               /* Disables clobbering of existing data. */
-  bool unlink;                  /* remove file before clobbering */
+  bool unlink_requested;        /* remove file before clobbering */
   char *dir_prefix;             /* The top of directory tree */
   char *lfilename;              /* Log filename */
   char *input_filename;         /* Input filename */
 #ifdef HAVE_METALINK
   char *input_metalink;         /* Input metalink file */
+  int metalink_index;           /* Metalink application/metalink4+xml metaurl ordinal number. */
   bool metalink_over_http;      /* Use Metalink if present in HTTP response */
   char *preferred_location;     /* Preferred location for Metalink resources */
 #endif
@@ -127,9 +129,12 @@ struct options
   bool warc_keep_log;           /* Store the log file in a WARC record. */
   char **warc_user_headers;     /* User-defined WARC header(s). */
 
+  bool enable_xattr;            /* Store metadata in POSIX extended attributes. */
+
   char *user;                   /* Generic username */
   char *passwd;                 /* Generic password */
   bool ask_passwd;              /* Ask for password? */
+  char *use_askpass;           /* value to use for use-askpass if WGET_ASKPASS is not set */
 
   bool always_rest;             /* Always use REST. */
   wgint start_pos;              /* Start position of a download. */
@@ -243,7 +248,7 @@ struct options
 
   char *pinnedpubkey;           /* Public key (PEM/DER) file, or any number
                                    of base64 encoded sha256 hashes preceded by
-                                   \'sha256//\' and seperated by \';\', to verify
+                                   \'sha256//\' and separated by \';\', to verify
                                    peer against */
 
   char *random_file;            /* file with random data to seed the PRNG */
@@ -258,6 +263,7 @@ struct options
   bool cookies;                 /* whether cookies are used. */
   char *cookies_input;          /* file we're loading the cookies from. */
   char *cookies_output;         /* file we're saving the cookies to. */
+  bool keep_badhash;            /* Keep files with checksum mismatch. */
   bool keep_session_cookies;    /* whether session cookies should be
                                    saved and loaded. */
 
@@ -306,7 +312,7 @@ struct options
 
   bool enable_iri;
   char *encoding_remote;
-  char *locale;
+  const char *locale;
 
   bool trustservernames;
 #ifdef __VMS

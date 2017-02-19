@@ -100,8 +100,8 @@ struct url
   char *user;
   char *passwd;
 
-  /* 'host' is allocated by idna_to_ascii_8z() via idn_encode().
-   * Call 'idn_free()' to free this memory. */
+  /* 'host' is allocated by idn2_lookup_u8() via idn_encode().
+   * Call 'idn2_free()' to free this memory. */
   bool idn_allocated;
 };
 
@@ -124,6 +124,7 @@ bool url_has_scheme (const char *);
 bool url_valid_scheme (const char *);
 int scheme_default_port (enum url_scheme);
 void scheme_disable (enum url_scheme);
+const char *scheme_leading_string (enum url_scheme);
 
 char *url_string (const struct url *, enum url_auth_mode);
 char *url_file_name (const struct url *, char *);

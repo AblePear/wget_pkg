@@ -634,7 +634,7 @@ retr_rate (wgint bytes, double secs)
   double dlrate = calc_rate (bytes, secs, &units);
   /* Use more digits for smaller numbers (regardless of unit used),
      e.g. "1022", "247", "12.5", "2.38".  */
-  sprintf (res, "%.*f %s",
+  snprintf (res, sizeof(res), "%.*f %s",
            dlrate >= 99.95 ? 0 : dlrate >= 9.995 ? 1 : 2,
            dlrate, !opt.report_bps ? rate_names[units]: rate_names_bits[units]);
 
@@ -869,7 +869,7 @@ retrieve_url (struct url * orig_parsed, const char *origurl, char **file,
          redirects, but a ton of boneheaded webservers and CGIs out
          there break the rules and use relative URLs, and popular
          browsers are lenient about this, so wget should be too. */
-      construced_newloc = uri_merge (url, mynewloc);
+      construced_newloc = uri_merge (url, mynewloc ? mynewloc : "");
       xfree (mynewloc);
       mynewloc = construced_newloc;
 
@@ -1147,7 +1147,7 @@ retrieve_from_file (const char *file, bool html, int *count)
 Removing file due to --delete-after in retrieve_from_file():\n"));
           logprintf (LOG_VERBOSE, _("Removing %s.\n"), filename);
           if (unlink (filename))
-            logprintf (LOG_NOTQUIET, "unlink: %s\n", strerror (errno));
+            logprintf (LOG_NOTQUIET, "Failed to unlink %s: (%d) %s\n", filename, errno, strerror (errno));
           dt &= ~RETROKF;
         }
 
@@ -1248,9 +1248,9 @@ rotate_backups(const char *fname)
 #endif
 
   int maxlen = strlen (fname) + sizeof (SEP) + numdigit (opt.backups) + AVSL;
-  char *from = (char *)alloca (maxlen);
-  char *to = (char *)alloca (maxlen);
-  struct_stat sb;
+  char *from = alloca (maxlen);
+  char *to = alloca (maxlen);
+  struct stat sb;
   int i;
 
   if (stat (fname, &sb) == 0)
@@ -1267,17 +1267,21 @@ rotate_backups(const char *fname)
        */
       if (i == opt.backups)
         {
-          sprintf (to, "%s%s%d%s", fname, SEP, i, AVS);
+          snprintf (to, sizeof(to), "%s%s%d%s", fname, SEP, i, AVS);
           delete (to);
         }
 #endif
-      sprintf (to, "%s%s%d", fname, SEP, i);
-      sprintf (from, "%s%s%d", fname, SEP, i - 1);
-      rename (from, to);
+      snprintf (to, maxlen, "%s%s%d", fname, SEP, i);
+      snprintf (from, maxlen, "%s%s%d", fname, SEP, i - 1);
+      if (rename (from, to))
+        logprintf (LOG_NOTQUIET, "Failed to rename %s to %s: (%d) %s\n",
+                   from, to, errno, strerror (errno));
     }
 
-  sprintf (to, "%s%s%d", fname, SEP, 1);
-  rename(fname, to);
+  snprintf (to, maxlen, "%s%s%d", fname, SEP, 1);
+  if (rename(fname, to))
+    logprintf (LOG_NOTQUIET, "Failed to rename %s to %s: (%d) %s\n",
+               fname, to, errno, strerror (errno));
 }
 
 static bool no_proxy_match (const char *, const char **);

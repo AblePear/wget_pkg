@@ -80,7 +80,6 @@ enum hsts_kh_match {
 
 #define DEFAULT_HTTP_PORT 80
 #define DEFAULT_SSL_PORT  443
-#define CHECK_EXPLICIT_PORT(p1, p2) (p1 == 0 || p1 == p2)
 #define MAKE_EXPLICIT_PORT(s, p) (s == SCHEME_HTTPS ? (p == DEFAULT_SSL_PORT ? 0 : p) \
     : (p == DEFAULT_HTTP_PORT ? 0 : p))
 
@@ -327,7 +326,8 @@ hsts_store_dump (hsts_store_t store, FILE *fp)
 
       if (fprintf (fp, "%s\t%d\t%d\t%lu\t%lu\n",
                    kh->host, kh->explicit_port, khi->include_subdomains,
-                   khi->created, khi->max_age) < 0)
+                   (unsigned long) khi->created,
+                   (unsigned long) khi->max_age) < 0)
         {
           logprintf (LOG_ALWAYS, "Could not write the HSTS database correctly.\n");
           break;
@@ -343,12 +343,20 @@ hsts_store_dump (hsts_store_t store, FILE *fp)
 static bool
 hsts_file_access_valid (const char *filename)
 {
-  struct_stat st;
+  struct stat st;
 
   if (stat (filename, &st) == -1)
     return false;
 
-  return !(st.st_mode & S_IWOTH) && S_ISREG (st.st_mode);
+  return
+#ifndef WINDOWS
+      /*
+       * The world-writable concept is a Unix-centric notion.
+       * We bypass this test on Windows.
+       */
+      !(st.st_mode & S_IWOTH) &&
+#endif
+      S_ISREG (st.st_mode);
 }
 
 /* HSTS API */
@@ -502,7 +510,7 @@ hsts_store_open (const char *filename)
     {
       if (hsts_file_access_valid (filename))
         {
-          struct_stat st;
+          struct stat st;
           FILE *fp = fopen (filename, "r");
 
           if (!fp || !hsts_read_database (store, fp, false))
@@ -510,7 +518,8 @@ hsts_store_open (const char *filename)
               /* abort! */
               hsts_store_close (store);
               xfree (store);
-              fclose (fp);
+              if (fp)
+                fclose (fp);
               goto out;
             }
 
@@ -540,7 +549,7 @@ out:
 void
 hsts_store_save (hsts_store_t store, const char *filename)
 {
-  struct_stat st;
+  struct stat st;
   FILE *fp = NULL;
   int fd = 0;
 
@@ -790,9 +799,9 @@ test_hsts_read_database (void)
       if (fp)
         {
           fputs ("# dummy comment\n", fp);
-          fprintf (fp, "foo.example.com\t0\t1\t%ld\t123\n",(long) created);
-          fprintf (fp, "bar.example.com\t0\t0\t%ld\t456\n", (long) created);
-          fprintf (fp, "test.example.com\t8080\t0\t%ld\t789\n", (long) created);
+          fprintf (fp, "foo.example.com\t0\t1\t%lu\t123\n",(unsigned long) created);
+          fprintf (fp, "bar.example.com\t0\t0\t%lu\t456\n", (unsigned long) created);
+          fprintf (fp, "test.example.com\t8080\t0\t%lu\t789\n", (unsigned long) created);
           fclose (fp);
 
           table = hsts_store_open (file);

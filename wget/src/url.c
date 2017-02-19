@@ -43,10 +43,10 @@ as that of the covered work.  */
 #include "host.h"  /* for is_valid_ipv6_address */
 #include "c-strcase.h"
 
-#if HAVE_ICONV
-#include <iconv.h>
-#include <langinfo.h>
+#ifdef HAVE_ICONV
+# include <iconv.h>
 #endif
+#include <langinfo.h>
 
 #ifdef __VMS
 #include "vms.h"
@@ -510,6 +510,12 @@ void
 scheme_disable (enum url_scheme scheme)
 {
   supported_schemes[scheme].flags |= scm_disabled;
+}
+
+const char *
+scheme_leading_string (enum url_scheme scheme)
+{
+  return supported_schemes[scheme].leading_string;
 }
 
 /* Skip the username and password, if present in the URL.  The
@@ -1207,7 +1213,7 @@ url_free (struct url *url)
   if (url)
     {
       if (url->idn_allocated) {
-        idn_free (url->host);      /* A dummy if !defined(ENABLE_IRI) */
+        idn2_free (url->host);      /* A dummy if !defined(ENABLE_IRI) */
         url->host = NULL;
       }
       else
@@ -1236,7 +1242,7 @@ mkalldirs (const char *path)
 {
   const char *p;
   char *t;
-  struct_stat st;
+  struct stat st;
   int res;
 
   p = path + strlen (path);
@@ -1271,12 +1277,14 @@ mkalldirs (const char *path)
              name exists, we just remove it and create the directory
              anyway.  */
           DEBUGP (("Removing %s because of directory danger!\n", t));
-          unlink (t);
+          if (unlink (t))
+            logprintf (LOG_NOTQUIET, "Failed to unlink %s (%d): %s\n",
+                       t, errno, strerror(errno));
         }
     }
   res = make_directory (t);
   if (res != 0)
-    logprintf (LOG_NOTQUIET, "%s: %s", t, strerror (errno));
+    logprintf (LOG_NOTQUIET, "%s: %s\n", t, strerror (errno));
   xfree (t);
   return res;
 }
@@ -1540,7 +1548,6 @@ static char *
 convert_fname (char *fname)
 {
   char *converted_fname = fname;
-#if HAVE_ICONV
   const char *from_encoding = opt.encoding_remote;
   const char *to_encoding = opt.locale;
   iconv_t cd;
@@ -1567,7 +1574,7 @@ convert_fname (char *fname)
 
       for (;;)
 	{
-	  if (iconv (cd, &fname, &inlen, &s, &outlen) != (size_t)(-1)
+	  if (iconv (cd, (ICONV_CONST char **) &fname, &inlen, &s, &outlen) != (size_t)(-1)
 	      && iconv (cd, NULL, NULL, &s, &outlen) != (size_t)(-1))
 	    {
 	      *(converted_fname + len - outlen - done) = '\0';
@@ -1607,7 +1614,6 @@ convert_fname (char *fname)
     }
 
     iconv_close(cd);
-#endif
 
   return converted_fname;
 }

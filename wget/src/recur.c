@@ -438,9 +438,14 @@ retrieve_tree (struct url *start_url_parsed, struct iri *pi)
               struct url *url_parsed = url_parse (url, NULL, i, true);
               struct iri *ci;
               char *referer_url = url;
-              bool strip_auth = (url_parsed != NULL
-                                 && url_parsed->user != NULL);
+              bool strip_auth;
+
               assert (url_parsed != NULL);
+
+              if (!url_parsed)
+                continue;
+
+              strip_auth = (url_parsed && url_parsed->user);
 
               /* Strip auth info if present */
               if (strip_auth)
@@ -451,9 +456,16 @@ retrieve_tree (struct url *start_url_parsed, struct iri *pi)
                   reject_reason r;
 
                   if (child->ignore_when_downloading)
-                    continue;
+                    {
+                      DEBUGP (("Not following due to 'ignore' flag: %s\n", child->url->url));
+                      continue;
+                    }
+
                   if (dash_p_leaf_HTML && !child->link_inline_p)
-                    continue;
+                    {
+                      DEBUGP (("Not following due to 'link inline' flag: %s\n", child->url->url));
+                      continue;
+                    }
 
                   r = download_child (child, url_parsed, depth,
                                       start_url_parsed, blacklist, i);
@@ -801,6 +813,12 @@ descend_redirect (const char *redirected, struct url *orig_parsed, int depth,
 
   if (reason == WG_RR_SUCCESS)
     blacklist_add (blacklist, upos->url->url);
+  else if (reason == WG_RR_LIST || reason == WG_RR_REGEX)
+    {
+      DEBUGP (("Ignoring decision for redirects, decided to load it.\n"));
+      blacklist_add (blacklist, upos->url->url);
+      reason = WG_RR_SUCCESS;
+    }
   else
     DEBUGP (("Redirection \"%s\" failed the test.\n", redirected));
 

@@ -97,6 +97,8 @@ CMD_DECLARE (cmd_directory);
 CMD_DECLARE (cmd_time);
 CMD_DECLARE (cmd_vector);
 
+CMD_DECLARE (cmd_use_askpass);
+
 CMD_DECLARE (cmd_spec_dirstruct);
 CMD_DECLARE (cmd_spec_header);
 CMD_DECLARE (cmd_spec_warc_header);
@@ -210,7 +212,7 @@ static const struct {
   { "header",           NULL,                   cmd_spec_header },
 #ifdef HAVE_HSTS
   { "hsts",             &opt.hsts,              cmd_boolean },
-  { "hsts-file",        &opt.hsts_file,         cmd_file },
+  { "hstsfile",         &opt.hsts_file,         cmd_file },
 #endif
   { "htmlextension",    &opt.adjust_extension,  cmd_boolean }, /* deprecated */
   { "htmlify",          NULL,                   cmd_spec_htmlify },
@@ -223,7 +225,7 @@ static const struct {
 #endif
   { "httpsproxy",       &opt.https_proxy,       cmd_string },
   { "httpuser",         &opt.http_user,         cmd_string },
-  { "if-modified-since", &opt.if_modified_since, cmd_boolean },
+  { "ifmodifiedsince",  &opt.if_modified_since, cmd_boolean },
   { "ignorecase",       &opt.ignore_case,       cmd_boolean },
   { "ignorelength",     &opt.ignore_length,     cmd_boolean },
   { "ignoretags",       &opt.ignore_tags,       cmd_vector },
@@ -234,9 +236,10 @@ static const struct {
 #endif
   { "input",            &opt.input_filename,    cmd_file },
 #ifdef HAVE_METALINK
-  { "input-metalink",   &opt.input_metalink,    cmd_file },
+  { "inputmetalink",    &opt.input_metalink,    cmd_file },
 #endif
   { "iri",              &opt.enable_iri,        cmd_boolean },
+  { "keepbadhash",      &opt.keep_badhash,      cmd_boolean },
   { "keepsessioncookies", &opt.keep_session_cookies, cmd_boolean },
   { "limitrate",        &opt.limit_rate,        cmd_bytes },
   { "loadcookies",      &opt.cookies_input,     cmd_file },
@@ -245,7 +248,8 @@ static const struct {
   { "login",            &opt.ftp_user,          cmd_string },/* deprecated*/
   { "maxredirect",      &opt.max_redirect,      cmd_number },
 #ifdef HAVE_METALINK
-  { "metalink-over-http", &opt.metalink_over_http, cmd_boolean },
+  { "metalinkindex",    &opt.metalink_index,     cmd_number_inf },
+  { "metalinkoverhttp", &opt.metalink_over_http, cmd_boolean },
 #endif
   { "method",           &opt.method,            cmd_string_uppercase },
   { "mirror",           NULL,                   cmd_spec_mirror },
@@ -267,7 +271,7 @@ static const struct {
   { "postfile",         &opt.post_file_name,    cmd_file },
   { "preferfamily",     NULL,                   cmd_spec_prefer_family },
 #ifdef HAVE_METALINK
-  { "preferred-location", &opt.preferred_location, cmd_string },
+  { "preferredlocation", &opt.preferred_location, cmd_string },
 #endif
   { "preservepermissions", &opt.preserve_perm,  cmd_boolean },
 #ifdef HAVE_SSL
@@ -300,6 +304,7 @@ static const struct {
   { "restrictfilenames", NULL,                  cmd_spec_restrict_file_names },
   { "retrsymlinks",     &opt.retr_symlinks,     cmd_boolean },
   { "retryconnrefused", &opt.retry_connrefused, cmd_boolean },
+  { "retryonhttperror", &opt.retry_on_http_error, cmd_string },
   { "robots",           &opt.use_robots,        cmd_boolean },
   { "savecookies",      &opt.cookies_output,    cmd_file },
   { "saveheaders",      &opt.save_headers,      cmd_boolean },
@@ -317,7 +322,8 @@ static const struct {
   { "timestamping",     &opt.timestamping,      cmd_boolean },
   { "tries",            &opt.ntry,              cmd_number_inf },
   { "trustservernames", &opt.trustservernames,  cmd_boolean },
-  { "unlink",           &opt.unlink,            cmd_boolean },
+  { "unlink",           &opt.unlink_requested,  cmd_boolean },
+  { "useaskpass" ,      &opt.use_askpass,       cmd_use_askpass },
   { "useproxy",         &opt.use_proxy,         cmd_boolean },
   { "user",             &opt.user,              cmd_string },
   { "useragent",        NULL,                   cmd_spec_useragent },
@@ -338,6 +344,9 @@ static const struct {
   { "warctempdir",      &opt.warc_tempdir,      cmd_directory },
 #ifdef USE_WATT32
   { "wdebug",           &opt.wdebug,            cmd_boolean },
+#endif
+#ifdef ENABLE_XATTR
+  { "xattr",            &opt.enable_xattr,      cmd_boolean },
 #endif
 };
 
@@ -377,6 +386,10 @@ defaults (void)
      illegal, but porting Wget to a machine where NULL is not all-zero
      bit pattern will be the least of the implementors' worries.  */
   xzero (opt);
+
+#ifdef HAVE_METALINK
+  opt.metalink_index = -1;
+#endif
 
   opt.cookies = true;
   opt.verbose = -1;
@@ -481,6 +494,12 @@ defaults (void)
 #ifdef HAVE_HSTS
   /* HSTS is enabled by default */
   opt.hsts = true;
+#endif
+
+#ifdef ENABLE_XATTR
+  opt.enable_xattr = true;
+#else
+  opt.enable_xattr = false;
 #endif
 }
 
@@ -859,6 +878,10 @@ static bool
 setval_internal (int comind, const char *com, const char *val)
 {
   assert (0 <= comind && ((size_t) comind) < countof (commands));
+
+  if ((unsigned) comind >= countof (commands))
+    return NULL;
+
   DEBUGP (("Setting %s (%s) to %s\n", com, commands[comind].name, val));
   return commands[comind].action (com, val, commands[comind].place);
 }
@@ -1369,6 +1392,32 @@ cmd_time (const char *com, const char *val, void *place)
 
   *(double *)place = number * mult;
   return true;
+}
+
+
+static bool
+cmd_use_askpass (const char *com _GL_UNUSED, const char *val, void *place)
+{
+  const char *env_name = "WGET_ASKPASS";
+  const char *env;
+
+  if (val && *val)
+    return cmd_string (com, val, place);
+
+  env = getenv (env_name);
+  if (!(env && *env))
+    {
+      env_name = "SSH_ASKPASS";
+      env = getenv (env_name);
+    }
+
+  if (!(env && *env))
+    {
+      fprintf (stderr, _("use-askpass requires a string or either environment variable WGET_ASKPASS or SSH_ASKPASS to be set.\n"));
+      exit (WGET_EXIT_GENERIC_ERROR);
+    }
+
+  return cmd_string (com, env, place);
 }
 
 #ifdef HAVE_SSL
@@ -1930,6 +1979,8 @@ cleanup (void)
   xfree (opt.body_data);
   xfree (opt.body_file);
   xfree (opt.rejected_log);
+  xfree (opt.use_askpass);
+  xfree (opt.retry_on_http_error);
 
 #ifdef HAVE_LIBCARES
 #include <ares.h>

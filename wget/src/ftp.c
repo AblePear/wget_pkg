@@ -52,6 +52,9 @@ as that of the covered work.  */
 #include "recur.h"              /* for INFINITE_RECURSION */
 #include "warc.h"
 #include "c-strcase.h"
+#ifdef ENABLE_XATTR
+#include "xattr.h"
+#endif
 
 #ifdef __VMS
 # include "vms.h"
@@ -239,7 +242,7 @@ print_length (wgint size, wgint start, bool authoritative)
 static uerr_t ftp_get_listing (struct url *, struct url *, ccon *, struct fileinfo **);
 
 static uerr_t
-get_ftp_greeting(int csock, ccon *con)
+get_ftp_greeting (int csock, ccon *con)
 {
   uerr_t err = 0;
 
@@ -356,12 +359,35 @@ getftp (struct url *u, struct url *original_url,
 
   *qtyread = restval;
 
-  user = u->user;
-  passwd = u->passwd;
-  search_netrc (u->host, (const char **)&user, (const char **)&passwd, 1);
-  user = user ? user : (opt.ftp_user ? opt.ftp_user : opt.user);
+  /* Find the username with priority */
+  if (u->user)
+    user = u->user;
+  else if (opt.user && (opt.use_askpass || opt.ask_passwd))
+    user = opt.user;
+  else if (opt.ftp_user)
+    user = opt.ftp_user;
+  else if (opt.user)
+    user = opt.user;
+  else
+    user = NULL;
+
+  /* Find the password with priority */
+  if (u->passwd)
+    passwd = u->passwd;
+  else if (opt.passwd && (opt.use_askpass || opt.ask_passwd))
+    passwd = opt.passwd;
+  else if (opt.ftp_passwd)
+    passwd = opt.ftp_passwd;
+  else if (opt.passwd)
+    passwd = opt.passwd;
+  else
+    passwd = NULL;
+
+  /* Check for ~/.netrc if none of the above match */
+  if (opt.netrc && (!user || !passwd))
+    search_netrc (u->host, (const char **) &user, (const char **) &passwd, 1);
+
   if (!user) user = "anonymous";
-  passwd = passwd ? passwd : (opt.ftp_passwd ? opt.ftp_passwd : opt.passwd);
   if (!passwd) passwd = "-wget@";
 
   dtsock = -1;
@@ -535,10 +561,10 @@ Error in server response, closing control connection.\n"));
                 logputs (LOG_VERBOSE, "done.");
 
               if (!opt.server_response)
-                logprintf (LOG_VERBOSE, "  ==> PROT %c ... ", prot);
+                logprintf (LOG_VERBOSE, "  ==> PROT %c ... ", (int) prot);
               if ((err = ftp_prot (csock, prot)) == FTPNOPROT)
                 {
-                  logprintf (LOG_NOTQUIET, _("Server did not accept the 'PROT %c' command.\n"), prot);
+                  logprintf (LOG_NOTQUIET, _("Server did not accept the 'PROT %c' command.\n"), (int) prot);
                   return err;
                 }
               if (!opt.server_response)
@@ -872,7 +898,7 @@ Error in server response, closing control connection.\n"));
              Unlike the rest of this block, this particular behavior
              _is_ VMS-specific, so it gets its own VMS test.
           */
-          if ((con->rs == ST_VMS) && (strchr( target, '/') != NULL))
+          if ((con->rs == ST_VMS) && (strchr (target, '/') != NULL))
             {
               cwd_end = 3;
               DEBUGP (("Using extra \"CWD []\" step for VMS server.\n"));
@@ -1188,6 +1214,7 @@ Error in server response, closing control connection.\n"));
       if (opt.spider)
         {
           bool exists = false;
+          bool all_exist = true;
           struct fileinfo *f;
           uerr_t _res = ftp_get_listing (u, original_url, con, &f);
           /* Set the DO_RETR command flag again, because it gets unset when
@@ -1203,6 +1230,8 @@ Error in server response, closing control connection.\n"));
                     {
                       exists = true;
                       break;
+                    } else {
+                      all_exist = false;
                     }
                   f = f->next;
                 }
@@ -1223,7 +1252,11 @@ Error in server response, closing control connection.\n"));
           con->csock = -1;
           fd_close (dtsock);
           fd_close (local_sock);
-          return RETRFINISHED;
+          if (all_exist) {
+              return RETRFINISHED;
+          } else {
+              return FTPNSFOD;
+          }
         }
 
       if (opt.verbose)
@@ -1430,7 +1463,7 @@ Error in server response, closing control connection.\n"));
       else if (opt.noclobber || opt.always_rest || opt.timestamping || opt.dirstruct
                || opt.output_document || count > 0)
         {
-          if (opt.unlink && file_exists_p (con->target))
+          if (opt.unlink_requested && file_exists_p (con->target))
             {
               if (unlink (con->target) < 0)
                 {
@@ -1546,6 +1579,11 @@ Error in server response, closing control connection.\n"));
   tmrate = retr_rate (rd_size, con->dltime);
   total_download_time += con->dltime;
 
+#ifdef ENABLE_XATTR
+  if (opt.enable_xattr)
+    set_file_metadata (u->url, NULL, fp);
+#endif
+
   fd_close (local_sock);
   /* Close the local file.  */
   if (!output_stream || con->cmd & DO_LIST)
@@ -1641,10 +1679,10 @@ Error in server response, closing control connection.\n"));
 #ifdef __VMS
       char *targ;
 
-      targ = ods_conform( con->target);
+      targ = ods_conform (con->target);
       if (targ != con->target)
         {
-          xfree( con->target);
+          xfree (con->target);
           con->target = targ;
         }
 #endif /* def __VMS */
@@ -1788,7 +1826,7 @@ ftp_loop_internal (struct url *u, struct url *original_url, struct fileinfo *f,
   char *tms, *locf;
   const char *tmrate = NULL;
   uerr_t err;
-  struct_stat st;
+  struct stat st;
 
   /* Declare WARC variables. */
   bool warc_enabled = (opt.warc_filename != NULL);
@@ -2211,7 +2249,7 @@ ftp_retrieve_list (struct url *u, struct url *original_url,
       dlthis = true;
       if (opt.timestamping && f->type == FT_PLAINFILE)
         {
-          struct_stat st;
+          struct stat st;
           /* If conversion of HTML files retrieved via FTP is ever implemented,
              we'll need to stat() <file>.orig here when -K has been specified.
              I'm not implementing it now since files on an FTP server are much
@@ -2274,7 +2312,7 @@ The sizes do not match (local %s) -- retrieving.\n\n"),
                          _("Invalid name of the symlink, skipping.\n"));
               else
                 {
-                  struct_stat st;
+                  struct stat st;
                   /* Check whether we already have the correct
                      symbolic link.  */
                   int rc = lstat (con->target, &st);
@@ -2334,6 +2372,7 @@ Already have correct symlink %s -> %s\n\n"),
             }
           break;
         case FT_UNKNOWN:
+        default:
           logprintf (LOG_NOTQUIET, _("%s: unknown/unsupported file type.\n"),
                      quote (f->name));
           break;
@@ -2355,7 +2394,12 @@ Already have correct symlink %s -> %s\n\n"),
        (f->type == FT_PLAINFILE) && opt.preserve_perm)
         {
           if (f->perms)
-            chmod (actual_target, f->perms);
+            {
+              if (chmod (actual_target, f->perms))
+                logprintf (LOG_NOTQUIET,
+                           _("Failed to set permissions for %s.\n"),
+                           actual_target);
+            }
           else
             DEBUGP (("Unrecognized permissions for %s.\n", actual_target));
         }
@@ -2503,7 +2547,7 @@ is_invalid_entry (struct fileinfo *f)
   while (cur->next)
     {
       cur = cur->next;
-      if (strcmp(f_name, cur->name) == 0)
+      if (strcmp (f_name, cur->name) == 0)
           return true;
     }
   return false;
@@ -2697,7 +2741,7 @@ ftp_loop (struct url *u, struct url *original_url, char **local_file, int *dt,
                 {
                   if (!opt.output_document)
                     {
-                      struct_stat st;
+                      struct stat st;
                       wgint sz;
                       if (stat (filename, &st) == 0)
                         sz = st.st_size;

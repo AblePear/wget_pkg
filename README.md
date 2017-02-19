@@ -1,12 +1,12 @@
-GNU Wget 1.18 for OS X
-======================
+GNU Wget 1.19.1 for OS X
+========================
 
 This project builds a standard OS X installer package for [GNU wget][1]. 
-It contains the source distribution for wget 1.18 and [OpenSSL 1.0.2k][2].
+It contains the source distribution for wget 1.19.1 and [OpenSSL 1.0.2k][2].
 
 Dependencies
 ------------
-This release was built on OS X 10.11.5 with Xcode 7.3.1 and [pkg-config 0.28][3]
+This release was built on OS X 10.12.3 with Xcode 8.2.1 and [pkg-config 0.29.1][3]
 installed. See [AblePear/pkg-config\_pkg][4] for an OS X installer package. 
 
 License

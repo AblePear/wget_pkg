@@ -39,6 +39,7 @@ as that of the covered work.  */
 #include <errno.h>
 #include <time.h>
 #include <locale.h>
+#include <fcntl.h>
 
 #include "hash.h"
 #include "http.h"
@@ -65,6 +66,9 @@ as that of the covered work.  */
 #ifdef HAVE_METALINK
 # include "metalink.h"
 # include "xstrndup.h"
+#endif
+#ifdef ENABLE_XATTR
+#include "xattr.h"
 #endif
 
 #ifdef TESTING
@@ -341,7 +345,7 @@ request_send (const struct request *req, int fd, FILE *warc_tmp)
   /* "\r\n\0" */
   size += 3;
 
-  p = request_string = alloca_array (char, size);
+  p = request_string = xmalloc (size);
 
   /* Generate the request. */
 
@@ -376,8 +380,9 @@ request_send (const struct request *req, int fd, FILE *warc_tmp)
       /* Write a copy of the data to the WARC record. */
       int warc_tmp_written = fwrite (request_string, 1, size - 1, warc_tmp);
       if (warc_tmp_written != size - 1)
-        return -2;
+        write_error = -2;
     }
+  xfree (request_string);
   return write_error;
 }
 
@@ -420,7 +425,7 @@ maybe_send_basic_creds (const char *hostname, const char *user,
       do_challenge = true;
     }
   else if (basic_authed_hosts
-      && hash_table_contains(basic_authed_hosts, hostname))
+      && hash_table_contains (basic_authed_hosts, hostname))
     {
       DEBUGP (("Found %s in basic_authed_hosts.\n", quote (hostname)));
       do_challenge = true;
@@ -446,9 +451,9 @@ register_basic_auth_host (const char *hostname)
     {
       basic_authed_hosts = make_nocase_string_hash_table (1);
     }
-  if (!hash_table_contains(basic_authed_hosts, hostname))
+  if (!hash_table_contains (basic_authed_hosts, hostname))
     {
-      hash_table_put (basic_authed_hosts, xstrdup(hostname), NULL);
+      hash_table_put (basic_authed_hosts, xstrdup (hostname), NULL);
       DEBUGP (("Inserted %s into basic_authed_hosts\n", quote (hostname)));
     }
 }
@@ -846,7 +851,7 @@ resp_free (struct response **resp_ref)
    caused crashes in UTF-8 locales.  */
 
 static void
-print_response_line(const char *prefix, const char *b, const char *e)
+print_response_line (const char *prefix, const char *b, const char *e)
 {
   char *copy;
   BOUNDED_TO_ALLOCA(b, e, copy);
@@ -872,7 +877,7 @@ print_server_response (const struct response *resp, const char *prefix)
         --e;
       if (b < e && e[-1] == '\r')
         --e;
-      print_response_line(prefix, b, e);
+      print_response_line (prefix, b, e);
     }
 }
 
@@ -1026,18 +1031,18 @@ skip_short_body (int fd, wgint contlen, bool chunked)
    or a fragment of a long parameter value
 */
 static int
-modify_param_name(param_token *name)
+modify_param_name (param_token *name)
 {
   const char *delim1 = memchr (name->b, '*', name->e - name->b);
   const char *delim2 = memrchr (name->b, '*', name->e - name->b);
 
   int result;
 
-  if(delim1 == NULL)
+  if (delim1 == NULL)
     {
       result = NOT_RFC2231;
     }
-  else if(delim1 == delim2)
+  else if (delim1 == delim2)
     {
       if ((name->e - 1) == delim1)
         {
@@ -1155,12 +1160,12 @@ extract_param (const char **source, param_token *name, param_token *value,
     }
   *source = p;
 
-  param_type = modify_param_name(name);
+  param_type = modify_param_name (name);
   if (param_type != NOT_RFC2231)
     {
       if (param_type == RFC2231_ENCODING && is_url_encoded)
         *is_url_encoded = true;
-      modify_param_value(value, param_type);
+      modify_param_value (value, param_type);
     }
   return true;
 }
@@ -1175,8 +1180,8 @@ static void
 append_value_to_filename (char **filename, param_token const * const value,
                           bool is_url_encoded)
 {
-  int original_length = strlen(*filename);
-  int new_length = strlen(*filename) + (value->e - value->b);
+  int original_length = strlen (*filename);
+  int new_length = strlen (*filename) + (value->e - value->b);
   *filename = xrealloc (*filename, new_length+1);
   memcpy (*filename + original_length, value->b, (value->e - value->b));
   (*filename)[new_length] = '\0';
@@ -1281,7 +1286,7 @@ parse_strict_transport_security (const char *header, time_t *max_age, bool *incl
         {
           if (BOUNDED_EQUAL_NO_CASE (name.b, name.e, "max-age"))
             {
-              xfree(c_max_age);
+              xfree (c_max_age);
               c_max_age = strdupdelim (value.b, value.e);
             }
           else if (BOUNDED_EQUAL_NO_CASE (name.b, name.e, "includeSubDomains"))
@@ -1564,6 +1569,7 @@ struct http_stat
 #ifdef HAVE_METALINK
   metalink_t *metalink;
 #endif
+  bool temporary;               /* downloading a temporary file */
 };
 
 static void
@@ -1805,7 +1811,7 @@ time_to_rfc1123 (time_t time, char *buf, size_t bufsize)
 }
 
 static struct request *
-initialize_request (struct url *u, struct http_stat *hs, int *dt, struct url *proxy,
+initialize_request (const struct url *u, struct http_stat *hs, int *dt, struct url *proxy,
                     bool inhibit_keep_alive, bool *basic_auth_finished,
                     wgint *body_data_size, char **user, char **passwd, uerr_t *ret)
 {
@@ -1869,21 +1875,42 @@ initialize_request (struct url *u, struct http_stat *hs, int *dt, struct url *pr
   request_set_header (req, "Accept", "*/*", rel_none);
   request_set_header (req, "Accept-Encoding", "identity", rel_none);
 
-  /* Find the username and password for authentication. */
-  *user = u->user;
-  *passwd = u->passwd;
-  search_netrc (u->host, (const char **)user, (const char **)passwd, 0);
-  *user = *user ? *user : (opt.http_user ? opt.http_user : opt.user);
-  *passwd = *passwd ? *passwd : (opt.http_passwd ? opt.http_passwd : opt.passwd);
+  /* Find the username with priority */
+  if (u->user)
+    *user = u->user;
+  else if (opt.user && (opt.use_askpass || opt.ask_passwd))
+    *user = opt.user;
+  else if (opt.http_user)
+    *user = opt.http_user;
+  else if (opt.user)
+    *user = opt.user;
+  else
+    *user = NULL;
+
+  /* Find the password with priority */
+  if (u->passwd)
+    *passwd = u->passwd;
+  else if (opt.passwd && (opt.use_askpass || opt.ask_passwd))
+    *passwd = opt.passwd;
+  else if (opt.http_passwd)
+    *passwd = opt.http_passwd;
+  else if (opt.passwd)
+    *passwd = opt.passwd;
+  else
+    *passwd = NULL;
+
+  /* Check for ~/.netrc if none of the above match */
+  if (opt.netrc && (!user || (!passwd || !*passwd)))
+    search_netrc (u->host, (const char **) user, (const char **) passwd, 0);
 
   /* We only do "site-wide" authentication with "global" user/password
    * values unless --auth-no-challange has been requested; URL user/password
    * info overrides. */
-  if (user && *passwd && (!u->user || opt.auth_without_challenge))
+  if (*user && *passwd && (!u->user || opt.auth_without_challenge))
     {
       /* If this is a host for which we've already received a Basic
        * challenge, we'll go ahead and send Basic authentication creds. */
-      *basic_auth_finished = maybe_send_basic_creds(u->host, *user, *passwd, req);
+      *basic_auth_finished = maybe_send_basic_creds (u->host, *user, *passwd, req);
     }
 
   /* Generate the Host header, HOST:PORT.  Take into account that:
@@ -1951,7 +1978,7 @@ initialize_request (struct url *u, struct http_stat *hs, int *dt, struct url *pr
 }
 
 static void
-initialize_proxy_configuration (struct url *u, struct request *req,
+initialize_proxy_configuration (const struct url *u, struct request *req,
                                 struct url *proxy, char **proxyauth)
 {
   char *proxy_user, *proxy_passwd;
@@ -1983,7 +2010,7 @@ initialize_proxy_configuration (struct url *u, struct request *req,
 }
 
 static uerr_t
-establish_connection (struct url *u, struct url **conn_ref,
+establish_connection (const struct url *u, const struct url **conn_ref,
                       struct http_stat *hs, struct url *proxy,
                       char **proxyauth,
                       struct request **req_ref, bool *using_ssl,
@@ -1993,7 +2020,7 @@ establish_connection (struct url *u, struct url **conn_ref,
   bool host_lookup_failed = false;
   int sock = *sock_ref;
   struct request *req = *req_ref;
-  struct url *conn = *conn_ref;
+  const struct url *conn = *conn_ref;
   struct response *resp;
   int write_error;
   int statcode;
@@ -2004,7 +2031,7 @@ establish_connection (struct url *u, struct url **conn_ref,
          proxy is used.  The exception is when SSL is in use, in which
          case the proxy is nothing but a passthrough to the target
          host, registered as a connection to the latter.  */
-      struct url *relevant = conn;
+      const struct url *relevant = conn;
 #ifdef HAVE_SSL
       if (u->scheme == SCHEME_HTTPS)
         relevant = u;
@@ -2119,7 +2146,7 @@ establish_connection (struct url *u, struct url **conn_ref,
               xfree (head);
               return HERR;
             }
-          xfree(hs->message);
+          xfree (hs->message);
           hs->message = xstrdup (message);
           resp_free (&resp);
           xfree (head);
@@ -2168,7 +2195,7 @@ set_file_timestamp (struct http_stat *hs)
   char *filename_plus_orig_suffix = alloca (filename_len + sizeof (ORIG_SFX));
   bool local_dot_orig_file_exists = false;
   char *local_filename = NULL;
-  struct_stat st;
+  struct stat st;
 
   if (opt.backup_converted)
     /* If -K is specified, we'll act on the assumption that it was specified
@@ -2225,7 +2252,7 @@ set_file_timestamp (struct http_stat *hs)
 }
 
 static uerr_t
-check_file_output (struct url *u, struct http_stat *hs,
+check_file_output (const struct url *u, struct http_stat *hs,
                    struct response *resp, char *hdrval, size_t hdrsize)
 {
   /* Determine the local filename if needed. Notice that if -O is used
@@ -2252,6 +2279,14 @@ check_file_output (struct url *u, struct http_stat *hs,
         }
 
       xfree (local_file);
+    }
+
+  hs->temporary = opt.delete_after || opt.spider || !acceptable (hs->local_file);
+  if (hs->temporary)
+    {
+      char *tmp = aprintf ("%s.tmp", hs->local_file);
+      xfree (hs->local_file);
+      hs->local_file = tmp;
     }
 
   /* TODO: perform this check only once. */
@@ -2285,7 +2320,7 @@ check_file_output (struct url *u, struct http_stat *hs,
 }
 
 static uerr_t
-check_auth (struct url *u, char *user, char *passwd, struct response *resp,
+check_auth (const struct url *u, char *user, char *passwd, struct response *resp,
             struct request *req, bool *ntlm_seen_ref, bool *retry,
             bool *basic_auth_finished_ref, bool *auth_finished_ref)
 {
@@ -2451,7 +2486,7 @@ open_output_stream (struct http_stat *hs, int count, FILE **fp)
         }
       else if (ALLOW_CLOBBER || count > 0)
         {
-          if (opt.unlink && file_exists_p (hs->local_file))
+          if (opt.unlink_requested && file_exists_p (hs->local_file))
             {
               if (unlink (hs->local_file) < 0)
                 {
@@ -2467,7 +2502,15 @@ open_output_stream (struct http_stat *hs, int count, FILE **fp)
           open_id = 22;
           *fp = fopen (hs->local_file, "wb", FOPEN_OPT_ARGS);
 #else /* def __VMS */
-          *fp = fopen (hs->local_file, "wb");
+          if (hs->temporary)
+            {
+              *fp = fdopen (open (hs->local_file, O_BINARY | O_CREAT | O_TRUNC | O_WRONLY, S_IRUSR | S_IWUSR), "wb");
+            }
+          else
+            {
+              *fp = fopen (hs->local_file, "wb");
+            }
+
 #endif /* def __VMS [else] */
         }
       else
@@ -2533,7 +2576,7 @@ metalink_from_http (const struct response *resp, const struct http_stat *hs,
   metalink_t *metalink = NULL;
   metalink_file_t *mfile = xnew0 (metalink_file_t);
   const char *val_beg, *val_end;
-  int res_count = 0, hash_count = 0, sig_count = 0, i;
+  int res_count = 0, meta_count = 0, hash_count = 0, sig_count = 0, i;
 
   DEBUGP (("Checking for Metalink in HTTP response\n"));
 
@@ -2546,6 +2589,88 @@ metalink_from_http (const struct response *resp, const struct http_stat *hs,
   /* Begin with 1-element array (for 0-termination). */
   mfile->checksums = xnew0 (metalink_checksum_t *);
   mfile->resources = xnew0 (metalink_resource_t *);
+  mfile->metaurls = xnew0 (metalink_metaurl_t *);
+
+  /* Process the Content-Type header.  */
+  if (resp_header_locate (resp, "Content-Type", 0, &val_beg, &val_end) != -1)
+    {
+      metalink_metaurl_t murl = {0};
+
+      const char *type_beg, *type_end;
+      char *typestr = NULL;
+      char *namestr = NULL;
+      size_t type_len;
+
+      DEBUGP (("Processing Content-Type header...\n"));
+
+      /* Find beginning of type.  */
+      type_beg = val_beg;
+      while (type_beg < val_end && c_isspace (*type_beg))
+        type_beg++;
+
+      /* Find end of type.  */
+      type_end = type_beg + 1;
+      while (type_end < val_end &&
+             *type_end != ';' &&
+             *type_end != ' ' &&
+             *type_end != '\r' &&
+             *type_end != '\n')
+        type_end++;
+
+      if (type_beg >= val_end || type_end > val_end)
+        {
+          DEBUGP (("Invalid Content-Type header. Ignoring.\n"));
+          goto skip_content_type;
+        }
+
+      type_len = type_end - type_beg;
+      typestr = xstrndup (type_beg, type_len);
+
+      DEBUGP (("Content-Type: %s\n", typestr));
+
+      if (strcmp (typestr, "application/metalink4+xml"))
+        {
+          xfree (typestr);
+          goto skip_content_type;
+        }
+
+      /*
+        Valid ranges for the "pri" attribute are from
+        1 to 999999.  Mirror servers with a lower value of the "pri"
+        attribute have a higher priority, while mirrors with an undefined
+        "pri" attribute are considered to have a value of 999999, which is
+        the lowest priority.
+
+        rfc6249 section 3.1
+      */
+      murl.priority = DEFAULT_PRI;
+
+      murl.mediatype = typestr;
+      typestr = NULL;
+
+      if (opt.content_disposition
+          && resp_header_locate (resp, "Content-Disposition", 0, &val_beg, &val_end) != -1)
+        {
+          find_key_value (val_beg, val_end, "filename", &namestr);
+          murl.name = namestr;
+          namestr = NULL;
+        }
+
+      murl.url = xstrdup (u->url);
+
+      DEBUGP (("URL=%s\n", murl.url));
+      DEBUGP (("MEDIATYPE=%s\n", murl.mediatype));
+      DEBUGP (("NAME=%s\n", murl.name ? murl.name : ""));
+      DEBUGP (("PRIORITY=%d\n", murl.priority));
+
+      /* 1 slot from new resource, 1 slot for null-termination.  */
+      mfile->metaurls = xrealloc (mfile->metaurls,
+                                  sizeof (metalink_metaurl_t *) * (meta_count + 2));
+      mfile->metaurls[meta_count] = xnew0 (metalink_metaurl_t);
+      *mfile->metaurls[meta_count] = murl;
+      meta_count++;
+    }
+skip_content_type:
 
   /* Find all Link headers.  */
   for (i = 0;
@@ -2606,14 +2731,14 @@ metalink_from_http (const struct response *resp, const struct http_stat *hs,
       DEBUGP (("URL=%s\n", urlstr));
       DEBUGP (("rel=%s\n", rel));
 
+      if (!strcmp (rel, "describedby"))
+        find_key_value (attrs_beg, val_end, "type", &reltype);
+
       /* Handle signatures.
          Libmetalink only supports one signature per file. Therefore we stop
          as soon as we successfully get first supported signature.  */
       if (sig_count == 0 &&
-          !strcmp (rel, "describedby") &&
-          find_key_value (attrs_beg, val_end, "type", &reltype) &&
-          !strcmp (reltype, "application/pgp-signature")
-          )
+          reltype && !strcmp (reltype, "application/pgp-signature"))
         {
           /* Download the signature to a temporary file.  */
           FILE *_output_stream = output_stream;
@@ -2779,6 +2904,60 @@ metalink_from_http (const struct response *resp, const struct http_stat *hs,
               res_count++;
             }
         } /* Handle resource link (rel=duplicate).  */
+
+      /* Handle Metalink/XML resources.  */
+      else if (reltype && !strcmp (reltype, "application/metalink4+xml"))
+        {
+          metalink_metaurl_t murl = {0};
+          char *pristr;
+
+          /*
+             Valid ranges for the "pri" attribute are from
+             1 to 999999.  Mirror servers with a lower value of the "pri"
+             attribute have a higher priority, while mirrors with an undefined
+             "pri" attribute are considered to have a value of 999999, which is
+             the lowest priority.
+
+             rfc6249 section 3.1
+           */
+          murl.priority = DEFAULT_PRI;
+          if (find_key_value (url_end, val_end, "pri", &pristr))
+            {
+              long pri;
+              char *end_pristr;
+              /* Do not care for errno since 0 is error in this case.  */
+              pri = strtol (pristr, &end_pristr, 10);
+              if (end_pristr != pristr + strlen (pristr) ||
+                  !VALID_PRI_RANGE (pri))
+                {
+                  /* This is against the specification, so let's inform the user.  */
+                  logprintf (LOG_NOTQUIET,
+                             _("Invalid pri value. Assuming %d.\n"),
+                             DEFAULT_PRI);
+                }
+              else
+                murl.priority = pri;
+              xfree (pristr);
+            }
+
+          murl.mediatype = xstrdup (reltype);
+
+          DEBUGP (("MEDIATYPE=%s\n", murl.mediatype));
+
+          /* At this point we have validated the new resource.  */
+
+          find_key_value (url_end, val_end, "name", &murl.name);
+
+          murl.url = urlstr;
+          urlstr = NULL;
+
+          /* 1 slot from new resource, 1 slot for null-termination.  */
+          mfile->metaurls = xrealloc (mfile->metaurls,
+                                       sizeof (metalink_metaurl_t *) * (meta_count + 2));
+          mfile->metaurls[meta_count] = xnew0 (metalink_metaurl_t);
+          *mfile->metaurls[meta_count] = murl;
+          meta_count++;
+        } /* Handle resource link (rel=describedby).  */
       else
         DEBUGP (("This link header was not used for Metalink\n"));
 
@@ -2789,8 +2968,9 @@ metalink_from_http (const struct response *resp, const struct http_stat *hs,
 
   /* Null-terminate resources array.  */
   mfile->resources[res_count] = 0;
+  mfile->metaurls[meta_count] = 0;
 
-  if (res_count == 0)
+  if (res_count == 0 && meta_count == 0)
     {
       DEBUGP (("No valid metalink references found.\n"));
       goto fail;
@@ -2816,9 +2996,17 @@ metalink_from_http (const struct response *resp, const struct http_stat *hs,
              Therefore we convert: base64 -> binary -> hex.  */
           const size_t dig_hash_str_len = strlen (dig_hash);
           char *bin_hash = alloca (dig_hash_str_len * 3 / 4 + 1);
-          size_t hash_bin_len;
+          ssize_t hash_bin_len;
 
-          hash_bin_len = base64_decode (dig_hash, bin_hash);
+          hash_bin_len = wget_base64_decode (dig_hash, bin_hash);
+
+          /* Detect malformed base64 input.  */
+          if (hash_bin_len < 0)
+            {
+              xfree (dig_type);
+              xfree (dig_hash);
+              continue;
+            }
 
           /* One slot for me, one for zero-termination.  */
           mfile->checksums =
@@ -2827,8 +3015,8 @@ metalink_from_http (const struct response *resp, const struct http_stat *hs,
           mfile->checksums[hash_count] = xnew (metalink_checksum_t);
           mfile->checksums[hash_count]->type = dig_type;
 
-          mfile->checksums[hash_count]->hash = xmalloc (hash_bin_len * 2 + 1);
-          wg_hex_to_string (mfile->checksums[hash_count]->hash, bin_hash, hash_bin_len);
+          mfile->checksums[hash_count]->hash = xmalloc ((size_t)hash_bin_len * 2 + 1);
+          wg_hex_to_string (mfile->checksums[hash_count]->hash, bin_hash, (size_t)hash_bin_len);
 
           xfree (dig_hash);
 
@@ -2845,7 +3033,7 @@ metalink_from_http (const struct response *resp, const struct http_stat *hs,
 
     rfc6249 section 6
    */
-  if (hash_count == 0)
+  if (res_count && hash_count == 0)
     {
       logputs (LOG_VERBOSE,
                _("Could not find acceptable digest for Metalink resources.\n"
@@ -2856,6 +3044,7 @@ metalink_from_http (const struct response *resp, const struct http_stat *hs,
   /* Metalink data is OK. Now we just need to sort the resources based
      on their priorities, preference, and perhaps location.  */
   stable_sort (mfile->resources, res_count, sizeof (metalink_resource_t *), metalink_res_cmp);
+  stable_sort (mfile->metaurls, meta_count, sizeof (metalink_metaurl_t *), metalink_meta_cmp);
 
   /* Restore sensible preference values (in case someone cares to look).  */
   for (i = 0; i < res_count; ++i)
@@ -2892,8 +3081,8 @@ fail:
    If PROXY is non-NULL, the connection will be made to the proxy
    server, and u->url will be requested.  */
 static uerr_t
-gethttp (struct url *u, struct http_stat *hs, int *dt, struct url *proxy,
-         struct iri *iri, int count)
+gethttp (const struct url *u, struct url *original_url, struct http_stat *hs,
+         int *dt, struct url *proxy, struct iri *iri, int count)
 {
   struct request *req = NULL;
 
@@ -2903,7 +3092,7 @@ gethttp (struct url *u, struct http_stat *hs, int *dt, struct url *proxy,
   int statcode;
   int write_error;
   wgint contlen, contrange;
-  struct url *conn;
+  const struct url *conn;
   FILE *fp;
   int err;
   uerr_t retval;
@@ -2997,7 +3186,7 @@ gethttp (struct url *u, struct http_stat *hs, int *dt, struct url *proxy,
   hs->res = -1;
   hs->rderrmsg = NULL;
   hs->newloc = NULL;
-  xfree(hs->remote_time);
+  xfree (hs->remote_time);
   hs->error = NULL;
   hs->message = NULL;
 
@@ -3136,7 +3325,7 @@ gethttp (struct url *u, struct http_stat *hs, int *dt, struct url *proxy,
       bool warc_result;
 
       /* Generate a timestamp and uuid for this request. */
-      warc_timestamp (warc_timestamp_str, sizeof(warc_timestamp_str));
+      warc_timestamp (warc_timestamp_str, sizeof (warc_timestamp_str));
       warc_uuid_str (warc_request_uuid);
 
       /* Create a request record and store it in the WARC file. */
@@ -3182,7 +3371,7 @@ gethttp (struct url *u, struct http_stat *hs, int *dt, struct url *proxy,
         resp = resp_new (head);
 
         /* Check for status line.  */
-        xfree(message);
+        xfree (message);
         statcode = resp_status (resp, &message);
         if (statcode < 0)
           {
@@ -3211,7 +3400,7 @@ gethttp (struct url *u, struct http_stat *hs, int *dt, struct url *proxy,
     while (_repeat);
   }
 
-  xfree(hs->message);
+  xfree (hs->message);
   hs->message = xstrdup (message);
   if (!opt.server_response)
     logprintf (LOG_VERBOSE, "%2d %s\n", statcode,
@@ -3291,6 +3480,9 @@ gethttp (struct url *u, struct http_stat *hs, int *dt, struct url *proxy,
   if (metalink)
     {
       hs->metalink = metalink_from_http (resp, hs, u);
+      /* Bugfix: hs->local_file is NULL (opt.content_disposition).  */
+      if (!hs->local_file && hs->metalink && hs->metalink->origin)
+        hs->local_file = xstrdup (hs->metalink->origin);
       xfree (hs->message);
       retval = RETR_WITH_METALINK;
       CLOSE_FINISH (sock);
@@ -3403,16 +3595,16 @@ gethttp (struct url *u, struct http_stat *hs, int *dt, struct url *proxy,
         {
           /* process strict transport security */
           if (hsts_store_entry (hsts_store, u->scheme, u->host, u->port, max_age, include_subdomains))
-            DEBUGP(("Added new HSTS host: %s:%u (max-age: %u, includeSubdomains: %s)\n",
+            DEBUGP(("Added new HSTS host: %s:%u (max-age: %lu, includeSubdomains: %s)\n",
                    u->host,
-                   u->port,
-                   (unsigned int) max_age,
+                   (unsigned) u->port,
+                   (unsigned long) max_age,
                    (include_subdomains ? "true" : "false")));
           else
-            DEBUGP(("Updated HSTS host: %s:%u (max-age: %u, includeSubdomains: %s)\n",
+            DEBUGP(("Updated HSTS host: %s:%u (max-age: %lu, includeSubdomains: %s)\n",
                    u->host,
-                   u->port,
-                   (unsigned int) max_age,
+                   (unsigned) u->port,
+                   (unsigned long) max_age,
                    (include_subdomains ? "true" : "false")));
         }
     }
@@ -3440,7 +3632,7 @@ gethttp (struct url *u, struct http_stat *hs, int *dt, struct url *proxy,
               tmp = parse_charset (tmp2);
               if (tmp)
                 set_content_encoding (iri, tmp);
-              xfree(tmp);
+              xfree (tmp);
             }
 #endif
         }
@@ -3646,7 +3838,7 @@ gethttp (struct url *u, struct http_stat *hs, int *dt, struct url *proxy,
       goto cleanup;
     }
   if ((contrange != 0 && contrange != hs->restval)
-      || (H_PARTIAL (statcode) && !contrange))
+      || (H_PARTIAL (statcode) && !contrange && hs->restval))
     {
       /* The Range request was somehow misunderstood by the server.
          Bail out.  */
@@ -3754,6 +3946,16 @@ gethttp (struct url *u, struct http_stat *hs, int *dt, struct url *proxy,
       goto cleanup;
     }
 
+#ifdef ENABLE_XATTR
+  if (opt.enable_xattr)
+    {
+      if (original_url != u)
+        set_file_metadata (u->url, original_url->url, fp);
+      else
+        set_file_metadata (u->url, NULL, fp);
+    }
+#endif
+
   err = read_response_body (hs, sock, fp, contlen, contrange,
                             chunked_transfer_encoding,
                             u->url, warc_timestamp_str,
@@ -3780,10 +3982,26 @@ gethttp (struct url *u, struct http_stat *hs, int *dt, struct url *proxy,
   return retval;
 }
 
+/* Check whether the supplied HTTP status code is among those
+   listed for the --retry-on-http-error option. */
+static bool
+check_retry_on_http_error (const int statcode)
+{
+  const char *tok = opt.retry_on_http_error;
+  while (tok && *tok)
+    {
+      if (atoi (tok) == statcode)
+        return true;
+      if ((tok = strchr (tok, ',')))
+        ++tok;
+    }
+  return false;
+}
+
 /* The genuine HTTP loop!  This is the part where the retrieval is
    retried, and retried, and retried, and...  */
 uerr_t
-http_loop (struct url *u, struct url *original_url, char **newloc,
+http_loop (const struct url *u, struct url *original_url, char **newloc,
            char **local_file, const char *referer, int *dt, struct url *proxy,
            struct iri *iri)
 {
@@ -3796,7 +4014,7 @@ http_loop (struct url *u, struct url *original_url, char **newloc,
   uerr_t err, ret = TRYLIMEXC;
   time_t tmr = -1;               /* remote time-stamp */
   struct http_stat hstat;        /* HTTP status */
-  struct_stat st;
+  struct stat st;
   bool send_head_first = true;
   bool force_full_retrieve = false;
 
@@ -3972,7 +4190,7 @@ http_loop (struct url *u, struct url *original_url, char **newloc,
         *dt &= ~SEND_NOCACHE;
 
       /* Try fetching the document, or at least its head.  */
-      err = gethttp (u, &hstat, dt, proxy, iri, count);
+      err = gethttp (u, original_url, &hstat, dt, proxy, iri, count);
 
       /* Time?  */
       tms = datetime_str (time (NULL));
@@ -4116,6 +4334,11 @@ http_loop (struct url *u, struct url *original_url, char **newloc,
               nonexisting_url (hurl);
               logprintf (LOG_NOTQUIET, _("\
 Remote file does not exist -- broken link!!!\n"));
+            }
+          else if (check_retry_on_http_error (hstat.statcode))
+            {
+              printwhat (count, opt.ntry);
+              continue;
             }
           else
             {
@@ -4400,7 +4623,10 @@ exit:
   if ((ret == RETROK || opt.content_on_error) && local_file)
     {
       xfree (*local_file);
-      *local_file = xstrdup (hstat.local_file);
+      /* Bugfix: Prevent SIGSEGV when hstat.local_file was left NULL
+         (i.e. due to opt.content_disposition).  */
+      if (hstat.local_file)
+        *local_file = xstrdup (hstat.local_file);
     }
   free_hstat (&hstat);
 
@@ -4546,7 +4772,7 @@ basic_authentication_encode (const char *user, const char *passwd)
   sprintf (t1, "%s:%s", user, passwd);
 
   t2 = (char *)alloca (BASE64_LENGTH (len1) + 1);
-  base64_encode (t1, len1, t2);
+  wget_base64_encode (t1, len1, t2);
 
   return concat_strings ("Basic ", t2, (char *) 0);
 }
@@ -4593,7 +4819,7 @@ digest_authentication_encode (const char *au, const char *user,
     { "algorithm", &algorithm }
   };
   char cnonce[16] = "";
-  char *res;
+  char *res = NULL;
   int res_len;
   size_t res_size;
   param_token name, value;
@@ -4616,29 +4842,22 @@ digest_authentication_encode (const char *au, const char *user,
           }
     }
 
-  if (qop != NULL && strcmp(qop,"auth"))
+  if (qop && strcmp (qop, "auth"))
     {
       logprintf (LOG_NOTQUIET, _("Unsupported quality of protection '%s'.\n"), qop);
-      xfree (qop); /* force freeing mem and return */
+      xfree (qop); /* force freeing mem and continue */
     }
-  else if (algorithm != NULL && strcmp (algorithm,"MD5") && strcmp (algorithm,"MD5-sess"))
+  else if (algorithm && strcmp (algorithm,"MD5") && strcmp (algorithm,"MD5-sess"))
     {
       logprintf (LOG_NOTQUIET, _("Unsupported algorithm '%s'.\n"), algorithm);
-      xfree (qop); /* force freeing mem and return */
+      xfree (algorithm); /* force freeing mem and continue */
     }
 
   if (!realm || !nonce || !user || !passwd || !path || !method)
     {
       *auth_err = ATTRMISSING;
-
-      xfree (realm);
-      xfree (opaque);
-      xfree (nonce);
-      xfree (qop);
-      xfree (algorithm);
-
-      return NULL;
-    }
+      goto cleanup;
+   }
 
   /* Calculate the digest value.  */
   {
@@ -4661,7 +4880,8 @@ digest_authentication_encode (const char *au, const char *user,
     if (algorithm && !strcmp (algorithm, "MD5-sess"))
       {
         /* A1BUF = H( H(user ":" realm ":" password) ":" nonce ":" cnonce ) */
-        snprintf (cnonce, sizeof (cnonce), "%08x", random_number(INT_MAX));
+        snprintf (cnonce, sizeof (cnonce), "%08x",
+          (unsigned) random_number (INT_MAX));
 
         md5_init_ctx (&ctx);
         /* md5_process_bytes (hash, MD5_DIGEST_SIZE, &ctx); */
@@ -4683,12 +4903,13 @@ digest_authentication_encode (const char *au, const char *user,
     md5_finish_ctx (&ctx, hash);
     dump_hash (a2buf, hash);
 
-    if (qop && !strcmp(qop, "auth"))
+    if (qop && !strcmp (qop, "auth"))
       {
         /* RFC 2617 Digest Access Authentication */
         /* generate random hex string */
         if (!*cnonce)
-          snprintf(cnonce, sizeof(cnonce), "%08x", random_number(INT_MAX));
+          snprintf (cnonce, sizeof (cnonce), "%08x",
+            (unsigned) random_number (INT_MAX));
 
         /* RESPONSE_DIGEST = H(A1BUF ":" nonce ":" noncecount ":" clientnonce ":" qop ": " A2BUF) */
         md5_init_ctx (&ctx);
@@ -4698,9 +4919,9 @@ digest_authentication_encode (const char *au, const char *user,
         md5_process_bytes ((unsigned char *)":", 1, &ctx);
         md5_process_bytes ((unsigned char *)"00000001", 8, &ctx); /* TODO: keep track of server nonce values */
         md5_process_bytes ((unsigned char *)":", 1, &ctx);
-        md5_process_bytes ((unsigned char *)cnonce, strlen(cnonce), &ctx);
+        md5_process_bytes ((unsigned char *)cnonce, strlen (cnonce), &ctx);
         md5_process_bytes ((unsigned char *)":", 1, &ctx);
-        md5_process_bytes ((unsigned char *)qop, strlen(qop), &ctx);
+        md5_process_bytes ((unsigned char *)qop, strlen (qop), &ctx);
         md5_process_bytes ((unsigned char *)":", 1, &ctx);
         md5_process_bytes ((unsigned char *)a2buf, MD5_DIGEST_SIZE * 2, &ctx);
         md5_finish_ctx (&ctx, hash);
@@ -4750,15 +4971,16 @@ digest_authentication_encode (const char *au, const char *user,
 
     if (opaque)
       {
-        res_len += snprintf(res + res_len, res_size - res_len, ", opaque=\"%s\"", opaque);
+        res_len += snprintf (res + res_len, res_size - res_len, ", opaque=\"%s\"", opaque);
       }
 
     if (algorithm)
       {
-        snprintf(res + res_len, res_size - res_len, ", algorithm=\"%s\"", algorithm);
+        snprintf (res + res_len, res_size - res_len, ", algorithm=\"%s\"", algorithm);
       }
   }
 
+cleanup:
   xfree (realm);
   xfree (opaque);
   xfree (nonce);
@@ -4904,7 +5126,7 @@ ensure_extension (struct http_stat *hs, const char *ext, int *dt)
 #ifdef TESTING
 
 const char *
-test_parse_range_header(void)
+test_parse_range_header (void)
 {
   unsigned i;
   static const struct {
@@ -4922,8 +5144,10 @@ test_parse_range_header(void)
       { "bytes 1-999/1000", 1, 999, 1000, true },
       { "bytes 42-1233/1234", 42, 1233, 1234, true },
       { "bytes 42-1233/*", 42, 1233, -1, true },
-      { "bytes 0-2147483648/2147483649", 0, 2147483648, 2147483649, true },
-      { "bytes 2147483648-4294967296/4294967297", 2147483648, 4294967296, 4294967297, true }
+      { "bytes 0-2147483648/2147483649", 0, 2147483648U, 2147483649U, true },
+#if SIZEOF_WGINT >= 8
+      { "bytes 2147483648-4294967296/4294967297", 2147483648U, 4294967296ULL, 4294967297ULL, true },
+#endif
   };
 
   wgint firstbyteptr[sizeof(wgint)];
@@ -4949,7 +5173,7 @@ test_parse_range_header(void)
 }
 
 const char *
-test_parse_content_disposition(void)
+test_parse_content_disposition (void)
 {
   unsigned i;
   static const struct {
@@ -4971,7 +5195,7 @@ test_parse_content_disposition(void)
 filename*1=\"B\"", "AA.ext", true },
   };
 
-  for (i = 0; i < countof(test_array); ++i)
+  for (i = 0; i < countof (test_array); ++i)
     {
       char *filename;
       bool res;

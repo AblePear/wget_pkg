@@ -45,6 +45,7 @@ as that of the covered work.  */
 
 #include "wget.h"
 
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -525,19 +526,51 @@ check_domain_match (const char *cookie_domain, const char *host)
 {
 
 #ifdef HAVE_LIBPSL
+  static int init_psl;
+  static const psl_ctx_t *psl;
+
   char *cookie_domain_lower = NULL;
   char *host_lower = NULL;
-  const psl_ctx_t *psl;
   int is_acceptable;
 
-  DEBUGP (("cdm: 1"));
-  if (!(psl = psl_builtin()))
+  DEBUGP (("cdm: 1\n"));
+  if (!init_psl)
     {
-      DEBUGP (("\nlibpsl not built with a public suffix list. "
-               "Falling back to simple heuristics.\n"));
-      goto no_psl;
-    }
+      init_psl = 1;
 
+#ifdef HAVE_PSL_LATEST
+      if ((psl = psl_latest (NULL)))
+        goto have_psl;
+
+      DEBUGP (("\nPSL: Failed to load any PSL data. "
+               "Falling back to insecure heuristics.\n"));
+#else
+      if ((psl = psl_builtin ()) && !psl_builtin_outdated ())
+        goto have_psl;
+
+      DEBUGP (("\nPSL: built-in data outdated. "
+               "Trying to load data from %s.\n",
+              quote (psl_builtin_filename ())));
+
+      if ((psl = psl_load_file (psl_builtin_filename ())))
+        goto have_psl;
+
+      DEBUGP (("\nPSL: %s not found or not readable. "
+               "Falling back to built-in data.\n",
+              quote (psl_builtin_filename ())));
+
+      if (!(psl = psl_builtin ()))
+        {
+          DEBUGP (("\nPSL: libpsl not built with a public suffix list. "
+                   "Falling back to insecure heuristics.\n"));
+          goto no_psl;
+        }
+#endif
+    }
+  else if (!psl)
+    goto no_psl;
+
+have_psl:
   if (psl_str_to_utf8lower (cookie_domain, NULL, NULL, &cookie_domain_lower) == PSL_SUCCESS &&
       psl_str_to_utf8lower (host, NULL, NULL, &host_lower) == PSL_SUCCESS)
     {
@@ -562,13 +595,13 @@ no_psl:
 #endif
 
   /* For efficiency make some elementary checks first */
-  DEBUGP (("cdm: 2"));
+  DEBUGP (("cdm: 2\n"));
 
   /* For the sake of efficiency, check for exact match first. */
   if (0 == strcasecmp (cookie_domain, host))
     return true;
 
-  DEBUGP ((" 3"));
+  DEBUGP (("cdm: 3\n"));
 
   /* HOST must match the tail of cookie_domain. */
   if (!match_tail (host, cookie_domain, true))
@@ -608,7 +641,7 @@ no_psl:
     if (*p == '.')
       /* Ignore leading period in this calculation. */
       ++p;
-    DEBUGP ((" 4"));
+    DEBUGP (("cdm: 4\n"));
     for (out = 0; !out; p++)
       switch (*p)
         {
@@ -634,12 +667,12 @@ no_psl:
           ++ldcl;
         }
 
-    DEBUGP ((" 5"));
+    DEBUGP (("cdm: 5\n"));
 
     if (dccount < 2)
       return false;
 
-    DEBUGP ((" 6"));
+    DEBUGP (("cdm: 6\n"));
 
     if (dccount == 2)
       {
@@ -659,7 +692,7 @@ no_psl:
       }
   }
 
-  DEBUGP ((" 7"));
+  DEBUGP (("cdm: 7\n"));
 
   /* Don't allow the host "foobar.com" to set a cookie for domain
      "bar.com".  */
@@ -674,7 +707,7 @@ no_psl:
         return false;
     }
 
-  DEBUGP ((" 8"));
+  DEBUGP (("cdm: 8\n"));
 
   return true;
 }
@@ -1018,7 +1051,7 @@ cookie_header (struct cookie_jar *jar, const char *host,
 
   struct cookie *cookie;
   struct weighed_cookie *outgoing;
-  int count, i, ocnt;
+  size_t count, i, ocnt;
   char *result;
   int result_size, pos;
   PREPEND_SLASH (path);         /* see cookie_handle_set_cookie */
@@ -1032,7 +1065,7 @@ cookie_header (struct cookie_jar *jar, const char *host,
   chain_count = find_chains_of_host (jar, host, chains);
 
   /* No cookies for this host. */
-  if (!chain_count)
+  if (chain_count <= 0)
     return NULL;
 
   cookies_now = time (NULL);
@@ -1043,7 +1076,7 @@ cookie_header (struct cookie_jar *jar, const char *host,
 
   /* Count the number of matching cookies. */
   count = 0;
-  for (i = 0; i < chain_count; i++)
+  for (i = 0; i < (unsigned) chain_count; i++)
     for (cookie = chains[i]; cookie; cookie = cookie->next)
       if (cookie_matches_url (cookie, host, port, path, secflag, NULL))
         ++count;
@@ -1051,12 +1084,14 @@ cookie_header (struct cookie_jar *jar, const char *host,
     return NULL;                /* no cookies matched */
 
   /* Allocate the array. */
-  outgoing = alloca_array (struct weighed_cookie, count);
+  if (count > SIZE_MAX / sizeof (struct weighed_cookie))
+    return NULL;                /* unable to process so many cookies */
+  outgoing = xmalloc (count * sizeof (struct weighed_cookie));
 
   /* Fill the array with all the matching cookies from the chains that
      match HOST. */
   ocnt = 0;
-  for (i = 0; i < chain_count; i++)
+  for (i = 0; i < (unsigned) chain_count; i++)
     for (cookie = chains[i]; cookie; cookie = cookie->next)
       {
         int pg;
@@ -1111,6 +1146,7 @@ cookie_header (struct cookie_jar *jar, const char *host,
         }
     }
   result[pos++] = '\0';
+  xfree (outgoing);
   assert (pos == result_size);
   return result;
 }

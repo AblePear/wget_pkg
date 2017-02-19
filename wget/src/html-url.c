@@ -729,8 +729,11 @@ tag_handle_img (int tagid, struct taginfo *tag, struct map_context *ctx) {
                                             srcset + url_end);
               struct urlpos *up = append_url (url_text, base_ind + url_start,
                                               url_end - url_start, ctx);
-              up->link_inline_p = 1;
-              up->link_noquote_html_p = 1;
+              if (up)
+                {
+                  up->link_inline_p = 1;
+                  up->link_noquote_html_p = 1;
+                }
               xfree (url_text);
             }
 
@@ -842,6 +845,7 @@ get_urls_html (const char *file, const char *url, bool *meta_disallow_follow,
   if (iri && !iri->content_encoding && meta_charset)
     set_content_encoding (iri, meta_charset);
 #endif
+  xfree (meta_charset);
 
   DEBUGP (("no-follow in %s: %d\n", file, ctx.nofollow));
   if (meta_disallow_follow)

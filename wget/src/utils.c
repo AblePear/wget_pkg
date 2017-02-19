@@ -113,7 +113,7 @@ as that of the covered work.  */
 #include "exits.h"
 #include "c-strcase.h"
 
-static void _Noreturn
+_Noreturn static void
 memfatal (const char *context, long attempted_size)
 {
   /* Make sure we don't try to store part of the log line, and thus
@@ -235,14 +235,20 @@ xstrdup_lower (const char *s)
 
 /* Copy the string formed by two pointers (one on the beginning, other
    on the char after the last char) to a new, malloc-ed location.
-   0-terminate it.  */
+   0-terminate it.
+   If both pointers are NULL, the function returns an empty string.  */
 char *
 strdupdelim (const char *beg, const char *end)
 {
-  char *res = xmalloc (end - beg + 1);
-  memcpy (res, beg, end - beg);
-  res[end - beg] = '\0';
-  return res;
+  if (beg && beg <= end)
+    {
+      char *res = xmalloc (end - beg + 1);
+      memcpy (res, beg, end - beg);
+      res[end - beg] = '\0';
+      return res;
+    }
+
+  return xstrdup("");
 }
 
 /* Parse a string containing comma-separated elements, and return a
@@ -292,13 +298,6 @@ sepstring (const char *s)
    vsnprintf until the correct size is found.  Since Wget also ships a
    fallback implementation of vsnprintf, this should be portable.  */
 
-/* Constant is using for limits memory allocation for text buffer.
-   Applicable in situation when: vasprintf is not available in the system
-   and vsnprintf return -1 when long line is truncated (in old versions of
-   glibc and in other system where C99 doesn`t support) */
-
-#define FMT_MAX_LENGTH 1048576
-
 char *
 aprintf (const char *fmt, ...)
 {
@@ -317,6 +316,13 @@ aprintf (const char *fmt, ...)
     return NULL;
   return str;
 #else  /* not HAVE_VASPRINTF */
+
+/* Constant is using for limits memory allocation for text buffer.
+   Applicable in situation when: vasprintf is not available in the system
+   and vsnprintf return -1 when long line is truncated (in old versions of
+   glibc and in other system where C99 doesn`t support) */
+
+#define FMT_MAX_LENGTH 1048576
 
   /* vasprintf is unavailable.  snprintf into a small buffer and
      resize it as necessary. */
@@ -567,7 +573,7 @@ int
 remove_link (const char *file)
 {
   int err = 0;
-  struct_stat st;
+  struct stat st;
 
   if (lstat (file, &st) == 0 && S_ISLNK (st.st_mode))
     {
@@ -593,7 +599,7 @@ file_exists_p (const char *filename)
 #ifdef HAVE_ACCESS
   return access (filename, F_OK) >= 0;
 #else
-  struct_stat buf;
+  struct stat buf;
   return stat (filename, &buf) >= 0;
 #endif
 }
@@ -603,7 +609,7 @@ file_exists_p (const char *filename)
 bool
 file_non_directory_p (const char *path)
 {
-  struct_stat buf;
+  struct stat buf;
   /* Use lstat() rather than stat() so that symbolic links pointing to
      directories can be identified correctly.  */
   if (lstat (path, &buf) != 0)
@@ -630,7 +636,7 @@ file_size (const char *filename)
   fclose (fp);
   return size;
 #else
-  struct_stat st;
+  struct stat st;
   if (stat (filename, &st) < 0)
     return -1;
   return st.st_size;
@@ -1184,7 +1190,7 @@ wget_read_file (const char *file)
 
 #ifdef HAVE_MMAP
   {
-    struct_fstat buf;
+    struct stat buf;
     if (fstat (fd, &buf) < 0)
       goto mmap_lose;
     fm->length = buf.st_size;
@@ -1327,7 +1333,7 @@ merge_vecs (char **v1, char **v2)
   for (j = 0; v2[j]; j++)
     ;
   /* Reallocate v1.  */
-  v1 = xrealloc (v1, (i + j + 1) * sizeof (char **));
+  v1 = xrealloc (v1, (i + j + 1) * sizeof (char *));
   memcpy (v1 + i, v2, (j + 1) * sizeof (char *));
   xfree (v2);
   return v1;
@@ -1930,7 +1936,7 @@ random_float (void)
 
 static sigjmp_buf run_with_timeout_env;
 
-static void _Noreturn
+_Noreturn static void
 abort_run_with_timeout (int sig _GL_UNUSED)
 {
   assert (sig == SIGALRM);
@@ -2045,12 +2051,15 @@ run_with_timeout (double timeout, void (*fun) (void *), void *arg)
       return false;
     }
 
-  signal (SIGALRM, abort_run_with_timeout);
   if (SETJMP (run_with_timeout_env) != 0)
     {
       /* Longjumped out of FUN with a timeout. */
       signal (SIGALRM, SIG_DFL);
       return true;
+    }
+  else
+    {
+      signal (SIGALRM, abort_run_with_timeout);
     }
   alarm_set (timeout);
   fun (arg);
@@ -2140,7 +2149,7 @@ xsleep (double seconds)
    base64 data.  */
 
 size_t
-base64_encode (const void *data, size_t length, char *dest)
+wget_base64_encode (const void *data, size_t length, char *dest)
 {
   /* Conversion table.  */
   static const char tbl[64] = {
@@ -2208,7 +2217,7 @@ base64_encode (const void *data, size_t length, char *dest)
    This function originates from Free Recode.  */
 
 ssize_t
-base64_decode (const char *base64, void *dest)
+wget_base64_decode (const char *base64, void *dest)
 {
   /* Table of base64 values for first 128 characters.  Note that this
      assumes ASCII (but so does Wget in other places).  */
@@ -2413,17 +2422,17 @@ mergesort_internal (void *base, void *temp, size_t size, size_t from, size_t to,
 }
 
 /* Stable sort with interface exactly like standard library's qsort.
-   Uses mergesort internally, allocating temporary storage with
-   alloca.  */
+   Uses mergesort internally. */
 
 void
 stable_sort (void *base, size_t nmemb, size_t size,
              int (*cmpfun) (const void *, const void *))
 {
-  if (size > 1)
+  if (nmemb > 1 && size > 1)
     {
-      void *temp = alloca (nmemb * size * sizeof (void *));
+      void *temp = xmalloc (nmemb * size);
       mergesort_internal (base, temp, size, 0, nmemb - 1, cmpfun);
+      xfree(temp);
     }
 }
 
@@ -2524,7 +2533,7 @@ wg_hex_to_string (char *str_buffer, const char *hex_buffer, size_t hex_len)
   for (i = 0; i < hex_len; i++)
     {
       /* Each byte takes 2 characters.  */
-      sprintf (str_buffer + 2 * i, "%02x", hex_buffer[i] & 0xFF);
+      sprintf (str_buffer + 2 * i, "%02x", (unsigned) (hex_buffer[i] & 0xFF));
     }
 
   /* Null-terminate result.  */
@@ -2588,7 +2597,7 @@ wg_pubkey_pem_to_der (const char *pem, unsigned char **der, size_t *der_len)
 
   base64data = xmalloc (BASE64_LENGTH(stripped_pem_count));
 
-  size = base64_decode (stripped_pem, base64data);
+  size = wget_base64_decode (stripped_pem, base64data);
 
   if (size < 0) {
     xfree (base64data);           /* malformed base64 from server */
@@ -2651,7 +2660,7 @@ wg_pin_peer_pubkey (const char *pinnedpubkey, const char *pubkey, size_t pubkeyl
           end_pos[0] = '\0';
 
         /* decode base64 pinnedpubkey, 8 is length of "sha256//" */
-        decoded_hash_length = base64_decode (begin_pos + 8, expectedsha256sumdigest);
+        decoded_hash_length = wget_base64_decode (begin_pos + 8, expectedsha256sumdigest);
         /* if valid base64, compare sha256 digests directly */
         if (SHA256_DIGEST_SIZE == decoded_hash_length &&
            !memcmp (sha256sumdigest, expectedsha256sumdigest, SHA256_DIGEST_SIZE)) {

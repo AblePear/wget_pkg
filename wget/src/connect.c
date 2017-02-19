@@ -31,6 +31,7 @@ as that of the covered work.  */
 
 #include "wget.h"
 
+#include "exits.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -56,7 +57,7 @@ as that of the covered work.  */
 #include <sys/time.h>
 
 #ifdef ENABLE_IRI
-#include <idn-free.h>
+#include <idn2.h>
 #endif
 
 #include "utils.h"
@@ -283,7 +284,7 @@ connect_to_ip (const ip_address *ip, int port, const char *print)
               str = xmalloc (len);
               snprintf (str, len, "%s (%s)", name, print);
               str[len-1] = '\0';
-              idn_free (name);
+              idn2_free (name);
             }
 
           logprintf (LOG_VERBOSE, _("Connecting to %s|%s|:%d... "),
@@ -331,8 +332,10 @@ connect_to_ip (const ip_address *ip, int port, const char *print)
       if (bufsize < 512)
         bufsize = 512;          /* avoid pathologically small values */
 #ifdef SO_RCVBUF
-      setsockopt (sock, SOL_SOCKET, SO_RCVBUF,
-                  (void *)&bufsize, (socklen_t)sizeof (bufsize));
+      if (setsockopt (sock, SOL_SOCKET, SO_RCVBUF,
+                  (void *) &bufsize, (socklen_t) sizeof (bufsize)))
+        logprintf (LOG_NOTQUIET, _("setsockopt SO_RCVBUF failed: %s\n"),
+                   strerror (errno));
 #endif
       /* When we add limit_rate support for writing, which is useful
          for POST, we should also set SO_SNDBUF here.  */
@@ -471,7 +474,9 @@ bind_local (const ip_address *bind_address, int *port)
     return -1;
 
 #ifdef SO_REUSEADDR
-  setsockopt (sock, SOL_SOCKET, SO_REUSEADDR, setopt_ptr, setopt_size);
+  if (setsockopt (sock, SOL_SOCKET, SO_REUSEADDR, setopt_ptr, setopt_size))
+    logprintf (LOG_NOTQUIET, _("setsockopt SO_REUSEADDR failed: %s\n"),
+               strerror (errno));
 #endif
 
   xzero (ss);
@@ -689,6 +694,11 @@ select_fd (int fd, double maxtime, int wait_for)
   struct timeval tmout;
   int result;
 
+  if (fd >= FD_SETSIZE)
+    {
+      logprintf (LOG_NOTQUIET, _("Too many fds open.  Cannot use select on a fd >= %d\n"), FD_SETSIZE);
+      exit (WGET_EXIT_GENERIC_ERROR);
+    }
   FD_ZERO (&fdset);
   FD_SET (fd, &fdset);
   if (wait_for & WAIT_FOR_READ)
@@ -731,6 +741,11 @@ test_socket_open (int sock)
   struct timeval to;
   int ret = 0;
 
+  if (sock >= FD_SETSIZE)
+    {
+      logprintf (LOG_NOTQUIET, _("Too many fds open.  Cannot use select on a fd >= %d\n"), FD_SETSIZE);
+      exit (WGET_EXIT_GENERIC_ERROR);
+    }
   /* Check if we still have a valid (non-EOF) connection.  From Andrew
    * Maholski's code in the Unix Socket FAQ.  */
 
